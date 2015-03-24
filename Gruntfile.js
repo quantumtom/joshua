@@ -39,6 +39,7 @@ module.exports = function (grunt) {
                     // Destination: Sources...
                     "build/js/<%= pkg.name %>.js": ["src/js/*"]
                 },
+
                 options: {
                     // Any options supported by Closure Compiler, for example:
                     "compilation_level": "ADVANCED_OPTIMIZATIONS",
@@ -51,6 +52,15 @@ module.exports = function (grunt) {
                 files: {
                     // Destination: Sources...
                     "build/js/<%= pkg.name %>.js": ["src/js/*"]
+                },
+
+                options: {
+                    version : 3,
+                    file: "out.js",
+                    sourceRoot : "",
+                    sources: ["foo.js", "bar.js"],
+                    names: ["src", "maps", "are", "fun"],
+                    mappings: "AAgBC,SAAQ,CAAEA"
                 }
             }
         },
