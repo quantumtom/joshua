@@ -41,7 +41,7 @@ module.exports = function (grunt) {
                 }
             },
             options: {
-                compilerFile: ssCompiler.getPathSS(),
+                compilerFile: superstartupclosurecompiler.getPathSS(),
                 compilerOpts: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
                     warning_level: 'verbose',
@@ -49,6 +49,7 @@ module.exports = function (grunt) {
                     summary_detail_level: 3,
                     output_wrapper: '"(function(){%output%}).call(this);"'
                 }
+            }
         },
         concat: {
             js: {
@@ -117,11 +118,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-closurecompiler');
+    grunt.loadNpmTasks('grunt-closure-tools');
 
     /**
      * Alias tasks
      */
     grunt.registerTask('default', ['clean', 'closurecompiler:minify', 'htmlmin', 'cssmin']);
-    grunt.registerTask('dev', ['copy:main']);
+    grunt.registerTask('compile', ['closurecompiler']);
 
 };
