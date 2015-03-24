@@ -55,12 +55,7 @@ module.exports = function (grunt) {
                 },
 
                 options: {
-                    version : 3,
-                    file: "out.js",
-                    sourceRoot : "",
-                    sources: ["foo.js", "bar.js"],
-                    names: ["src", "maps", "are", "fun"],
-                    mappings: "AAgBC,SAAQ,CAAEA"
+                    version : 3
                 }
             }
         },
