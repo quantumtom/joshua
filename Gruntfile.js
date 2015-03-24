@@ -38,26 +38,17 @@ module.exports = function (grunt) {
                 files: {
                     // Destination: Sources...
                     "build/js/<%= pkg.name %>.js": ["src/js/*"]
-                },
-
-                options: {
-                    // Any options supported by Closure Compiler, for example:
-                    "compilation_level": "ADVANCED_OPTIMIZATIONS",
-
-                    // Plus a simultaneous processes limit
-                    "max_processes": 5
                 }
             },
-            dev: {
-                files: {
-                    // Destination: Sources...
-                    "build/js/<%= pkg.name %>.js": ["src/js/*"]
-                },
-
-                options: {
-                    version : 3
+            options: {
+                compilerFile: ssCompiler.getPathSS(),
+                compilerOpts: {
+                    compilation_level: 'ADVANCED_OPTIMIZATIONS',
+                    warning_level: 'verbose',
+                    externs: 'test/case/externs.js',
+                    summary_detail_level: 3,
+                    output_wrapper: '"(function(){%output%}).call(this);"'
                 }
-            }
         },
         concat: {
             js: {
