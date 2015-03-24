@@ -41,7 +41,7 @@ module.exports = function (grunt) {
                 }
             },
             options: {
-                compilerFile: superstartupclosurecompiler.getPathSS(),
+                compilerFile: ssCompiler.getPathSS(),
                 compilerOpts: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
                     warning_level: 'verbose',
