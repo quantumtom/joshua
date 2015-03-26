@@ -27,14 +27,14 @@ var GOES = {
                 theDate = myDate.getDate(),
                 monthDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
                 theDayOfTheYear = 0,
-                i = 0;
+                i;
 
             // Check for leap year
             if (myDate.getYear() % 4) {
                 monthDays[1] = 28;
             }
 
-            for (i; i < theMonth; i++) {
+            for (i = 0; i < theMonth; i++) {
                 theDayOfTheYear += monthDays[i];
             }
 
@@ -54,12 +54,12 @@ var GOES = {
          */
         function padZeroes(i, places) {
 
-            var j = 0,
+            var j,
                 theString = "";
 
             theString += i;
 
-            for (j; j < places; j++) {
+            for (j = 0; j < places; j++) {
                 if (theString.length < places) {
                     theString = "0" + theString;
                 }
@@ -99,10 +99,10 @@ var GOES = {
         }
 
         function getEnhancement() {
-            var n = 0,
+            var n,
                 enhancementCode = "rb";
 
-            for (n; n < GOES.theEnhancement.length; n++) {
+            for (n = 0; n < GOES.theEnhancement.length; n++) {
                 if (GOES.theEnhancement[n].checked) {
                     enhancementCode = GOES.theEnhancement[n].value;
                 }
@@ -175,7 +175,7 @@ var GOES = {
         function load() {
 
             var thePast = new Date(),
-                frameNumber = 0,
+                frameNumber,
                 frameLeft,
                 frameRight;
 
@@ -185,7 +185,7 @@ var GOES = {
             // that starts then.
             thePast.setHours(thePast.getHours() - 4);
 
-            for (frameNumber; frameNumber < 20; frameNumber++) {
+            for (frameNumber = 0; frameNumber < 20; frameNumber++) {
 
                 /** West Coast */
 
@@ -194,7 +194,7 @@ var GOES = {
                 frameLeft.classList.add("hidden");
                 frameLeft.classList.add("frameLeft");
 
-                frameLeft.src = getURI(thePast);
+                frameLeft.src = getURI(thePast, "west");
 
                 GOES.panelOne.appendChild(frameLeft);
 
@@ -262,7 +262,7 @@ var GOES = {
                     frameLeft.item(0).classList.remove("hidden");
                     frameRight.item(0).classList.remove("hidden");
 
-                    animate();
+                    animate(0);
 
                 }
 
@@ -272,7 +272,7 @@ var GOES = {
 
         load();
 
-        animate();
+        animate(0);
 
         GOES.theEnhancement.addEventListener("click", function () {
             load();

@@ -41,14 +41,10 @@ module.exports = function (grunt) {
                 }
             },
             options: {
-                compilerFile: ssCompiler.getPathSS(),
-                compilerOpts: {
-                    compilation_level: 'ADVANCED_OPTIMIZATIONS',
-                    warning_level: 'verbose',
-                    externs: 'test/case/externs.js',
-                    summary_detail_level: 3,
-                    output_wrapper: '"(function(){%output%}).call(this);"'
-                }
+                compilation_level: "ADVANCED_OPTIMIZATIONS",
+                warning_level: 'VERBOSE',
+                output_wrapper: '(function(){%output%\n}).call(window)',
+                create_source_map: 'build/js/<%= pkg.name %>.js.map'
             }
         },
         concat: {
