@@ -35,16 +35,17 @@ module.exports = function (grunt) {
         },
         closurecompiler: {
             minify: {
-                files: {
-                    // Destination: Sources...
-                    "build/js/<%= pkg.name %>.js": ["src/js/*"]
+                src: "src/js/goes.js",
+                dest: "build/js/<%= pkg.name %>.js",
+                options: {
+                    compilation_level: "ADVANCED_OPTIMIZATIONS",
+                    language_in: "ECMASCRIPT5_STRICT",
+                    warning_level: "VERBOSE",
+                    jscomp_off: "checkVars",
+                    create_source_map: "build/js/<%= pkg.name %>.js.map",
+                    output_wrapper: "(function(){%output%})()\n//# sourceMappingURL=output.js.map"
                 }
-            },
-            options: {
-                compilation_level: "ADVANCED_OPTIMIZATIONS",
-                warning_level: 'VERBOSE',
-                output_wrapper: '(function(){%output%\n}).call(window)',
-                create_source_map: 'build/js/<%= pkg.name %>.js.map'
+
             }
         },
         concat: {
@@ -100,7 +101,7 @@ module.exports = function (grunt) {
         },
         clean: {
             build: {
-                src: ["build"]
+                src: ["build/", ""]
             }
         }
 
@@ -120,6 +121,6 @@ module.exports = function (grunt) {
      * Alias tasks
      */
     grunt.registerTask('default', ['clean', 'closurecompiler:minify', 'htmlmin', 'cssmin']);
-    grunt.registerTask('compile', ['closurecompiler']);
+    grunt.registerTask('cc', ['clean', 'closurecompiler']);
 
 };
