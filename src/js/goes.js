@@ -91,7 +91,7 @@ var GOES = {
          * @returns {number}
          */
         function float2int (value) {
-            return value | 0;
+            return value || 0;
         }
 
         function getTimeStamp(YYYY, DDD, HH, MM) {
