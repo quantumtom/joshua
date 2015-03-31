@@ -34,18 +34,22 @@ module.exports = function (grunt) {
             }
         },
         closurecompiler: {
-            minify: {
-                src: "src/js/goes.js",
-                dest: "build/js/<%= pkg.name %>.js",
+            simple: {
                 options: {
-                    compilation_level: "ADVANCED_OPTIMIZATIONS",
-                    language_in: "ECMASCRIPT5_STRICT",
-                    warning_level: "VERBOSE",
-                    jscomp_off: "checkVars",
-                    create_source_map: "build/js/<%= pkg.name %>.js.map",
-                    output_wrapper: "(function(){%output%})()\n//# sourceMappingURL=output.js.map"
-                }
-
+                    compilation_level: 'SIMPLE_OPTIMIZATIONS'
+                },
+                src: "src/js/goes.js",
+                dest: "build/js/goes.js"
+            },
+            minify: {
+                options: {
+                    compilation_level: 'ADVANCED_OPTIMIZATIONS',
+                    output_wrapper: "(function(){%output%}).call(this);\n// #sourceMappingURL=src/js/goes.js.map",
+                    source_map_format: "V3",
+                    create_source_map: "src/js/goes.js.map"
+                },
+                src: "src/js/goes.js",
+                dest: "build/js/goes.js"
             }
         },
         concat: {
@@ -84,7 +88,7 @@ module.exports = function (grunt) {
         watch: {
             dev: {
                 files: ['src/**/*.html', 'src/**/*.css', 'src/**/*.js'],
-                tasks: ['dev']
+                tasks: ['ccjs']
             }
         },
         jshint: {
@@ -101,7 +105,7 @@ module.exports = function (grunt) {
         },
         clean: {
             build: {
-                src: ["build/", "test"]
+                src: ["build"]
             }
         }
 
@@ -120,7 +124,9 @@ module.exports = function (grunt) {
     /**
      * Alias tasks
      */
-    grunt.registerTask('default', ['clean', 'closurecompiler:minify', 'htmlmin', 'cssmin']);
-    grunt.registerTask('cc', ['clean', 'closurecompiler']);
+    grunt.registerTask('default', ['clean', 'htmlmin', 'cssmin', 'closurecompiler']);
+    grunt.registerTask('dev', ['clean', 'copy:js', 'htmlmin', 'cssmin']);
+    grunt.registerTask('simple', ['clean', 'closurecompiler:simple', 'htmlmin', 'cssmin']);
+    grunt.registerTask('ccjs', ['closurecompiler:minify']);
 
 };

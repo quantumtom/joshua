@@ -79,19 +79,10 @@ var GOES = {
 
             m = m / 30;
 
-            m = float2int(m);
+            m = Math.floor(m);
 
             return m * 30;
 
-        }
-
-        /**
-         * This little trick casts floats to integers (whole numbers).
-         * @param value
-         * @returns {number}
-         */
-        function float2int (value) {
-            return value || 0;
         }
 
         function getTimeStamp(YYYY, DDD, HH, MM) {
@@ -209,6 +200,8 @@ var GOES = {
                 frameRight.classList.add("frameRight");
 
                 frameRight.src = getURI(thePast, "east");
+
+                console.log("here");
 
                 /** Advance to the next frame's timestamp **/
                 thePast.setMinutes(thePast.getMinutes() + 15);
