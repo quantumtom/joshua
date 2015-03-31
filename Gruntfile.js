@@ -1,6 +1,5 @@
-/**
- * Created by thomascornyn on 3/9/15.
- */
+"use strict";
+
 module.exports = function (grunt) {
 
     /**
@@ -34,22 +33,22 @@ module.exports = function (grunt) {
             }
         },
         closurecompiler: {
-            simple: {
-                options: {
-                    compilation_level: 'SIMPLE_OPTIMIZATIONS'
-                },
+            dist: {
                 src: "src/js/goes.js",
-                dest: "build/js/goes.js"
+                dest: "build/js/goes.js",
+                options: {
+                    compilation_level: 'ADVANCED_OPTIMIZATIONS'
+                }
             },
-            minify: {
+            debug: {
+                src: "src/js/goes.js",
+                dest: "build/js/goes.js",
                 options: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
-                    output_wrapper: "(function(){%output%}).call(this);\n// #sourceMappingURL=src/js/goes.js.map",
+                    output_wrapper: "(function(){%output%}).call(this);\n//# sourceMappingURL=sourcemap.json",
                     source_map_format: "V3",
-                    create_source_map: "src/js/goes.js.map"
-                },
-                src: "src/js/goes.js",
-                dest: "build/js/goes.js"
+                    create_source_map: "./sourcemap.json"
+                }
             }
         },
         concat: {
@@ -124,9 +123,10 @@ module.exports = function (grunt) {
     /**
      * Alias tasks
      */
-    grunt.registerTask('default', ['clean', 'htmlmin', 'cssmin', 'closurecompiler']);
-    grunt.registerTask('dev', ['clean', 'copy:js', 'htmlmin', 'cssmin']);
-    grunt.registerTask('simple', ['clean', 'closurecompiler:simple', 'htmlmin', 'cssmin']);
-    grunt.registerTask('ccjs', ['closurecompiler:minify']);
+    grunt.registerTask('build', ['clean', 'closurecompiler:dist', 'htmlmin', 'cssmin']);
+
+    grunt.registerTask('dev', ['clean', 'copy:main', 'closurecompiler:debug']);
+
+    grunt.registerTask('ccjs', ['clean', 'closurecompiler:debug']);
 
 };

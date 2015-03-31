@@ -1,3 +1,5 @@
+"use strict";
+
 var GOES = {
     panelOne: document.getElementById("panelOne"),
     panelTwo: document.getElementById("panelTwo"),
@@ -8,8 +10,6 @@ var GOES = {
     },
 
     view: function () {
-
-        "use strict";
 
         /**
          * Takes a date and calculates how many days that date is from
@@ -30,7 +30,7 @@ var GOES = {
                 monthDays[1] = 28;
             }
 
-            for (i = 0; i < theMonth; i++) {
+            for (i = 0; i < theMonth; i =  i + 1) {
                 theDayOfTheYear += monthDays[i];
             }
 
@@ -55,7 +55,7 @@ var GOES = {
 
             theString += i;
 
-            for (j = 0; j < places; j++) {
+            for (j = 0; j < places; j = j + 1) {
                 if (theString.length < places) {
                     theString = "0" + theString;
                 }
@@ -89,7 +89,7 @@ var GOES = {
             var n,
                 enhancementCode = "rb";
 
-            for (n = 0; n < GOES.theEnhancement.length; n++) {
+            for (n = 0; n < GOES.theEnhancement.length; n = n + 1) {
                 if (GOES.theEnhancement[n].checked) {
                     enhancementCode = GOES.theEnhancement[n].value;
                 }
@@ -172,7 +172,7 @@ var GOES = {
             // that starts then.
             thePast.setHours(thePast.getHours() - 4);
 
-            for (frameNumber = 0; frameNumber < 20; frameNumber++) {
+            for (frameNumber = 0; frameNumber < 20; frameNumber = frameNumber + 1) {
 
                 /** West Coast */
 
@@ -232,7 +232,7 @@ var GOES = {
                     frameLeft.item(f).classList.add("hidden");
                     frameRight.item(f).classList.add("hidden");
 
-                    f++;
+                    f =  f + 1;
 
                     frameLeft.item(f).classList.remove("hidden");
                     frameRight.item(f).classList.remove("hidden");
