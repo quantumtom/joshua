@@ -11,10 +11,6 @@ var GOES = {
 
         "use strict";
 
-        function init() {
-
-        }
-
         /**
          * Takes a date and calculates how many days that date is from
          * January 1.
@@ -201,7 +197,7 @@ var GOES = {
 
                 frameRight.src = getURI(thePast, "east");
 
-                console.log("here");
+                window.console.log("here");
 
                 /** Advance to the next frame's timestamp **/
                 thePast.setMinutes(thePast.getMinutes() + 15);
