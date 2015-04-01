@@ -45,9 +45,9 @@ module.exports = function (grunt) {
                 dest: "build/js/goes.js",
                 options: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
-                    output_wrapper: "(function(){%output%}).call(this);\n//# sourceMappingURL=sourcemap.json",
                     source_map_format: "V3",
-                    create_source_map: "./sourcemap.json"
+                    output_wrapper: "(function(){%output%})();\n//# sourceMap=sourcemap.json",
+                    create_source_map: "./build/sourcemap.json"
                 }
             }
         },
