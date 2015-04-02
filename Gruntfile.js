@@ -123,7 +123,7 @@ module.exports = function (grunt) {
     /**
      * Alias tasks
      */
-    grunt.registerTask('build', ['clean', 'closurecompiler:dist', 'htmlmin', 'cssmin']);
+    grunt.registerTask('default', ['clean', 'closurecompiler:dist', 'htmlmin', 'cssmin']);
 
     grunt.registerTask('dev', ['clean', 'copy:main', 'closurecompiler:debug']);
 
