@@ -37,17 +37,10 @@ module.exports = function (grunt) {
                 src: "src/js/goes.js",
                 dest: "build/js/goes.js",
                 options: {
-                    compilation_level: 'ADVANCED_OPTIMIZATIONS'
-                }
-            },
-            debug: {
-                src: "src/js/goes.js",
-                dest: "build/js/goes.js",
-                options: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
                     source_map_format: "V3",
                     output_wrapper: "(function(){%output%})();\n//# sourceMap=sourcemap.json",
-                    create_source_map: "./build/sourcemap.json"
+                    create_source_map: "build/sourcemap.json"
                 }
             }
         },
@@ -113,20 +106,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-closurecompiler');
-    grunt.loadNpmTasks('grunt-closure-tools');
 
     /**
      * Alias tasks
      */
-    grunt.registerTask('default', ['clean', 'closurecompiler:dist', 'htmlmin', 'cssmin']);
-
-    grunt.registerTask('dev', ['clean', 'copy:main', 'closurecompiler:debug']);
-
-    grunt.registerTask('ccjs', ['clean', 'closurecompiler:debug']);
+    grunt.registerTask('default', ['clean', 'htmlmin', 'cssmin', 'closurecompiler']);
 
 };

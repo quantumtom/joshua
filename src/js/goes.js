@@ -197,8 +197,6 @@ var GOES = {
 
                 frameRight.src = getURI(thePast, "east");
 
-                window.console.log("here");
-
                 /** Advance to the next frame's timestamp **/
                 thePast.setMinutes(thePast.getMinutes() + 15);
 
