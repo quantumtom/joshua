@@ -12,7 +12,8 @@ body {
 }
 
 #metaStuff,
-#panelOne {
+#panelOne,
+#panelTwo {
     left: 0;
     top: 0;
 }
