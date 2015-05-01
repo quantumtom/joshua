@@ -1,12 +1,17 @@
 "use strict";
 
-var GOES = {
+var GOES = {};
+
+GOES = {
     panelOne: document.getElementById("panelOne"),
     panelTwo: document.getElementById("panelTwo"),
     theEnhancement: document.getElementById("theEnhancement"),
     uri: {
-        west: "http://www.ssd.noaa.gov/goes/west/weus/img/",
-        east: "http://www.ssd.noaa.gov/goes/east/eaus/img/"
+        prefix: "http://www.ssd.noaa.gov/goes/",
+        suffix: "/img/",
+        west: "west/weus",
+        east: "east/eaus",
+        full: "comp/nhem"
     },
 
     view: function () {
@@ -105,7 +110,7 @@ var GOES = {
                 theDays = dayOfYear(thePast),
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
-                baseURI = GOES.uri.west;
+                baseURI = GOES.uri.prefix + GOES.uri.west + GOES.uri.suffix;
 
             theDays = padZeroes(theDays, 3);
             theHours = padZeroes(theHours, 2);
@@ -118,7 +123,7 @@ var GOES = {
 
             if (target === "east") {
                 theMinutes = theMinutes + 15;
-                baseURI = GOES.uri.east;
+                baseURI = GOES.uri.prefix + GOES.uri.east + GOES.uri.suffix;
             }
 
             theMinutes = padZeroes(theMinutes, 2);
