@@ -34,8 +34,8 @@ module.exports = function (grunt) {
         },
         closurecompiler: {
             dist: {
-                src: "src/js/goes.js",
-                dest: "build/js/goes.js",
+                src: "src/js/app.js",
+                dest: "build/js/app.js",
                 options: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
                     source_map_format: "V3",
