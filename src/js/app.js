@@ -3,15 +3,12 @@
 var GOES = {};
 
 GOES = {
-    panelOne: document.getElementById("panelOne"),
-    panelTwo: document.getElementById("panelTwo"),
+    panelRoot: document.getElementById("panelRoot"),
     theEnhancement: document.getElementById("theEnhancement"),
+    theMapList: document.getElementById("theMapList"),
     uri: {
         prefix: "http://www.ssd.noaa.gov/goes/",
-        suffix: "/img/",
-        west: "west/weus",
-        east: "east/eaus",
-        full: "comp/nhem"
+        suffix: "/img/"
     },
 
     view: function () {
@@ -110,7 +107,7 @@ GOES = {
                 theDays = dayOfYear(thePast),
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
-                baseURI = GOES.uri.prefix + GOES.uri.west + GOES.uri.suffix;
+                baseURI = GOES.uri.prefix + target + GOES.uri.suffix;
 
             theDays = padZeroes(theDays, 3);
             theHours = padZeroes(theHours, 2);
@@ -121,9 +118,8 @@ GOES = {
              * Handle exceptions between the two sets of imagery.
              **/
 
-            if (target === "east") {
+            if (target === "east/eaus") {
                 theMinutes = theMinutes + 15;
-                baseURI = GOES.uri.prefix + GOES.uri.east + GOES.uri.suffix;
             }
 
             theMinutes = padZeroes(theMinutes, 2);
@@ -136,15 +132,9 @@ GOES = {
          */
         function removeImages() {
 
-            while (GOES.panelOne.firstChild) {
+            while (GOES.panelRoot.firstChild) {
 
-                GOES.panelOne.removeChild(GOES.panelOne.firstChild);
-
-            }
-
-            while (GOES.panelTwo.firstChild) {
-
-                GOES.panelTwo.removeChild(GOES.panelTwo.firstChild);
+                GOES.panelRoot.removeChild(GOES.panelRoot.firstChild);
 
             }
 
@@ -167,11 +157,16 @@ GOES = {
         function load() {
 
             var thePast = new Date(),
+                theMapList = GOES.theMapList[0],
+                theMapPick = theMapList[theMapList.selectedIndex].value,
                 frameNumber,
-                frameLeft,
-                frameRight;
+                frameLeft;
 
             removeImages();
+
+            if (theMapPick === "") {
+                theMapPick = "west/weus";
+            }
 
             // We can get images from the past four hours, so create a date object
             // that starts then.
@@ -179,33 +174,17 @@ GOES = {
 
             for (frameNumber = 0; frameNumber < 20; frameNumber = frameNumber + 1) {
 
-                /** West Coast */
-
                 frameLeft = document.createElement("img");
 
                 frameLeft.classList.add("hidden");
                 frameLeft.classList.add("frameLeft");
 
-                frameLeft.src = getURI(thePast, "west");
+                frameLeft.src = getURI(thePast, theMapPick);
 
-                GOES.panelOne.appendChild(frameLeft);
-
-                /** Advance to the next frame's timestamp **/
-                thePast.setMinutes(thePast.getMinutes() + 15);
-
-                /** East Coast */
-
-                frameRight = document.createElement("img");
-
-                frameRight.classList.add("hidden");
-                frameRight.classList.add("frameRight");
-
-                frameRight.src = getURI(thePast, "east");
+                GOES.panelRoot.appendChild(frameLeft);
 
                 /** Advance to the next frame's timestamp **/
                 thePast.setMinutes(thePast.getMinutes() + 15);
-
-                GOES.panelTwo.appendChild(frameRight);
 
             }
 
@@ -219,8 +198,7 @@ GOES = {
         function animate(f) {
 
             var theInterval = 200,
-                frameLeft = document.getElementsByClassName("frameLeft"),
-                frameRight = document.getElementsByClassName("frameRight");
+                frameLeft = document.getElementsByClassName("frameLeft");
 
             if (!f) {
                 f = 0;
@@ -233,12 +211,10 @@ GOES = {
                 if (f < frameLeft.length - 1) {
 
                     frameLeft.item(f).classList.add("hidden");
-                    frameRight.item(f).classList.add("hidden");
 
                     f =  f + 1;
 
                     frameLeft.item(f).classList.remove("hidden");
-                    frameRight.item(f).classList.remove("hidden");
 
                     animate(f);
 
@@ -247,12 +223,10 @@ GOES = {
                     // Frame 19 (end)
 
                     frameLeft.item(f).classList.add("hidden");
-                    frameRight.item(f).classList.add("hidden");
 
                     // Set the first frame back to visible
 
                     frameLeft.item(0).classList.remove("hidden");
-                    frameRight.item(0).classList.remove("hidden");
 
                     animate(0);
 
@@ -268,6 +242,14 @@ GOES = {
 
         GOES.theEnhancement.addEventListener("click", function () {
             load();
+        });
+
+        GOES.theMapList.addEventListener("change", function () {
+            load();
+        });
+
+        GOES.theMapList.addEventListener("keypress", function (e) {
+            console.dir(e)
         });
 
     }

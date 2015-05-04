@@ -14,7 +14,7 @@ module.exports = function (grunt) {
                     collapseWhitespace: true
                 },
                 files: {
-                    'build/index.html': 'src/index.html'
+                    'src/build/index.html': 'src/index.html'
                 }
             }
         },
@@ -28,31 +28,34 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: 'src',
                     src: ['css/*.css'],
-                    dest: 'build'
+                    dest: 'src/build'
                 }]
             }
         },
         closurecompiler: {
             dist: {
                 src: "src/js/app.js",
-                dest: "build/js/app.js",
+                dest: "src/build/js/app.min.js",
                 options: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
                     source_map_format: "V3",
-                    output_wrapper: "(function(){%output%})();\n//# sourceMap=sourcemap.json",
-                    create_source_map: "build/sourcemap.json"
+                    output_wrapper: "(function(){%output%})();\n//# sourceMappingURL=app.min.js.map",
+                    create_source_map: "./src/build/js/app.min.js.map"
                 }
             }
         },
         watch: {
             dev: {
-                files: ['src/**/*.html', 'src/**/*.css', 'src/**/*.js'],
+                files: ['src/*.html', 'src/css/*', 'src/js/*'],
                 tasks: ['default']
             }
         },
         clean: {
             build: {
-                src: ["build"]
+                src: [
+                    "src/build/css/*",
+                    "src/build/js/*",
+                    "src/build/*.html"]
             }
         }
 

@@ -5,24 +5,27 @@ body {
     width: 1164px;
 }
 
-#metaStuff,
-#panelOne,
-#panelTwo {
-    position:absolute;
+#theEnhancement legend {
+    font-size: 100%;
+}
+
+.panel {
+    float: left;
+    overflow-y: hidden;
+    height: 480px;
+    margin:0;
+    width:720px;
 }
 
 #metaStuff,
-#panelOne,
-#panelTwo {
+#panelRoot {
+    position:absolute;
     left: 0;
     top: 0;
 }
 
 #metaStuff {
     z-index: 10;
-}
-
-#metaStuff {
     color: white;
     font-family: Tahoma, Verdana, Arial, Helvetica, Futura, sans-serif;
     text-shadow: black 0.1em 0.1em 0.2em;
@@ -30,10 +33,6 @@ body {
 
 #metaStuff a {
     color: white;
-}
-
-#theEnhancement legend {
-    font-size: 100%;
 }
 
 #metaStuff fieldset {
@@ -49,26 +48,6 @@ body {
 #aboutSection p,
 #aboutSection  ul {
     font-size: 75%;
-}
-
-.panel {
-    float: left;
-    overflow-y: hidden;
-    height: 480px;
-    margin:0;
-    width:720px;
-}
-
-#panelOne {
-    left: 0;
-    overflow: hidden;
-    width:512px;
-    z-index:5;
-}
-
-#panelTwo {
-    left: 512px;
-    z-index: 4;
 }
 
 .hidden {

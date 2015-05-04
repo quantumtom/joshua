@@ -10,21 +10,22 @@
 
 <body>
 
-<div id="panelRoot">
-    <div id="panelOne" class="panel"></div>
-    <div id="panelTwo" class="panel"></div>
-</div>
+<div id="panelRoot" class="panel"></div>
 
 <div id="metaStuff">
-    <form id="theMap">
-
+    <form id="theMapList">
+        <select>
+            <option value="west/weus">Western US</option>
+            <option value="east/eaus">Eastern US</option>
+            <option value="comp/nhem">North America</option>
+        </select>
     </form>
 
     <form id="theEnhancement">
         <fieldset>
             <legend>Visual Enhancements</legend>
             <p>
-                <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_00" value="rb" />
+                <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_00" value="rb" checked="checked" />
                 <label for="enhancement_00">Rainbow</label>
             </p>
             <p>
@@ -60,15 +61,15 @@
                 <label for="enhancement_08">Shortwave</label>
             </p>
             <p>
-                <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_09" value="wv" checked="checked" />
+                <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_09" value="wv" />
                 <label for="enhancement_09">Water Vapor</label>
             </p>
         </fieldset>
     </form>
 
-</div>// <!-- div#metaStuff -->
+</div>
 
-<script src="js/app.js"></script>
+<script src="js/app.min.js"></script>
 
 </body>
 
