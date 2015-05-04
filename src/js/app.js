@@ -4,7 +4,7 @@ var GOES = {};
 
 GOES = {
     panelRoot: document.getElementById("panelRoot"),
-    theEnhancement: document.getElementById("theEnhancement"),
+    theColorList: document.getElementById("theColorList"),
     theMapList: document.getElementById("theMapList"),
     uri: {
         prefix: "http://www.ssd.noaa.gov/goes/",
@@ -87,17 +87,15 @@ GOES = {
             return YYYY + DDD + "_" + HH + MM;
         }
 
-        function getEnhancement() {
-            var n,
-                enhancementCode = "rb";
+        function getColor() {
+            var theColorList = GOES.theColorList,
+                theColorPick = theColorList[theColorList.selectedIndex].value;
 
-            for (n = 0; n < GOES.theEnhancement.length; n = n + 1) {
-                if (GOES.theEnhancement[n].checked) {
-                    enhancementCode = GOES.theEnhancement[n].value;
-                }
+            if (theColorPick === "") {
+                theColorPick = "rb";
             }
 
-            return enhancementCode;
+            return theColorPick;
 
         }
 
@@ -116,28 +114,25 @@ GOES = {
 
             /**
              * Handle exceptions between the two sets of imagery.
+             * The GOES-East delivers images 15 minutes after GOES-West.
              **/
 
-            if (target === "east/eaus") {
+            if (target.search("east") >= 0) {
                 theMinutes = theMinutes + 15;
             }
 
             theMinutes = padZeroes(theMinutes, 2);
 
-            return baseURI + getTimeStamp(theYear, theDays, theHours, theMinutes) + getEnhancement() + ".jpg";
+            return baseURI + getTimeStamp(theYear, theDays, theHours, theMinutes) + getColor() + ".jpg";
         }
 
         /**
          * Removes all the image elements from the page.
          */
         function removeImages() {
-
             while (GOES.panelRoot.firstChild) {
-
                 GOES.panelRoot.removeChild(GOES.panelRoot.firstChild);
-
             }
-
         }
 
         /**
@@ -157,7 +152,7 @@ GOES = {
         function load() {
 
             var thePast = new Date(),
-                theMapList = GOES.theMapList[0],
+                theMapList = GOES.theMapList,
                 theMapPick = theMapList[theMapList.selectedIndex].value,
                 frameNumber,
                 frameLeft;
@@ -176,10 +171,13 @@ GOES = {
 
                 frameLeft = document.createElement("img");
 
+                frameLeft.src = getURI(thePast, theMapPick);
+
                 frameLeft.classList.add("hidden");
                 frameLeft.classList.add("frameLeft");
-
-                frameLeft.src = getURI(thePast, theMapPick);
+                frameLeft.setAttribute("alt", "Image " + frameNumber + " unavailable.");
+                frameLeft.setAttribute("height", "480");
+                frameLeft.setAttribute("width", "720");
 
                 GOES.panelRoot.appendChild(frameLeft);
 
@@ -240,16 +238,12 @@ GOES = {
 
         animate(0);
 
-        GOES.theEnhancement.addEventListener("click", function () {
-            load();
-        });
-
         GOES.theMapList.addEventListener("change", function () {
             load();
         });
 
-        GOES.theMapList.addEventListener("keypress", function (e) {
-            console.dir(e)
+        GOES.theColorList.addEventListener("change", function () {
+            load();
         });
 
     }
