@@ -1,4 +1,31 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: app.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
  * @license MIT
  *
  * @module APP
@@ -13,9 +40,8 @@ APP = {
     theColorList: document.getElementById("theColorList"),
     theMapList: document.getElementById("theMapList"),
     uri: {
-        medium: "img/",
-        domain: "http://www.ssd.noaa.gov/",
-        system: "goes/"
+        prefix: "http://www.ssd.noaa.gov/GOES/",
+        suffix: "/img/"
     },
 
     view: function () {
@@ -39,7 +65,7 @@ APP = {
                 monthDays[1] = 28;
             }
 
-            for (i = 0; i < theMonth; i =  i + 1) {
+            for (i = 0; i &lt; theMonth; i =  i + 1) {
                 theDayOfTheYear += monthDays[i];
             }
 
@@ -64,8 +90,8 @@ APP = {
 
             theString += i;
 
-            for (j = 0; j < places; j = j + 1) {
-                if (theString.length < places) {
+            for (j = 0; j &lt; places; j = j + 1) {
+                if (theString.length &lt; places) {
                     theString = "0" + theString;
                 }
             }
@@ -112,10 +138,7 @@ APP = {
                 theDays = dayOfYear(thePast),
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
-                baseURI = APP.uri.domain
-                    + APP.uri.system
-                    + target + "/"
-                    + APP.uri.medium;
+                baseURI = APP.uri.prefix + target + APP.uri.suffix;
 
             theDays = padZeroes(theDays, 3);
             theHours = padZeroes(theHours, 2);
@@ -165,7 +188,7 @@ APP = {
                 theMapList = APP.theMapList,
                 theMapPick = theMapList[theMapList.selectedIndex].value,
                 frameNumber,
-                frame;
+                frameLeft;
 
             removeImages();
 
@@ -177,17 +200,19 @@ APP = {
             // that starts then.
             thePast.setHours(thePast.getHours() - 4);
 
-            for (frameNumber = 0; frameNumber < 20; frameNumber = frameNumber + 1) {
+            for (frameNumber = 0; frameNumber &lt; 20; frameNumber = frameNumber + 1) {
 
-                frame = document.createElement("img");
+                frameLeft = document.createElement("img");
 
-                frame.src = getURI(thePast, theMapPick);
+                frameLeft.src = getURI(thePast, theMapPick);
 
-                frame.classList.add("hidden");
-                frame.classList.add("frame");
-                frame.setAttribute("alt", "Image " + frameNumber + " unavailable.");
+                frameLeft.classList.add("hidden");
+                frameLeft.classList.add("frameLeft");
+                frameLeft.setAttribute("alt", "Image " + frameNumber + " unavailable.");
+                frameLeft.setAttribute("height", "480");
+                frameLeft.setAttribute("width", "720");
 
-                APP.panelRoot.appendChild(frame);
+                APP.panelRoot.appendChild(frameLeft);
 
                 /** Advance to the next frame's timestamp **/
                 thePast.setMinutes(thePast.getMinutes() + 15);
@@ -204,7 +229,7 @@ APP = {
         function animate(f) {
 
             var theInterval = 200,
-                frame = document.getElementsByClassName("frame");
+                frameLeft = document.getElementsByClassName("frameLeft");
 
             if (!f) {
                 f = 0;
@@ -214,13 +239,13 @@ APP = {
 
                 // Frames 1 - 18
 
-                if (f < frame.length - 1) {
+                if (f &lt; frameLeft.length - 1) {
 
-                    frame.item(f).classList.add("hidden");
+                    frameLeft.item(f).classList.add("hidden");
 
                     f =  f + 1;
 
-                    frame.item(f).classList.remove("hidden");
+                    frameLeft.item(f).classList.remove("hidden");
 
                     animate(f);
 
@@ -228,11 +253,11 @@ APP = {
 
                     // Frame 19 (end)
 
-                    frame.item(f).classList.add("hidden");
+                    frameLeft.item(f).classList.add("hidden");
 
                     // Set the first frame back to visible
 
-                    frame.item(0).classList.remove("hidden");
+                    frameLeft.item(0).classList.remove("hidden");
 
                     animate(0);
 
@@ -259,3 +284,26 @@ APP = {
 };
 
 APP.view();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-APP.html">APP</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue May 05 2015 09:29:30 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

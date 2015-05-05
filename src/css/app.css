@@ -1,53 +1,37 @@
 body {
     background: #000;
-    overflow-x: scroll;
+    height: 100%;
     margin: auto;
-    width: 1164px;
+    position: absolute;
+    width: 100%;
 }
 
-#theEnhancement legend {
-    font-size: 100%;
+#metaStuff {
+    color: white;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+#panelRoot,
+#metaStuff {
+    text-align: center;
+}
+
+#panelRoot {
+    left: 0;
+    position: relative;
+    top: 30px;
 }
 
 .panel {
     float: left;
-    overflow-y: hidden;
-    height: 480px;
     margin:0;
-    width:720px;
+    width: 100%;
 }
 
-#metaStuff,
-#panelRoot {
-    position:absolute;
-    left: 0;
-    top: 0;
-}
-
-#metaStuff {
-    z-index: 10;
-    color: white;
-    font-family: Tahoma, Verdana, Arial, Helvetica, Futura, sans-serif;
-    text-shadow: black 0.1em 0.1em 0.2em;
-}
-
-#metaStuff a {
-    color: white;
-}
-
-#metaStuff fieldset {
-    border: none;
-}
-
-#metaStuff p,
-#aboutSection p {
-    font-size: 75%;
-    margin: 5px;
-}
-
-#aboutSection p,
-#aboutSection  ul {
-    font-size: 75%;
+.frame {
+    vertical-align: middle;
 }
 
 .hidden {

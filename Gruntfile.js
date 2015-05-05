@@ -35,19 +35,25 @@ module.exports = function (grunt) {
         closurecompiler: {
             dist: {
                 src: "src/js/app.js",
-                dest: "src/build/js/app.min.js",
+                dest: "src/build/js/app.js",
                 options: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
                     source_map_format: "V3",
-                    output_wrapper: "(function(){%output%})();\n//# sourceMappingURL=app.min.js.map",
-                    create_source_map: "./src/build/js/app.min.js.map"
+                    output_wrapper: "(function(){%output%})();\n//# sourceMappingURL=app.js.map",
+                    create_source_map: "./src/build/js/app.js.map"
                 }
             }
         },
         watch: {
             dev: {
                 files: ['src/*.html', 'src/css/*', 'src/js/*'],
-                tasks: ['default']
+                tasks: ['minimal']
+            }
+        },
+        jsdoc : {
+            dist : {
+                src: 'src/js/app.js',
+                dest: 'src/build/doc/'
             }
         },
         clean: {
@@ -66,10 +72,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-closurecompiler');
+    grunt.loadNpmTasks('grunt-jsdoc');
 
     /**
      * Alias tasks
      */
-    grunt.registerTask('default', ['clean', 'htmlmin', 'cssmin', 'closurecompiler']);
+    grunt.registerTask('default', ['clean', 'jsdoc', 'htmlmin', 'cssmin', 'closurecompiler']);
+    grunt.registerTask('minimal', ['clean', 'htmlmin', 'cssmin', 'closurecompiler']);
 
 };
