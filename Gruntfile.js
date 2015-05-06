@@ -14,7 +14,7 @@ module.exports = function (grunt) {
                     collapseWhitespace: true
                 },
                 files: {
-                    'src/build/index.html': 'src/index.html'
+                    'build/index.html': 'src/index.html'
                 }
             }
         },
@@ -28,7 +28,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: 'src',
                     src: ['css/*.css'],
-                    dest: 'src/build'
+                    dest: 'build'
                 }]
             }
         },
@@ -38,7 +38,7 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         src: 'src/js/*',
-                        dest: 'src/build/js/'
+                        dest: 'build/js/'
                     }
 
                 ]
@@ -48,7 +48,7 @@ module.exports = function (grunt) {
             dist: {
                 closurePath: '/usr/local/opt/closure-compiler/libexec/',
                 js: "src/js/app.js",
-                jsOutputFile: "src/build/js/app.js",
+                jsOutputFile: "build/js/app.js",
                 maxBuffer: 500,
                 options: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
                     warning_level: 'VERBOSE',
                     source_map_format: "V3",
                     output_wrapper: "(function(){%output%}).call(window);\n//# sourceMappingURL=app.js.map",
-                    create_source_map: "src/build/js/app.js.map"
+                    create_source_map: "build/js/app.js.map"
                 }
             }
         },
@@ -74,15 +74,15 @@ module.exports = function (grunt) {
         jsdoc : {
             dist : {
                 src: 'src/js/app.js',
-                dest: 'src/build/doc/'
+                dest: 'build/doc/'
             }
         },
         clean: {
             build: {
                 src: [
-                    "src/build/css/*",
-                    "src/build/js/*",
-                    "src/build/*.html"]
+                    "build/css/*",
+                    "build/js/*",
+                    "build/*.html"]
             }
         }
 
