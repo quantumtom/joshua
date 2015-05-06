@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Realtime Weather Satellite (GOES) Imagery</title>
-    <meta name="viewport" content="width=device-width, initial-scale=2.0, minimum-scale=.5, maximum-scale=4.0, user-scalable=yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=.5, minimum-scale=.5, maximum-scale=1.0, user-scalable=yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <link type="text/css" rel="stylesheet" href="css/app.css" />
@@ -14,41 +14,30 @@
     <form>
         <label for="theMapList">Map List</label>
         <select id="theMapList">
-            <option value="east/tatl">Tropical Atlantic</option>
-            <option value="comp/nhem">Continental US</option>
-            <option value="flt/t6">Southern Japan (Okinawa)</option>
-            <optgroup label="Western US">
-                <option value="west/weus">Western US</option>
-                <option value="west/nw">Northwest</option>
-                <option value="west/wc">Mid-Pacific</option>
-                <option value="west/sw">Southwest</option>
+            <option value="goes/comp/nhem">Continental US</option>
+            <optgroup label="Ocean Tropics (wide-view)">
+                <option value="mtsat/twpac">West Pacific</option>
+                <option value="goes/west/tpac">East Pacific</option>
+                <option value="goes/east/tatl">West Atlantic</option>
             </optgroup>
-            <optgroup label="Weather Forecast Offices">
-                <option value="west/wfo/byz">Billings, MT</option>
-                <option value="west/wfo/boi">Boise, ID</option>
-                <option value="west/wfo/lkn">Elko, NV</option>
-                <option value="west/wfo/eka">Eureka, CA</option>
-                <option value="west/wfo/fgz">Flagstaff, AZ</option>
-                <option value="west/wfo/ggw">Glasgow, MT</option>
-                <option value="west/wfo/tfx">Great Falls, MT</option>
-                <option value="west/wfo/hnx">Hanford/
-                    San Joaquin Valley, CA</option>
-                <option value="west/wfo/vef">Las Vegas, NV</option>
-                <option value="west/wfo/lox">Los Angeles/Oxnard, CA</option>
-                <option value="west/wfo/sgx">San Diego, CA</option>
+            <optgroup label="Western US">
+                <option value="goes/west/weus">Western US</option>
+                <option value="goes/west/nw">Northwest</option>
+                <option value="goes/west/wc">Mid-Pacific</option>
+                <option value="goes/west/sw">Southwest</option>
             </optgroup>
             <optgroup label="Central US">
-                <option value="west/np">Northern Plains</option>
-                <option value="west/cp">Central Plains</option>
-                <option value="east/sc">Southern Plains</option>
+                <option value="goes/west/np">Northern Plains</option>
+                <option value="goes/west/cp">Central Plains</option>
+                <option value="goes/east/sc">Southern Plains</option>
             </optgroup>
             <optgroup label="Eastern US">
-                <option value="east/eaus">Eastern US</option>
-                <option value="east/gl">Great Lakes</option>
-                <option value="east/mw">Midwest</option>
-                <option value="east/ne">Northeast</option>
-                <option value="east/ma">Mid-Atlantic</option>
-                <option value="east/se">Southeast</option>
+                <option value="goes/east/eaus">Eastern US</option>
+                <option value="goes/east/gl">Great Lakes</option>
+                <option value="goes/east/mw">Midwest</option>
+                <option value="goes/east/ne">Northeast</option>
+                <option value="goes/east/ma">Mid-Atlantic</option>
+                <option value="goes/east/se">Southeast</option>
             </optgroup>
         </select>
 

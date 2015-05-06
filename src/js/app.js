@@ -14,8 +14,7 @@ APP = {
     theMapList: document.getElementById("theMapList"),
     uri: {
         medium: "img/",
-        domain: "http://www.ssd.noaa.gov/",
-        system: "goes/"
+        domain: "http://www.ssd.noaa.gov/"
     },
 
     view: function () {
@@ -74,22 +73,6 @@ APP = {
 
         }
 
-        /**
-         * Takes a value between 0 - 59 and returns either the
-         * bottom or top half of the hour.
-         * @param m
-         * @returns {number}
-         */
-        function parseMinutes(m) {
-
-            m = m / 30;
-
-            m = Math.floor(m);
-
-            return m * 30;
-
-        }
-
         function getTimeStamp(YYYY, DDD, HH, MM) {
             return YYYY + DDD + "_" + HH + MM;
         }
@@ -106,31 +89,65 @@ APP = {
 
         }
 
+        /**
+         * Takes a value between 0 - 59 and returns either the
+         * bottom or top half of the hour.
+         * @param m
+         * @param p
+         * @returns {number}
+         */
+        function parseMinutes(m, p) {
+
+            m = m / p;
+
+            m = Math.floor(m);
+
+            return m * p;
+
+        }
+
         function getURI(thePast, target) {
 
             var theYear = thePast.getFullYear(),
                 theDays = dayOfYear(thePast),
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
-                baseURI = APP.uri.domain
-                    + APP.uri.system
-                    + target + "/"
-                    + APP.uri.medium;
+                baseURI = APP.uri.domain + target + "/" + APP.uri.medium,
+                thePeriod = 30,
+                theOffset = 0;
 
             theDays = padZeroes(theDays, 3);
             theHours = padZeroes(theHours, 2);
 
-            theMinutes = parseMinutes(theMinutes);
-
             /**
-             * Handle exceptions between the two sets of imagery.
-             * The GOES-East delivers images 15 minutes after GOES-West.
+             * Handle differences in the timing between the satellite
+             * image delivery.
+             *
+             * GOES-West: 0
+             * GOES-East: 15
+             * MTSAT: 32
+             *
              **/
 
-            if (target.search("east") >= 0) {
-                theMinutes = theMinutes + 15;
+            if (target.search("mtsat") >= 0) {
+                thePeriod = 59;
+                theOffset = 32;
             }
 
+            if (target.search("east") >= 0) {
+                theOffset = 15;
+            }
+
+            theMinutes = parseMinutes(theMinutes, thePeriod);
+
+            /**
+             * Add the offfset.
+             */
+            theMinutes = theMinutes + theOffset;
+
+            /**
+             *  Add a leading zero if the _minutes_ value is a single-digit.
+             */
             theMinutes = padZeroes(theMinutes, 2);
 
             return baseURI + getTimeStamp(theYear, theDays, theHours, theMinutes) + getColor() + ".jpg";
@@ -169,10 +186,6 @@ APP = {
 
             removeImages();
 
-            if (theMapPick === "") {
-                theMapPick = "west/weus";
-            }
-
             // We can get images from the past four hours, so create a date object
             // that starts then.
             thePast.setHours(thePast.getHours() - 4);
@@ -190,7 +203,7 @@ APP = {
                 APP.panelRoot.appendChild(frame);
 
                 /** Advance to the next frame's timestamp **/
-                thePast.setMinutes(thePast.getMinutes() + 15);
+                thePast.setMinutes(thePast.getMinutes() + 30);
 
             }
 
@@ -203,7 +216,7 @@ APP = {
          */
         function animate(f) {
 
-            var theInterval = 200,
+            var theInterval = 133,
                 frame = document.getElementsByClassName("frame");
 
             if (!f) {
