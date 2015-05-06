@@ -37,7 +37,9 @@ APP = {
                 theDayOfTheYear = 0,
                 i;
 
-            // Check for leap year
+            /**
+             * Check for leap year.
+             */
             if (myDate.getYear() % 4) {
                 monthDays[1] = 28;
             }
