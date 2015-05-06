@@ -9,15 +9,13 @@
 var APP = {};
 
 APP = {
-    panelRoot: document.getElementById("panelRoot"),
-    theColorList: document.getElementById("theColorList"),
-    theMapList: document.getElementById("theMapList"),
-    uri: {
-        medium: "img/",
-        domain: "http://www.ssd.noaa.gov/"
-    },
+    init: function () {
 
-    view: function () {
+        APP.view = {
+            panelRoot: document.getElementById("panelRoot"),
+            theColorList: document.getElementById("theColorList"),
+            theMapList: document.getElementById("theMapList")
+        };
 
         /**
          * Takes a date and calculates how many days that date is from
@@ -78,7 +76,7 @@ APP = {
         }
 
         function getColor() {
-            var theColorList = APP.theColorList,
+            var theColorList = APP.view.theColorList,
                 theColorPick = theColorList[theColorList.selectedIndex].value;
 
             if (theColorPick === "") {
@@ -112,7 +110,7 @@ APP = {
                 theDays = dayOfYear(thePast),
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
-                baseURI = APP.uri.domain + target + "/" + APP.uri.medium,
+                baseURI = "http://www.ssd.noaa.gov/" + target + "/img/",
                 thePeriod = 30,
                 theOffset = 0;
 
@@ -157,8 +155,8 @@ APP = {
          * Removes all the image elements from the page.
          */
         function removeImages() {
-            while (APP.panelRoot.firstChild) {
-                APP.panelRoot.removeChild(APP.panelRoot.firstChild);
+            while (APP.view.panelRoot.firstChild) {
+                APP.view.panelRoot.removeChild(APP.view.panelRoot.firstChild);
             }
         }
 
@@ -179,7 +177,7 @@ APP = {
         function load() {
 
             var thePast = new Date(),
-                theMapList = APP.theMapList,
+                theMapList = APP.view.theMapList,
                 theMapPick = theMapList[theMapList.selectedIndex].value,
                 frameNumber,
                 frame;
@@ -200,7 +198,7 @@ APP = {
                 frame.classList.add("frame");
                 frame.setAttribute("alt", "Image " + frameNumber + " unavailable.");
 
-                APP.panelRoot.appendChild(frame);
+                APP.view.panelRoot.appendChild(frame);
 
                 /** Advance to the next frame's timestamp **/
                 thePast.setMinutes(thePast.getMinutes() + 30);
@@ -259,11 +257,11 @@ APP = {
 
         animate(0);
 
-        APP.theMapList.addEventListener("change", function () {
+        APP.view.theMapList.addEventListener("change", function () {
             load();
         });
 
-        APP.theColorList.addEventListener("change", function () {
+        APP.view.theColorList.addEventListener("change", function () {
             load();
         });
 
@@ -271,4 +269,4 @@ APP = {
 
 };
 
-APP.view();
+APP.init();
