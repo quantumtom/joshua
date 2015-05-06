@@ -17,6 +17,12 @@ APP = {
             theMapList: document.getElementById("theMapList")
         };
 
+        APP.run();
+
+    },
+
+    run: function () {
+
         /**
          * Takes a date and calculates how many days that date is from
          * January 1.
@@ -221,9 +227,15 @@ APP = {
                 f = 0;
             }
 
+            /**
+             * This is sort of a hybrid for-while loop.
+             */
+
             setTimeout(function () {
 
-                // Frames 1 - 18
+                /**
+                 * Run through all but the final frame.
+                 */
 
                 if (f < frame.length - 1) {
 
@@ -237,13 +249,21 @@ APP = {
 
                 } else {
 
-                    // Frame 19 (end)
+                    /**
+                     * Last frame (19)
+                     */
 
                     frame.item(f).classList.add("hidden");
 
-                    // Set the first frame back to visible
+                    /**
+                     * Set the first frame back to visible.
+                     */
 
                     frame.item(0).classList.remove("hidden");
+
+                    /**
+                     * Call this function recursively to loop it.
+                     */
 
                     animate(0);
 
