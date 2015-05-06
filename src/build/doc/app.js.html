@@ -36,15 +36,19 @@
 var APP = {};
 
 APP = {
-    panelRoot: document.getElementById("panelRoot"),
-    theColorList: document.getElementById("theColorList"),
-    theMapList: document.getElementById("theMapList"),
-    uri: {
-        prefix: "http://www.ssd.noaa.gov/GOES/",
-        suffix: "/img/"
+    init: function () {
+
+        APP.view = {
+            panelRoot: document.getElementById("panelRoot"),
+            theColorList: document.getElementById("theColorList"),
+            theMapList: document.getElementById("theMapList")
+        };
+
+        APP.run();
+
     },
 
-    view: function () {
+    run: function () {
 
         /**
          * Takes a date and calculates how many days that date is from
@@ -60,7 +64,9 @@ APP = {
                 theDayOfTheYear = 0,
                 i;
 
-            // Check for leap year
+            /**
+             * Check for leap year.
+             */
             if (myDate.getYear() % 4) {
                 monthDays[1] = 28;
             }
@@ -100,28 +106,12 @@ APP = {
 
         }
 
-        /**
-         * Takes a value between 0 - 59 and returns either the
-         * bottom or top half of the hour.
-         * @param m
-         * @returns {number}
-         */
-        function parseMinutes(m) {
-
-            m = m / 30;
-
-            m = Math.floor(m);
-
-            return m * 30;
-
-        }
-
         function getTimeStamp(YYYY, DDD, HH, MM) {
             return YYYY + DDD + "_" + HH + MM;
         }
 
         function getColor() {
-            var theColorList = APP.theColorList,
+            var theColorList = APP.view.theColorList,
                 theColorPick = theColorList[theColorList.selectedIndex].value;
 
             if (theColorPick === "") {
@@ -132,28 +122,65 @@ APP = {
 
         }
 
+        /**
+         * Takes a value between 0 - 59 and returns either the
+         * bottom or top half of the hour.
+         * @param m
+         * @param p
+         * @returns {number}
+         */
+        function parseMinutes(m, p) {
+
+            m = m / p;
+
+            m = Math.floor(m);
+
+            return m * p;
+
+        }
+
         function getURI(thePast, target) {
 
             var theYear = thePast.getFullYear(),
                 theDays = dayOfYear(thePast),
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
-                baseURI = APP.uri.prefix + target + APP.uri.suffix;
+                baseURI = "http://www.ssd.noaa.gov/" + target + "/img/",
+                thePeriod = 30,
+                theOffset = 0;
 
             theDays = padZeroes(theDays, 3);
             theHours = padZeroes(theHours, 2);
 
-            theMinutes = parseMinutes(theMinutes);
-
             /**
-             * Handle exceptions between the two sets of imagery.
-             * The GOES-East delivers images 15 minutes after GOES-West.
+             * Handle differences in the timing between the satellite
+             * image delivery.
+             *
+             * GOES-West: 0
+             * GOES-East: 15
+             * MTSAT: 32
+             *
              **/
 
-            if (target.search("east") >= 0) {
-                theMinutes = theMinutes + 15;
+            if (target.search("mtsat") >= 0) {
+                thePeriod = 59;
+                theOffset = 32;
             }
 
+            if (target.search("east") >= 0) {
+                theOffset = 15;
+            }
+
+            theMinutes = parseMinutes(theMinutes, thePeriod);
+
+            /**
+             * Add the offfset.
+             */
+            theMinutes = theMinutes + theOffset;
+
+            /**
+             *  Add a leading zero if the _minutes_ value is a single-digit.
+             */
             theMinutes = padZeroes(theMinutes, 2);
 
             return baseURI + getTimeStamp(theYear, theDays, theHours, theMinutes) + getColor() + ".jpg";
@@ -163,8 +190,8 @@ APP = {
          * Removes all the image elements from the page.
          */
         function removeImages() {
-            while (APP.panelRoot.firstChild) {
-                APP.panelRoot.removeChild(APP.panelRoot.firstChild);
+            while (APP.view.panelRoot.firstChild) {
+                APP.view.panelRoot.removeChild(APP.view.panelRoot.firstChild);
             }
         }
 
@@ -185,37 +212,33 @@ APP = {
         function load() {
 
             var thePast = new Date(),
-                theMapList = APP.theMapList,
+                theMapList = APP.view.theMapList,
                 theMapPick = theMapList[theMapList.selectedIndex].value,
                 frameNumber,
-                frameLeft;
+                frame;
 
             removeImages();
 
-            if (theMapPick === "") {
-                theMapPick = "west/weus";
-            }
+            /**
+             * We can get images from the past four hours, so create a date object that starts at that point in time.
+             */
 
-            // We can get images from the past four hours, so create a date object
-            // that starts then.
             thePast.setHours(thePast.getHours() - 4);
 
             for (frameNumber = 0; frameNumber &lt; 20; frameNumber = frameNumber + 1) {
 
-                frameLeft = document.createElement("img");
+                frame = document.createElement("img");
 
-                frameLeft.src = getURI(thePast, theMapPick);
+                frame.src = getURI(thePast, theMapPick);
 
-                frameLeft.classList.add("hidden");
-                frameLeft.classList.add("frameLeft");
-                frameLeft.setAttribute("alt", "Image " + frameNumber + " unavailable.");
-                frameLeft.setAttribute("height", "480");
-                frameLeft.setAttribute("width", "720");
+                frame.classList.add("hidden");
+                frame.classList.add("frame");
+                frame.setAttribute("alt", "Image " + frameNumber + " unavailable.");
 
-                APP.panelRoot.appendChild(frameLeft);
+                APP.view.panelRoot.appendChild(frame);
 
                 /** Advance to the next frame's timestamp **/
-                thePast.setMinutes(thePast.getMinutes() + 15);
+                thePast.setMinutes(thePast.getMinutes() + 30);
 
             }
 
@@ -228,36 +251,50 @@ APP = {
          */
         function animate(f) {
 
-            var theInterval = 200,
-                frameLeft = document.getElementsByClassName("frameLeft");
+            var theInterval = 133,
+                frame = document.getElementsByClassName("frame");
 
             if (!f) {
                 f = 0;
             }
 
+            /**
+             * This is sort of a hybrid for-while loop.
+             */
+
             setTimeout(function () {
 
-                // Frames 1 - 18
+                /**
+                 * Run through all but the final frame.
+                 */
 
-                if (f &lt; frameLeft.length - 1) {
+                if (f &lt; frame.length - 1) {
 
-                    frameLeft.item(f).classList.add("hidden");
+                    frame.item(f).classList.add("hidden");
 
                     f =  f + 1;
 
-                    frameLeft.item(f).classList.remove("hidden");
+                    frame.item(f).classList.remove("hidden");
 
                     animate(f);
 
                 } else {
 
-                    // Frame 19 (end)
+                    /**
+                     * Last frame (19)
+                     */
 
-                    frameLeft.item(f).classList.add("hidden");
+                    frame.item(f).classList.add("hidden");
 
-                    // Set the first frame back to visible
+                    /**
+                     * Set the first frame back to visible.
+                     */
 
-                    frameLeft.item(0).classList.remove("hidden");
+                    frame.item(0).classList.remove("hidden");
+
+                    /**
+                     * Call this function recursively to loop it.
+                     */
 
                     animate(0);
 
@@ -271,11 +308,11 @@ APP = {
 
         animate(0);
 
-        APP.theMapList.addEventListener("change", function () {
+        APP.view.theMapList.addEventListener("change", function () {
             load();
         });
 
-        APP.theColorList.addEventListener("change", function () {
+        APP.view.theColorList.addEventListener("change", function () {
             load();
         });
 
@@ -283,7 +320,7 @@ APP = {
 
 };
 
-APP.view();
+APP.init();
 </code></pre>
         </article>
     </section>
@@ -300,7 +337,7 @@ APP.view();
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue May 05 2015 09:29:30 GMT-0700 (PDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed May 06 2015 14:26:09 GMT-0700 (PDT)
 </footer>
 
 <script> prettyPrint(); </script>
