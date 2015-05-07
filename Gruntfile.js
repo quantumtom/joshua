@@ -32,79 +32,57 @@ module.exports = function (grunt) {
                 }]
             }
         },
-        closurecompiler: {
+        copy: {
+            js: {
+                files: [
+                    {
+                        expand: true,
+                        src: 'src/js/*',
+                        dest: 'build/js/'
+                    }
+
+                ]
+            }
+        },
+        'closure-compiler': {
             dist: {
-                src: "src/js/goes.js",
-                dest: "build/js/goes.js",
-                options: {
-                    compilation_level: 'ADVANCED_OPTIMIZATIONS'
-                }
-            },
-            debug: {
-                src: "src/js/goes.js",
-                dest: "build/js/goes.js",
+                closurePath: '/usr/local/opt/closure-compiler/libexec/',
+                js: "src/js/app.js",
+                jsOutputFile: "build/js/app.js",
+                maxBuffer: 500,
                 options: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
+                    language_in: 'ECMASCRIPT5_STRICT',
+                    warning_level: 'VERBOSE',
                     source_map_format: "V3",
-                    output_wrapper: "(function(){%output%})();\n//# sourceMap=sourcemap.json",
-                    create_source_map: "./build/sourcemap.json"
+                    output_wrapper: "(function(){%output%}).call(window);\n//# sourceMappingURL=app.js.map",
+                    create_source_map: "build/js/app.js.map"
                 }
-            }
-        },
-        concat: {
-            js: {
-                src: ['src/js/*.js'],
-                dest: ['build/js/<%= pkg.name %>.js']
-            },
-            css: {
-                src: ['src/css/*.css'],
-                dest: ['build/css/<%= pkg.name %>.css']
-            }
-        },
-        copy: {
-            main: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'src/',
-                        src: ['index.html', 'js/*.js', 'css/*.css'],
-                        dest: 'build/'
-                    }
-                ]
-            },
-            js: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'src/',
-                        src: ['js/**'],
-                        dest: 'build/'
-                    }
-                ]
-
             }
         },
         watch: {
             dev: {
-                files: ['src/**/*.html', 'src/**/*.css', 'src/**/*.js'],
-                tasks: ['ccjs']
+                files: [
+                    'src/*.html',
+                    'src/css/*',
+                    'src/js/*',
+                    'Gruntfile.js'
+                ],
+                tasks: ['minimal']
             }
         },
-        jshint: {
-            files: ['src/**/*.js'],
-            options: {
-                // options here to override JSHint defaults
-                globals: {
-                    jQuery: true,
-                    console: true,
-                    module: true,
-                    document: true
-                }
+        jsdoc : {
+            dist : {
+                src: 'src/js/app.js',
+                dest: 'build/doc/'
             }
         },
         clean: {
             build: {
-                src: ["build"]
+                src: [
+                    "build/css/*",
+                    "build/js/*",
+                    "build/*.html"]
             }
         }
 
@@ -112,21 +90,16 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-closurecompiler');
-    grunt.loadNpmTasks('grunt-closure-tools');
+    grunt.loadNpmTasks('grunt-closure-compiler');
+    grunt.loadNpmTasks('grunt-jsdoc');
 
     /**
      * Alias tasks
      */
-    grunt.registerTask('default', ['clean', 'closurecompiler:dist', 'htmlmin', 'cssmin']);
-
-    grunt.registerTask('dev', ['clean', 'copy:main', 'closurecompiler:debug']);
-
-    grunt.registerTask('ccjs', ['clean', 'closurecompiler:debug']);
+    grunt.registerTask('default', ['clean', 'jsdoc', 'htmlmin', 'cssmin', 'copy:js', 'closure-compiler']);
+    grunt.registerTask('minimal', ['clean', 'htmlmin', 'cssmin', 'copy:js', 'closure-compiler']);
 
 };

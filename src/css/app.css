@@ -1,0 +1,40 @@
+body {
+    background: #000;
+    height: 100%;
+    margin: auto;
+    position: absolute;
+    width: 100%;
+}
+
+#metaStuff {
+    top: 30px;
+    width: 100%;
+    z-index: 10;
+}
+
+#panelRoot,
+#metaStuff {
+    position: absolute;
+    text-align: center;
+}
+
+#panelRoot {
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 5;
+}
+
+.panel {
+    float: left;
+    margin:0;
+    max-height: 100%;
+}
+
+.frame {
+    vertical-align: middle;
+}
+
+.hidden {
+    display:none;
+}

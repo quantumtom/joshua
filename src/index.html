@@ -1,87 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Realtime Weather Satellite (GOES) Imagery</title>
-        <meta name="viewport" content="width=device-width, initial-scale=.5, minimum-scale=.5, maximum-scale=2.0, user-scalable=yes"/>
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-		<meta name="apple-mobile-web-app-capable" content="yes"/>
-		<link type="text/css" rel="stylesheet" href="css/goes.css"/>
-	</head>
+<head>
+    <title>Realtime Weather Satellite (GOES) Imagery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=.5, minimum-scale=.5, maximum-scale=1.0, user-scalable=yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link type="text/css" rel="stylesheet" href="css/app.css" />
+</head>
 
-	<body>
+<body>
 
-		<div id="panelOne" class="panel"></div>
-		<div id="panelTwo" class="panel"></div>
+<div id="metaStuff">
+    <form>
+        <label for="theMapList">Map List</label>
+        <select id="theMapList">
+            <option value="goes/comp/nhem">Continental US</option>
+            <optgroup label="Ocean Tropics (wide-view)">
+                <option value="mtsat/twpac">West Pacific</option>
+                <option value="goes/west/tpac">East Pacific</option>
+                <option value="goes/east/tatl">West Atlantic</option>
+            </optgroup>
+            <optgroup label="Western US">
+                <option value="goes/west/weus">Western US</option>
+                <option value="goes/west/nw">Northwest</option>
+                <option value="goes/west/wc">Mid-Pacific</option>
+                <option value="goes/west/sw">Southwest</option>
+            </optgroup>
+            <optgroup label="Central US">
+                <option value="goes/west/np">Northern Plains</option>
+                <option value="goes/west/cp">Central Plains</option>
+                <option value="goes/east/sc">Southern Plains</option>
+            </optgroup>
+            <optgroup label="Eastern US">
+                <option value="goes/east/eaus">Eastern US</option>
+                <option value="goes/east/gl">Great Lakes</option>
+                <option value="goes/east/mw">Midwest</option>
+                <option value="goes/east/ne">Northeast</option>
+                <option value="goes/east/ma">Mid-Atlantic</option>
+                <option value="goes/east/se">Southeast</option>
+            </optgroup>
+        </select>
 
-		<div id="metaStuff">
+        <label for="theColorList">The Color List</label>
+        <select id="theColorList">
+            <option value="rb">Rainbow</option>
+            <option value="ir4">None</option>
+            <option value="ft">Funktop</option>
+            <option value="rgb">RGB</option>
+            <option value="jsl">JSL</option>
+            <option value="bd">Dvorak</option>
+            <option value="avn">AVN</option>
+            <option value="vis">Visible</option>
+            <option value="ir2">Shortwave</option>
+            <option value="wv">Water Vapor</option>
+        </select>
+    </form>
+</div>
 
-			<form id="theEnhancement">
-                <fieldset>
-                    <legend>Visual Enhancements</legend>
-                    <p>
-                        <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_00" value="rb" checked="checked"/>
-                        <label for="enhancement_00">Rainbow</label>
-                    </p>
-                    <p>
-                        <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_01" value="ir4"/>
-                        <label for="enhancement_01">None</label>
-                    </p>
-                    <p>
-                        <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_02" value="ft"/>
-                        <label for="enhancement_02">Funktop</label>
-                    </p>
-                    <p>
-                        <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_03" value="rgb"/>
-                        <label for="enhancement_03">RGB</label>
-                    </p>
-                    <p>
-                        <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_04" value="jsl"/>
-                        <label for="enhancement_04">JSL</label>
-                    </p>
-                    <p>
-                        <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_05" value="bd"/>
-                        <label for="enhancement_05">Dvorak</label>
-                    </p>
-                    <p>
-                        <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_06" value="avn"/>
-                        <label for="enhancement_06">AVN</label>
-                    </p>
-                    <p>
-                        <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_07" value="vis"/>
-                        <label for="enhancement_07"></label>Visible
-                    </p>
-                    <p>
-                        <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_08" value="ir2"/>
-                        <label for="enhancement_08">Shortwave</label>
-                    </p>
-                    <p>
-                        <input class="enhancementRadio" name="enhancementRadio" type="radio" id="enhancement_09" value="wv"/>
-                        <label for="enhancement_09">Water Vapor</label>
-                    </p>
-                </fieldset>
-			</form>
+<div id="panelRoot" class="panel"></div>
 
-            <section id="aboutSection">
-                <p>
-                    Check the current operational <a href="http://www.ospo.noaa.gov/Operations/GOES/status.html" target="_blank">status</a> of all the satellites in the constellation.
-                </p>
-                <p>
-                    Detailed information on each of the two operating weather satellites:
-                    <ul>
-                        <li>
-                            <a href="http://www.osd.noaa.gov/Spacecraft%20Systems/Geostationary_Sat/GOES_N/GOES_N.html" target="_blank">GOES-13 (GOES-N)</a>
-                        </li>
-                        <li>
-                            <a href="http://www.osd.noaa.gov/Spacecraft%20Systems/Geostationary_Sat/GOES_P/GOES_P.html" target="_blank">GOES-15 (GOES-P)</a>
-                        </li>
-                    </ul>
-                </p>
-            </section>
+<script src="js/app.js"></script>
 
-		</div>// <!-- div#metaStuff -->
-
-        <script src="js/goes.js"></script>
-
-	</body>
+</body>
 
 </html>
