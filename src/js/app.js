@@ -9,6 +9,7 @@
 var APP = {};
 
 APP = {
+    /** Initialize some properties. Call the main function. */
     init: function () {
 
         APP.view = {
@@ -55,7 +56,7 @@ APP = {
 
         /**
          * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
-         * it (concatenates it with) a number (cast as a string) that is
+         * it (concatenates it with) a numeric string) that is
          * passed in as the first parameter.
          * @param i
          * @param places
@@ -76,10 +77,6 @@ APP = {
 
             return theString;
 
-        }
-
-        function getTimeStamp(YYYY, DDD, HH, MM) {
-            return YYYY + DDD + "_" + HH + MM;
         }
 
         function getColor() {
@@ -111,6 +108,13 @@ APP = {
 
         }
 
+        /**
+         * This function dynamically generates the NOAA-specific file path for the remote
+         * image resources.
+         * @param thePast
+         * @param target
+         * @returns {string}
+         */
         function getURI(thePast, target) {
 
             var theYear = thePast.getFullYear(),
@@ -155,7 +159,7 @@ APP = {
              */
             theMinutes = padZeroes(theMinutes, 2);
 
-            return baseURI + getTimeStamp(theYear, theDays, theHours, theMinutes) + getColor() + ".jpg";
+            return baseURI + theYear + theDays+ "_" + theHours + theMinutes + getColor() + ".jpg";
         }
 
         /**
