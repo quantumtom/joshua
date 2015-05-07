@@ -22,14 +22,39 @@ APP = {
 
     },
 
-    run: function () {
+    util: {
+
+        /**
+         * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
+         * it (concatenates it with) a numeric string) that is
+         * passed in as the first parameter.
+         * @param i
+         * @param places
+         * @returns {string}
+         */
+        padZeroes: function(i, places) {
+
+            var j,
+                theString = "";
+
+            theString += i;
+
+            for (j = 0; j < places; j = j + 1) {
+                if (theString.length < places) {
+                    theString = "0" + theString;
+                }
+            }
+
+            return theString;
+
+        },
 
         /**
          * Takes a date and calculates how many days into the year that date is.
          * @param myDate
          * @returns {number}
          */
-        function dayOfYear(myDate) {
+        dayOfYear: function(myDate) {
 
             var theMonth = myDate.getMonth(),
                 theDate = myDate.getDate(),
@@ -54,30 +79,9 @@ APP = {
 
         }
 
-        /**
-         * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
-         * it (concatenates it with) a numeric string) that is
-         * passed in as the first parameter.
-         * @param i
-         * @param places
-         * @returns {string}
-         */
-        function padZeroes(i, places) {
+    },
 
-            var j,
-                theString = "";
-
-            theString += i;
-
-            for (j = 0; j < places; j = j + 1) {
-                if (theString.length < places) {
-                    theString = "0" + theString;
-                }
-            }
-
-            return theString;
-
-        }
+    run: function () {
 
         function getColor() {
             var theColorList = APP.view.theColorList,
@@ -118,12 +122,13 @@ APP = {
         function getURI(thePast, target) {
 
             var theYear = thePast.getFullYear(),
-                theDays = dayOfYear(thePast),
+                theDays = APP.util.dayOfYear(thePast),
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
                 baseURI = "http://www.ssd.noaa.gov/" + target + "/img/",
                 thePeriod = 30,
-                theOffset = 0;
+                theOffset = 0,
+                padZeroes = APP.util.padZeroes;
 
             theDays = padZeroes(theDays, 3);
             theHours = padZeroes(theHours, 2);
