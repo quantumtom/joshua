@@ -198,8 +198,8 @@ APP = {
          *
          * E.G.
          *
-         * APP-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
-         * APP-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
+         * GOES-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
+         * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
          *
          */
         function load() {
