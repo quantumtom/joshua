@@ -16,13 +16,24 @@ APP = {
             panelRoot: document.getElementById("panelRoot"),
             theColorList: document.getElementById("theColorList"),
             theMapList: document.getElementById("theMapList"),
-            /**
-             * Removes all the image elements from the page.
-             */
             removeImages: function() {
+                /**
+                 * Removes all the image elements from the page.
+                 */
                 while (APP.view.panelRoot.firstChild) {
                     APP.view.panelRoot.removeChild(APP.view.panelRoot.firstChild);
                 }
+            },
+            getEnhancement: function () {
+                var theColorList = APP.view.theColorList,
+                    theColorPick = theColorList[theColorList.selectedIndex].value;
+
+                if (theColorPick === "") {
+                    theColorPick = "rb";
+                }
+
+                return theColorPick;
+
             }
         };
 
@@ -120,18 +131,6 @@ APP = {
 
     run: function () {
 
-        function getColor() {
-            var theColorList = APP.view.theColorList,
-                theColorPick = theColorList[theColorList.selectedIndex].value;
-
-            if (theColorPick === "") {
-                theColorPick = "rb";
-            }
-
-            return theColorPick;
-
-        }
-
         /**
          * This function dynamically generates the NOAA-specific file path for the remote
          * image resources.
@@ -148,6 +147,7 @@ APP = {
                 baseURI = "http://www.ssd.noaa.gov/" + target + "/img/",
                 thePeriod = 30,
                 theOffset = 0,
+                theEnhancement = APP.view.getEnhancement(),
                 padZeroes = APP.util.padZeroes,
                 parseMinutes = APP.util.parseMinutes;
 
@@ -185,7 +185,7 @@ APP = {
              */
             theMinutes = padZeroes(theMinutes, 2);
 
-            return baseURI + theYear + theDays+ "_" + theHours + theMinutes + getColor() + ".jpg";
+            return baseURI + theYear + theDays+ "_" + theHours + theMinutes + theEnhancement + ".jpg";
         }
 
         /**
