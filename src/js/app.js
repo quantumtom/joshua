@@ -17,36 +17,29 @@ APP = {
             theColorList: document.getElementById("theColorList"),
             theMapList: document.getElementById("theMapList"),
             removeImages: function() {
-                /**
-                 * Removes all the image elements from the page.
-                 */
+                /** Removes all the image elements from the page. */
                 while (APP.view.panelRoot.firstChild) {
                     APP.view.panelRoot.removeChild(APP.view.panelRoot.firstChild);
                 }
             },
+            getTheMap: function () {
+                return APP.view.theMapList[APP.view.theMapList.selectedIndex].value;
+            },
             getEnhancement: function () {
-                var theColorList = APP.view.theColorList,
-                    theColorPick = theColorList[theColorList.selectedIndex].value;
+                var theColorList = APP.view.theColorList;
 
-                if (theColorPick === "") {
-                    theColorPick = "rb";
-                }
-
-                return theColorPick;
-
+                return theColorList[theColorList.selectedIndex].value;
             }
         };
 
-        APP.data = {
+        APP.theMap = APP.view.getTheMap();
 
-            /**
-             * We can get images from the past four hours, so create a date object that starts at that point in time.
-             */
-            date: function() {
-                var thePast = new Date();
-                thePast.setHours(thePast.getHours() - 4);
-                return thePast;
-            }
+        APP.thePast = function () {
+            var thePast = new Date(),
+                theHours = thePast.getHours();
+            thePast.setHours(theHours - 4);
+
+            return thePast;
         };
 
         APP.run();
@@ -135,16 +128,15 @@ APP = {
          * This function dynamically generates the NOAA-specific file path for the remote
          * image resources.
          * @param thePast
-         * @param target
          * @returns {string}
          */
-        function getURI(thePast, target) {
+        function getURI(thePast) {
 
             var theYear = thePast.getFullYear(),
-                theDays = APP.util.dayOfYear(thePast),
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
-                baseURI = "http://www.ssd.noaa.gov/" + target + "/img/",
+                theDays = APP.util.dayOfYear(thePast),
+                baseURI = "http://www.ssd.noaa.gov/" + APP.view.getTheMap() + "/img/",
                 thePeriod = 30,
                 theOffset = 0,
                 theEnhancement = APP.view.getEnhancement(),
@@ -164,12 +156,12 @@ APP = {
              *
              **/
 
-            if (target.search("mtsat") >= 0) {
+            if (baseURI.search("mtsat") >= 0) {
                 thePeriod = 59;
                 theOffset = 32;
             }
 
-            if (target.search("east") >= 0) {
+            if (baseURI.search("east") >= 0) {
                 theOffset = 15;
             }
 
@@ -204,10 +196,8 @@ APP = {
          */
         function load() {
 
-            var thePast = APP.data.date(),
-                panelRoot = APP.view.panelRoot,
-                theMapList = APP.view.theMapList,
-                theMapPick = theMapList[theMapList.selectedIndex].value,
+            var thePast = APP.thePast(),
+                theMapPick = APP.view.getTheMap(),
                 frameNumber,
                 frame;
 
@@ -223,7 +213,7 @@ APP = {
                 frame.classList.add("frame");
                 frame.setAttribute("alt", "Image " + frameNumber + " unavailable.");
 
-                panelRoot.appendChild(frame);
+                APP.view.panelRoot.appendChild(frame);
 
                 /** Advance to the next frame's timestamp **/
                 thePast.setMinutes(thePast.getMinutes() + 30);
