@@ -197,7 +197,6 @@ APP = {
         function load() {
 
             var thePast = APP.thePast(),
-                theMapPick = APP.view.getTheMap(),
                 frameNumber,
                 frame;
 
@@ -207,7 +206,7 @@ APP = {
 
                 frame = document.createElement("img");
 
-                frame.src = getURI(thePast, theMapPick);
+                frame.src = getURI(thePast);
 
                 frame.classList.add("hidden");
                 frame.classList.add("frame");
