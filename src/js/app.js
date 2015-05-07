@@ -185,7 +185,7 @@ APP = {
              */
             theMinutes = padZeroes(theMinutes, 2);
 
-            return baseURI + theYear + theDays+ "_" + theHours + theMinutes + theEnhancement + ".jpg";
+            return baseURI + theYear + theDays + "_" + theHours + theMinutes + theEnhancement + ".jpg";
         }
 
         /**
