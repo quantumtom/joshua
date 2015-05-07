@@ -15,7 +15,27 @@ APP = {
         APP.view = {
             panelRoot: document.getElementById("panelRoot"),
             theColorList: document.getElementById("theColorList"),
-            theMapList: document.getElementById("theMapList")
+            theMapList: document.getElementById("theMapList"),
+            /**
+             * Removes all the image elements from the page.
+             */
+            removeImages: function() {
+                while (APP.view.panelRoot.firstChild) {
+                    APP.view.panelRoot.removeChild(APP.view.panelRoot.firstChild);
+                }
+            }
+        };
+
+        APP.data = {
+
+            /**
+             * We can get images from the past four hours, so create a date object that starts at that point in time.
+             */
+            date: function() {
+                var thePast = new Date();
+                thePast.setHours(thePast.getHours() - 4);
+                return thePast;
+            }
         };
 
         APP.run();
@@ -77,6 +97,23 @@ APP = {
 
             return theDayOfTheYear;
 
+        },
+
+        /**
+         * Takes a value between 0 - 59 and returns either the
+         * bottom or top half of the hour.
+         * @param m
+         * @param p
+         * @returns {number}
+         */
+        parseMinutes: function(m, p) {
+
+            m = m / p;
+
+            m = Math.floor(m);
+
+            return m * p;
+
         }
 
     },
@@ -96,23 +133,6 @@ APP = {
         }
 
         /**
-         * Takes a value between 0 - 59 and returns either the
-         * bottom or top half of the hour.
-         * @param m
-         * @param p
-         * @returns {number}
-         */
-        function parseMinutes(m, p) {
-
-            m = m / p;
-
-            m = Math.floor(m);
-
-            return m * p;
-
-        }
-
-        /**
          * This function dynamically generates the NOAA-specific file path for the remote
          * image resources.
          * @param thePast
@@ -128,7 +148,8 @@ APP = {
                 baseURI = "http://www.ssd.noaa.gov/" + target + "/img/",
                 thePeriod = 30,
                 theOffset = 0,
-                padZeroes = APP.util.padZeroes;
+                padZeroes = APP.util.padZeroes,
+                parseMinutes = APP.util.parseMinutes;
 
             theDays = padZeroes(theDays, 3);
             theHours = padZeroes(theHours, 2);
@@ -168,15 +189,6 @@ APP = {
         }
 
         /**
-         * Removes all the image elements from the page.
-         */
-        function removeImages() {
-            while (APP.view.panelRoot.firstChild) {
-                APP.view.panelRoot.removeChild(APP.view.panelRoot.firstChild);
-            }
-        }
-
-        /**
          * This subroutine injects image DOM nodes. It calculates the URI for each image
          * used as frames in the imagination to use as values for the src
          * attributes in each image element on the page.
@@ -192,19 +204,14 @@ APP = {
          */
         function load() {
 
-            var thePast = new Date(),
+            var thePast = APP.data.date(),
+                panelRoot = APP.view.panelRoot,
                 theMapList = APP.view.theMapList,
                 theMapPick = theMapList[theMapList.selectedIndex].value,
                 frameNumber,
                 frame;
 
-            removeImages();
-
-            /**
-             * We can get images from the past four hours, so create a date object that starts at that point in time.
-             */
-
-            thePast.setHours(thePast.getHours() - 4);
+            APP.view.removeImages();
 
             for (frameNumber = 0; frameNumber < 20; frameNumber = frameNumber + 1) {
 
@@ -216,7 +223,7 @@ APP = {
                 frame.classList.add("frame");
                 frame.setAttribute("alt", "Image " + frameNumber + " unavailable.");
 
-                APP.view.panelRoot.appendChild(frame);
+                panelRoot.appendChild(frame);
 
                 /** Advance to the next frame's timestamp **/
                 thePast.setMinutes(thePast.getMinutes() + 30);
