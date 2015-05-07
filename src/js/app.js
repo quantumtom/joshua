@@ -14,7 +14,7 @@ APP = {
 
         APP.view = {
             panelRoot: document.getElementById("panelRoot"),
-            theColorList: document.getElementById("theColorList"),
+            theEnhancementList: document.getElementById("theEnhancementList"),
             theMapList: document.getElementById("theMapList"),
             removeImages: function() {
                 /** Removes all the image elements from the page. */
@@ -26,9 +26,9 @@ APP = {
                 return APP.view.theMapList[APP.view.theMapList.selectedIndex].value;
             },
             getEnhancement: function () {
-                var theColorList = APP.view.theColorList;
+                var theEnhancementList = APP.view.theEnhancementList;
 
-                return theColorList[theColorList.selectedIndex].value;
+                return theEnhancementList[theEnhancementList.selectedIndex].value;
             }
         };
 
@@ -289,7 +289,7 @@ APP = {
             load();
         });
 
-        APP.view.theColorList.addEventListener("change", function () {
+        APP.view.theEnhancementList.addEventListener("change", function () {
             load();
         });
 
