@@ -40,7 +40,14 @@ module.exports = function (grunt) {
                         src: 'src/js/*',
                         dest: 'build/js/'
                     }
-
+                ]
+            },
+            favicon: {
+                files: [
+                    {
+                        src: 'src/favicon.ico',
+                        dest: 'build/favicon.ico'
+                    }
                 ]
             }
         },
