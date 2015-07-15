@@ -121,7 +121,7 @@ module.exports = function (grunt) {
     /**
      * Alias tasks
      */
-    grunt.registerTask('default', ['clean', 'jsdoc', 'htmlmin:dist', 'cssmin', 'copy:js', 'closure-compiler']);
+    grunt.registerTask('default', ['clean', 'htmlmin:dev', 'cssmin', 'copy:js', 'closure-compiler']);
     grunt.registerTask('dev', ['copy:dev']);
     grunt.registerTask('minimal', ['clean', 'htmlmin', 'cssmin', 'copy:js', 'closure-compiler']);
 

@@ -4,35 +4,28 @@
  * @module APP
  */
 
-"use strict";
+(function () {
+    'use strict';
 
-var APP = {};
+    var APP = {};
 
-APP = {
-    /** Initialize some properties. Call the main function. */
-    init: function () {
+    APP.init = function () {
+        APP.panelRoot = document.getElementById("panelRoot");
+        APP.theEnhancementList = document.getElementById("theEnhancementList");
+        APP.theMapList = document.getElementById("theMapList");
 
-        APP.view = {
-            panelRoot: document.getElementById("panelRoot"),
-            theEnhancementList: document.getElementById("theEnhancementList"),
-            theMapList: document.getElementById("theMapList"),
-            removeImages: function() {
-                /** Removes all the image elements from the page. */
-                while (APP.view.panelRoot.firstChild) {
-                    APP.view.panelRoot.removeChild(APP.view.panelRoot.firstChild);
-                }
-            },
-            getTheMap: function () {
-                return APP.view.theMapList[APP.view.theMapList.selectedIndex].value;
-            },
-            getEnhancement: function () {
-                var theEnhancementList = APP.view.theEnhancementList;
-
-                return theEnhancementList[theEnhancementList.selectedIndex].value;
+        APP.removeImages = function () {
+            while (APP.panelRoot.firstChild) {
+                APP.panelRoot.removeChild(APP.panelRoot.firstChild);
             }
         };
 
-        APP.theMap = APP.view.getTheMap();
+        APP.getEnhancement = function () {
+            var theEnhancementList = APP.theEnhancementList;
+
+            return theEnhancementList[theEnhancementList.selectedIndex].value;
+        };
+
 
         APP.thePast = function () {
             var thePast = new Date(),
@@ -43,10 +36,9 @@ APP = {
         };
 
         APP.run();
+    };
 
-    },
-
-    util: {
+    APP.util = {
 
         /**
          * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
@@ -56,7 +48,7 @@ APP = {
          * @param places
          * @returns {string}
          */
-        padZeroes: function(i, places) {
+        padZeroes: function (i, places) {
 
             var j,
                 theString = "";
@@ -78,7 +70,7 @@ APP = {
          * @param myDate
          * @returns {number}
          */
-        dayOfYear: function(myDate) {
+        dayOfYear: function (myDate) {
 
             var theMonth = myDate.getMonth(),
                 theDate = myDate.getDate(),
@@ -110,7 +102,7 @@ APP = {
          * @param p
          * @returns {number}
          */
-        parseMinutes: function(m, p) {
+        parseMinutes: function (m, p) {
 
             m = m / p;
 
@@ -120,9 +112,9 @@ APP = {
 
         }
 
-    },
+    };
 
-    run: function () {
+    APP.run = function () {
 
         /**
          * This function dynamically generates the NOAA-specific file path for the remote
@@ -136,10 +128,10 @@ APP = {
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
                 theDays = APP.util.dayOfYear(thePast),
-                baseURI = "http://www.ssd.noaa.gov/" + APP.view.getTheMap() + "/img/",
+                baseURI = "http://www.ssd.noaa.gov/" + APP.theMapList[APP.theMapList.selectedIndex].value + "/img/",
                 thePeriod = 30,
                 theOffset = 0,
-                theEnhancement = APP.view.getEnhancement(),
+                theEnhancement = APP.getEnhancement(),
                 padZeroes = APP.util.padZeroes,
                 parseMinutes = APP.util.parseMinutes;
 
@@ -200,7 +192,7 @@ APP = {
                 frameNumber,
                 frame;
 
-            APP.view.removeImages();
+            APP.removeImages();
 
             for (frameNumber = 0; frameNumber < 20; frameNumber = frameNumber + 1) {
 
@@ -212,7 +204,7 @@ APP = {
                 frame.classList.add("frame");
                 frame.setAttribute("alt", "Image " + frameNumber + " unavailable.");
 
-                APP.view.panelRoot.appendChild(frame);
+                APP.panelRoot.appendChild(frame);
 
                 /** Advance to the next frame's timestamp **/
                 thePast.setMinutes(thePast.getMinutes() + 30);
@@ -285,16 +277,16 @@ APP = {
 
         animate(0);
 
-        APP.view.theMapList.addEventListener("change", function () {
+        APP.theMapList.addEventListener("change", function () {
             load();
         });
 
-        APP.view.theEnhancementList.addEventListener("change", function () {
+        APP.theEnhancementList.addEventListener("change", function () {
             load();
         });
 
-    }
+    };
 
-};
+    APP.init();
 
-APP.init();
+}());
