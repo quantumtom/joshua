@@ -27,7 +27,7 @@
 
         /**
          * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
-         * it (concatenates it with) a numeric string) that is
+         * it (concatenates it with a numeric string) that is
          * passed in as the first parameter.
          * @param i
          * @param places
@@ -101,6 +101,21 @@
 
     APP.run = function () {
 
+        function removeImages() {
+            while (APP.panelRoot.firstChild) {
+                APP.panelRoot.removeChild(APP.panelRoot.firstChild);
+            }
+        }
+
+        function getThePast() {
+            var thePresent = new Date();
+            var theHours = thePresent.getHours();
+
+            thePresent.setHours(theHours - 4);
+
+            return thePresent;
+        }
+
         /**
          * This function dynamically generates the NOAA-specific file path for the remote
          * image resources.
@@ -155,21 +170,6 @@
             theMinutes = padZeroes(theMinutes, 2);
 
             return baseURI + theYear + theDays + "_" + theHours + theMinutes + theEnhancement + ".jpg";
-        }
-
-        function removeImages() {
-            while (APP.panelRoot.firstChild) {
-                APP.panelRoot.removeChild(APP.panelRoot.firstChild);
-            }
-        }
-
-        function getThePast() {
-            var thePresent = new Date();
-            var theHours = thePresent.getHours();
-
-            thePresent.setHours(theHours - 4);
-
-            return thePresent;
         }
 
         /**
