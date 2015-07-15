@@ -16,6 +16,11 @@ module.exports = function (grunt) {
                 files: {
                     'build/index.html': 'src/index.html'
                 }
+            },
+            dev: {
+                files: {
+                    'build/index.html': 'src/index.html'
+                }
             }
         },
         cssmin: {
@@ -49,6 +54,14 @@ module.exports = function (grunt) {
                         dest: 'build/favicon.ico'
                     }
                 ]
+            },
+            dev: {
+                files: [
+                    {
+                        src: 'src',
+                        dest: 'build'
+                    }
+                ]
             }
         },
         'closure-compiler': {
@@ -75,7 +88,9 @@ module.exports = function (grunt) {
                     'src/js/*',
                     'Gruntfile.js'
                 ],
-                tasks: ['minimal']
+                tasks: [
+                    'copy:dev'
+                ]
             }
         },
         jsdoc : {
@@ -106,7 +121,8 @@ module.exports = function (grunt) {
     /**
      * Alias tasks
      */
-    grunt.registerTask('default', ['clean', 'jsdoc', 'htmlmin', 'cssmin', 'copy:js', 'closure-compiler']);
+    grunt.registerTask('default', ['clean', 'jsdoc', 'htmlmin:dist', 'cssmin', 'copy:js', 'closure-compiler']);
+    grunt.registerTask('dev', ['copy:dev']);
     grunt.registerTask('minimal', ['clean', 'htmlmin', 'cssmin', 'copy:js', 'closure-compiler']);
 
 };
