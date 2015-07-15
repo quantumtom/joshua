@@ -14,24 +14,10 @@
         APP.theEnhancementList = document.getElementById("theEnhancementList");
         APP.theMapList = document.getElementById("theMapList");
 
-        APP.removeImages = function () {
-            while (APP.panelRoot.firstChild) {
-                APP.panelRoot.removeChild(APP.panelRoot.firstChild);
-            }
-        };
-
         APP.getEnhancement = function () {
             var theEnhancementList = APP.theEnhancementList;
 
             return theEnhancementList[theEnhancementList.selectedIndex].value;
-        };
-
-        APP.thePast = function () {
-            var thePast = new Date(),
-                theHours = thePast.getHours();
-            thePast.setHours(theHours - 4);
-
-            return thePast;
         };
 
         APP.run();
@@ -41,7 +27,7 @@
 
         /**
          * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
-         * it (concatenates it with) a numeric string) that is
+         * it (concatenates it with a numeric string) that is
          * passed in as the first parameter.
          * @param i
          * @param places
@@ -171,8 +157,23 @@
             return baseURI + theYear + theDays + "_" + theHours + theMinutes + theEnhancement + ".jpg";
         }
 
+        function removeImages() {
+            while (APP.panelRoot.firstChild) {
+                APP.panelRoot.removeChild(APP.panelRoot.firstChild);
+            }
+        }
+
+        function getThePast() {
+            var thePresent = new Date();
+            var theHours = thePresent.getHours();
+
+            thePresent.setHours(theHours - 4);
+
+            return thePresent;
+        }
+
         /**
-         * This subroutine injects image DOM nodes. It calculates the URI for each image
+         * Injects image DOM nodes. It calculates the URI for each image
          * used as frames in the imagination to use as values for the src
          * attributes in each image element on the page.
          *
@@ -187,11 +188,11 @@
          */
         function load() {
 
-            var thePast = APP.thePast(),
+            var thePast = getThePast(),
                 frameNumber,
                 frame;
 
-            APP.removeImages();
+            removeImages();
 
             for (frameNumber = 0; frameNumber < 20; frameNumber = frameNumber + 1) {
 
