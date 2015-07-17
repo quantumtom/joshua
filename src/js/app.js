@@ -57,6 +57,12 @@
 
     APP.loadFrames = function() {
 
+        function getEnhancement() {
+            var theEnhancementList = APP.theEnhancementList;
+
+            return theEnhancementList[theEnhancementList.selectedIndex].value;
+        }
+
         function getThePast() {
             var thePresent = new Date();
             var theHours = thePresent.getHours();
@@ -186,7 +192,7 @@
              */
             theMinutes = padZeroes(theMinutes, 2);
 
-            return baseURI + theYear + theDays + "_" + theHours + theMinutes + APP.enhancement() + ".jpg";
+            return baseURI + theYear + theDays + "_" + theHours + theMinutes + getEnhancement() + ".jpg";
         }
 
         /**
