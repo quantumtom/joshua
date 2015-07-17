@@ -5,101 +5,17 @@
  */
 
 (function () {
+
     'use strict';
 
     var APP = {};
 
-    APP.init = function () {
+
+    APP.run = function () {
+
         APP.panelRoot = document.getElementById("panelRoot");
         APP.theEnhancementList = document.getElementById("theEnhancementList");
         APP.theMapList = document.getElementById("theMapList");
-
-        APP.getEnhancement = function () {
-            var theEnhancementList = APP.theEnhancementList;
-
-            return theEnhancementList[theEnhancementList.selectedIndex].value;
-        };
-
-        APP.run();
-    };
-
-    APP.util = {
-
-        /**
-         * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
-         * it (concatenates it with a numeric string) that is
-         * passed in as the first parameter.
-         * @param i
-         * @param places
-         * @returns {string}
-         */
-        padZeroes: function (i, places) {
-
-            var j,
-                theString = "";
-
-            theString += i;
-
-            for (j = 0; j < places; j = j + 1) {
-                if (theString.length < places) {
-                    theString = "0" + theString;
-                }
-            }
-
-            return theString;
-
-        },
-
-        /**
-         * Takes a date and calculates how many days into the year that date is.
-         * @param myDate
-         * @returns {number}
-         */
-        dayOfYear: function (myDate) {
-
-            var theMonth = myDate.getMonth(),
-                theDate = myDate.getDate(),
-                monthDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
-                theDayOfTheYear = 0,
-                i;
-
-            /**
-             * Check for leap year.
-             */
-            if (myDate.getYear() % 4) {
-                monthDays[1] = 28;
-            }
-
-            for (i = 0; i < theMonth; i =  i + 1) {
-                theDayOfTheYear += monthDays[i];
-            }
-
-            theDayOfTheYear += theDate;
-
-            return theDayOfTheYear;
-
-        },
-
-        /**
-         * Takes a value between 0 - 59 and returns either the
-         * bottom or top half of the hour.
-         * @param m
-         * @param p
-         * @returns {number}
-         */
-        parseMinutes: function (m, p) {
-
-            m = m / p;
-
-            m = Math.floor(m);
-
-            return m * p;
-
-        }
-
-    };
-
-    APP.run = function () {
 
         function removeImages() {
             while (APP.panelRoot.firstChild) {
@@ -114,6 +30,87 @@
             thePresent.setHours(theHours - 4);
 
             return thePresent;
+        }
+
+        function getEnhancement() {
+            var theEnhancementList = APP.theEnhancementList;
+
+            return theEnhancementList[theEnhancementList.selectedIndex].value;
+        }
+
+        APP.util = {
+
+            /**
+             * Takes a date and calculates how many days into the year that date is.
+             * @param myDate
+             * @returns {number}
+             */
+            dayOfYear: function (myDate) {
+
+                var theMonth = myDate.getMonth(),
+                    theDate = myDate.getDate(),
+                    monthDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+                    theDayOfTheYear = 0,
+                    i;
+
+                /**
+                 * Check for leap year.
+                 */
+                if (myDate.getYear() % 4) {
+                    monthDays[1] = 28;
+                }
+
+                for (i = 0; i < theMonth; i =  i + 1) {
+                    theDayOfTheYear += monthDays[i];
+                }
+
+                theDayOfTheYear += theDate;
+
+                return theDayOfTheYear;
+
+            },
+
+        };
+
+        /**
+         * Takes a value between 0 - 59 and returns either the
+         * bottom or top half of the hour.
+         * @param m
+         * @param p
+         * @returns {number}
+         */
+        function parseMinutes(m, p) {
+
+            m = m / p;
+            m = Math.floor(m);
+
+            return m * p;
+
+        }
+
+        /**
+         * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
+         * it (concatenates it with a numeric string) that is
+         * passed in as the first parameter.
+         * @param i
+         * @param places
+         * @returns {string}
+         */
+        function padZeroes(i, places) {
+
+            var j;
+            var theString = "";
+
+            theString += i;
+
+            for (j = 0; j < places; j = j + 1) {
+                if (theString.length < places) {
+                    theString = "0" + theString;
+                }
+            }
+
+            return theString;
+
         }
 
         /**
@@ -131,9 +128,7 @@
                 baseURI = "http://www.ssd.noaa.gov/" + APP.theMapList[APP.theMapList.selectedIndex].value + "/img/",
                 thePeriod = 30,
                 theOffset = 0,
-                theEnhancement = APP.getEnhancement(),
-                padZeroes = APP.util.padZeroes,
-                parseMinutes = APP.util.parseMinutes;
+                theEnhancement = getEnhancement();
 
             theDays = padZeroes(theDays, 3);
             theHours = padZeroes(theHours, 2);
@@ -202,7 +197,7 @@
 
                 frame.classList.add("hidden");
                 frame.classList.add("frame");
-                frame.setAttribute("alt", "Image " + frameNumber + " unavailable.");
+                frame.setAttribute("alt", "Image " + frameNumber);
 
                 APP.panelRoot.appendChild(frame);
 
@@ -287,6 +282,6 @@
 
     };
 
-    APP.init();
+    APP.run();
 
 }());
