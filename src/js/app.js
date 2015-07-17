@@ -10,17 +10,116 @@
 
     var APP = {};
 
-
-    APP.run = function () {
+    APP.initialize = function () {
 
         APP.panelRoot = document.getElementById("panelRoot");
         APP.theEnhancementList = document.getElementById("theEnhancementList");
         APP.theMapList = document.getElementById("theMapList");
 
-        function removeImages() {
-            while (APP.panelRoot.firstChild) {
-                APP.panelRoot.removeChild(APP.panelRoot.firstChild);
+        APP.theMapList.addEventListener("change", function () {
+            APP.loadFrames();
+        });
+
+        APP.theEnhancementList.addEventListener("change", function () {
+            APP.loadFrames();
+        });
+
+    };
+
+    /**
+     * This is the animation "player" that shows and hides the individual
+     * frames of the animation.
+     * @param n
+     */
+    APP.animate = function (n) {
+
+        function animate(n) {
+
+            var theInterval = 50,
+                frame = document.getElementsByClassName("frame");
+
+            if (!n) {
+                n = 0;
             }
+
+            setTimeout(function () {
+
+                /**
+                 * Run through all but the final frame.
+                 */
+
+                if (n < frame.length - 1) {
+
+                    frame.item(n).classList.add("hidden");
+
+                    n = n + 1;
+
+                    frame.item(n).classList.remove("hidden");
+
+                    animate(n);
+
+                } else {
+
+                    /**
+                     * Otherwise, we're on the final frame (#19)
+                     */
+
+                    frame.item(n).classList.add("hidden");
+
+                    /**
+                     * Set the first frame back to visible.
+                     */
+
+                    frame.item(0).classList.remove("hidden");
+
+                    /**
+                     * Call this function recursively to loop it.
+                     */
+
+                    animate(0);
+
+                }
+
+
+            }, theInterval);
+
+        }
+
+        return animate(n);
+
+    };
+
+    APP.main = function () {
+
+        APP.initialize();
+
+        APP.loadFrames();
+
+        APP.animate(0);
+
+    };
+
+    /**
+     * Injects image DOM nodes. It calculates the URI for each image
+     * used as frames in the imagination to use as values for the src
+     * attributes in each image element on the page.
+     *
+     * Each satellite generates an image every thirty minutes. The second satellite timing is
+     * offset fifteen minutes from the first.
+     *
+     * E.G.
+     *
+     * GOES-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
+     * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
+     *
+     */
+
+    APP.loadFrames = function() {
+
+        function getEnhancement() {
+            var theEnhancementList = APP.theEnhancementList;
+
+            return theEnhancementList[theEnhancementList.selectedIndex].value;
         }
 
         function getThePast() {
@@ -31,46 +130,6 @@
 
             return thePresent;
         }
-
-        function getEnhancement() {
-            var theEnhancementList = APP.theEnhancementList;
-
-            return theEnhancementList[theEnhancementList.selectedIndex].value;
-        }
-
-        APP.util = {
-
-            /**
-             * Takes a date and calculates how many days into the year that date is.
-             * @param myDate
-             * @returns {number}
-             */
-            dayOfYear: function (myDate) {
-
-                var theMonth = myDate.getMonth(),
-                    theDate = myDate.getDate(),
-                    monthDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
-                    theDayOfTheYear = 0,
-                    i;
-
-                /**
-                 * Check for leap year.
-                 */
-                if (myDate.getYear() % 4) {
-                    monthDays[1] = 28;
-                }
-
-                for (i = 0; i < theMonth; i =  i + 1) {
-                    theDayOfTheYear += monthDays[i];
-                }
-
-                theDayOfTheYear += theDate;
-
-                return theDayOfTheYear;
-
-            },
-
-        };
 
         /**
          * Takes a value between 0 - 59 and returns either the
@@ -114,6 +173,35 @@
         }
 
         /**
+         * Takes a date and calculates how many days into the year that date is.
+         * @param myDate
+         * @returns {number}
+         */
+        function dayOfYear(myDate) {
+
+            var theMonth = myDate.getMonth(),
+                theDate = myDate.getDate(),
+                monthDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+                theDayOfTheYear = 0,
+                i;
+
+            /**
+             * Check for leap year.
+             */
+            if (myDate.getYear() % 4) {
+                monthDays[1] = 28;
+            }
+
+            for (i = 0; i < theMonth; i =  i + 1) {
+                theDayOfTheYear += monthDays[i];
+            }
+
+            theDayOfTheYear += theDate;
+
+            return theDayOfTheYear;
+        }
+
+        /**
          * This function dynamically generates the NOAA-specific file path for the remote
          * image resources.
          * @param thePast
@@ -124,7 +212,7 @@
             var theYear = thePast.getFullYear(),
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
-                theDays = APP.util.dayOfYear(thePast),
+                theDays = dayOfYear(thePast),
                 baseURI = "http://www.ssd.noaa.gov/" + APP.theMapList[APP.theMapList.selectedIndex].value + "/img/",
                 thePeriod = 30,
                 theOffset = 0,
@@ -168,120 +256,35 @@
         }
 
         /**
-         * Injects image DOM nodes. It calculates the URI for each image
-         * used as frames in the imagination to use as values for the src
-         * attributes in each image element on the page.
-         *
-         * Each satellite generates an image every thirty minutes. The second satellite timing is
-         * offset fifteen minutes from the first.
-         *
-         * E.G.
-         *
-         * GOES-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
-         * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
-         *
+         * Remove images.
          */
-        function load() {
 
-            var thePast = getThePast(),
-                frameNumber,
-                frame;
-
-            removeImages();
-
-            for (frameNumber = 0; frameNumber < 20; frameNumber = frameNumber + 1) {
-
-                frame = document.createElement("img");
-
-                frame.src = getURI(thePast);
-
-                frame.classList.add("hidden");
-                frame.classList.add("frame");
-                frame.setAttribute("alt", "Image " + frameNumber);
-
-                APP.panelRoot.appendChild(frame);
-
-                /** Advance to the next frame's timestamp **/
-                thePast.setMinutes(thePast.getMinutes() + 30);
-
-            }
-
+        while (APP.panelRoot.firstChild) {
+            APP.panelRoot.removeChild(APP.panelRoot.firstChild);
         }
 
-        /**
-         * This is the animation "player" that shows and hides the individual
-         * frames of the animation.
-         * @param f
-         */
-        function animate(f) {
+        var thePast = getThePast();
+        var frameNumber;
+        var frame;
 
-            var theInterval = 133,
-                frame = document.getElementsByClassName("frame");
+        for (frameNumber = 0; frameNumber < 20; frameNumber = frameNumber + 1) {
 
-            if (!f) {
-                f = 0;
-            }
+            frame = document.createElement("img");
 
-            /**
-             * This is sort of a hybrid for-while loop.
-             */
+            frame.src = getURI(thePast);
 
-            setTimeout(function () {
+            frame.classList.add("hidden");
+            frame.classList.add("frame");
+            frame.setAttribute("alt", "Image " + frameNumber);
 
-                /**
-                 * Run through all but the final frame.
-                 */
+            APP.panelRoot.appendChild(frame);
 
-                if (f < frame.length - 1) {
-
-                    frame.item(f).classList.add("hidden");
-
-                    f =  f + 1;
-
-                    frame.item(f).classList.remove("hidden");
-
-                    animate(f);
-
-                } else {
-
-                    /**
-                     * Last frame (19)
-                     */
-
-                    frame.item(f).classList.add("hidden");
-
-                    /**
-                     * Set the first frame back to visible.
-                     */
-
-                    frame.item(0).classList.remove("hidden");
-
-                    /**
-                     * Call this function recursively to loop it.
-                     */
-
-                    animate(0);
-
-                }
-
-            }, theInterval);
-
+            /** Advance to the next frame's timestamp **/
+            thePast.setMinutes(thePast.getMinutes() + 30);
         }
-
-        load();
-
-        animate(0);
-
-        APP.theMapList.addEventListener("change", function () {
-            load();
-        });
-
-        APP.theEnhancementList.addEventListener("change", function () {
-            load();
-        });
 
     };
 
-    APP.run();
+    APP.main();
 
 }());
