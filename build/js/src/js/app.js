@@ -182,23 +182,16 @@
 
             theMinutes = parseMinutes(theMinutes, thePeriod);
 
-            /**
-             * Add the offfset.
-             */
+            /** Add the offfset. */
             theMinutes = theMinutes + theOffset;
 
-            /**
-             *  Add a leading zero if the _minutes_ value is a single-digit.
-             */
+            /** Add a leading zero if the _minutes_ value is a single-digit. */
             theMinutes = padZeroes(theMinutes, 2);
 
             return baseURI + theYear + theDays + "_" + theHours + theMinutes + getEnhancement() + ".jpg";
         }
 
-        /**
-         * Remove images.
-         */
-
+        /** Remove any existing animation frames (images). */
         while (APP.panelRoot.firstChild) {
             APP.panelRoot.removeChild(APP.panelRoot.firstChild);
         }
@@ -235,21 +228,13 @@
         var theInterval = 50;
         var theFrames = document.getElementsByClassName("frame");
 
-        function hideFrame(f) {
-            theFrames.item(f).classList.add("hidden");
-        }
-
-        function showFrame(f) {
-            theFrames.item(f).classList.remove("hidden");
-        }
-
         if (!n) {
             n = 0;
         }
 
         setTimeout(function () {
 
-            hideFrame(n);
+            theFrames.item(n).classList.add("hidden");
 
             if (n < theFrames.length - 1) {
                 n = n + 1;
@@ -257,9 +242,7 @@
                 n = 0;
             }
 
-            showFrame(n);
-
-            /** Call this function recursively to make it into a infinite loop. */
+            theFrames.item(n).classList.remove("hidden");
 
             APP.animate(n);
 
