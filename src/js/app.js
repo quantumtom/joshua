@@ -202,7 +202,7 @@
 
                 frame.classList.add("hidden");
                 frame.classList.add("frame");
-                frame.setAttribute("alt", "Image " + frameNumber + " unavailable.");
+                frame.setAttribute("alt", "Image " + frameNumber);
 
                 APP.panelRoot.appendChild(frame);
 
