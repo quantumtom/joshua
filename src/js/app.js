@@ -14,7 +14,7 @@
 
         APP.initialize();
         APP.loadFrames();
-        APP.animate(0);
+        APP.animate();
 
     };
 
@@ -31,12 +31,6 @@
         APP.theEnhancementList.addEventListener("change", function () {
             APP.loadFrames();
         });
-
-        APP.enhancement = function () {
-            var theEnhancementList = APP.theEnhancementList;
-
-            return theEnhancementList[theEnhancementList.selectedIndex].value;
-        };
 
     };
 

@@ -1,0 +1,5 @@
+src/js/app.js:17: WARNING - Function APP.animate: called with 0 argument(s). Function requires at least 1 argument(s) and no more than 1 argument(s).
+        APP.animate();
+        ^
+
+0 error(s), 1 warning(s), 83.6% typed
