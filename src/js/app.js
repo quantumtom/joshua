@@ -10,6 +10,14 @@
 
     var APP = {};
 
+    APP.main = function () {
+
+        APP.initialize();
+        APP.loadFrames();
+        APP.animate(0);
+
+    };
+
     APP.initialize = function () {
 
         APP.panelRoot = document.getElementById("panelRoot");
@@ -24,78 +32,11 @@
             APP.loadFrames();
         });
 
-    };
+        APP.enhancement = function () {
+            var theEnhancementList = APP.theEnhancementList;
 
-    /**
-     * This is the animation "player" that shows and hides the individual
-     * frames of the animation.
-     * @param n
-     */
-    APP.animate = function (n) {
-
-        function animate(n) {
-
-            var theInterval = 50,
-                frame = document.getElementsByClassName("frame");
-
-            if (!n) {
-                n = 0;
-            }
-
-            setTimeout(function () {
-
-                /**
-                 * Run through all but the final frame.
-                 */
-
-                if (n < frame.length - 1) {
-
-                    frame.item(n).classList.add("hidden");
-
-                    n = n + 1;
-
-                    frame.item(n).classList.remove("hidden");
-
-                    animate(n);
-
-                } else {
-
-                    /**
-                     * Otherwise, we're on the final frame (#19)
-                     */
-
-                    frame.item(n).classList.add("hidden");
-
-                    /**
-                     * Set the first frame back to visible.
-                     */
-
-                    frame.item(0).classList.remove("hidden");
-
-                    /**
-                     * Call this function recursively to loop it.
-                     */
-
-                    animate(0);
-
-                }
-
-
-            }, theInterval);
-
-        }
-
-        return animate(n);
-
-    };
-
-    APP.main = function () {
-
-        APP.initialize();
-
-        APP.loadFrames();
-
-        APP.animate(0);
+            return theEnhancementList[theEnhancementList.selectedIndex].value;
+        };
 
     };
 
@@ -115,12 +56,6 @@
      */
 
     APP.loadFrames = function() {
-
-        function getEnhancement() {
-            var theEnhancementList = APP.theEnhancementList;
-
-            return theEnhancementList[theEnhancementList.selectedIndex].value;
-        }
 
         function getThePast() {
             var thePresent = new Date();
@@ -215,8 +150,7 @@
                 theDays = dayOfYear(thePast),
                 baseURI = "http://www.ssd.noaa.gov/" + APP.theMapList[APP.theMapList.selectedIndex].value + "/img/",
                 thePeriod = 30,
-                theOffset = 0,
-                theEnhancement = getEnhancement();
+                theOffset = 0;
 
             theDays = padZeroes(theDays, 3);
             theHours = padZeroes(theHours, 2);
@@ -252,7 +186,7 @@
              */
             theMinutes = padZeroes(theMinutes, 2);
 
-            return baseURI + theYear + theDays + "_" + theHours + theMinutes + theEnhancement + ".jpg";
+            return baseURI + theYear + theDays + "_" + theHours + theMinutes + APP.enhancement() + ".jpg";
         }
 
         /**
@@ -265,23 +199,66 @@
 
         var thePast = getThePast();
         var frameNumber;
-        var frame;
+        var frameElement;
 
         for (frameNumber = 0; frameNumber < 20; frameNumber = frameNumber + 1) {
 
-            frame = document.createElement("img");
+            frameElement = document.createElement("img");
 
-            frame.src = getURI(thePast);
+            frameElement.src = getURI(thePast);
 
-            frame.classList.add("hidden");
-            frame.classList.add("frame");
-            frame.setAttribute("alt", "Image " + frameNumber);
+            frameElement.classList.add("hidden");
+            frameElement.classList.add("frame");
+            frameElement.setAttribute("alt", "Image " + frameNumber);
 
-            APP.panelRoot.appendChild(frame);
+            APP.panelRoot.appendChild(frameElement);
 
             /** Advance to the next frame's timestamp **/
             thePast.setMinutes(thePast.getMinutes() + 30);
         }
+
+    };
+
+    /**
+     * This is the animation "player" that shows and hides the individual
+     * frames of the animation.
+     * @param n
+     */
+    APP.animate = function (n) {
+
+        var theInterval = 50;
+        var theFrames = document.getElementsByClassName("frame");
+
+        function hideFrame(f) {
+            theFrames.item(f).classList.add("hidden");
+        }
+
+        function showFrame(f) {
+            theFrames.item(f).classList.remove("hidden");
+        }
+
+        if (!n) {
+            n = 0;
+        }
+
+        setTimeout(function () {
+
+            hideFrame(n);
+
+            if (n < theFrames.length - 1) {
+                n = n + 1;
+            } else {
+                n = 0;
+            }
+
+            showFrame(n);
+
+            /** Call this function recursively to make it into a infinite loop. */
+
+            APP.animate(n);
+
+
+        }, theInterval);
 
     };
 
