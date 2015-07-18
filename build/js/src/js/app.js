@@ -108,7 +108,7 @@
         };
 
         this.getEnhancement = function() {
-            var theEnhancementList = APP.theEnhancementList;
+            var theEnhancementList = WOPR.theEnhancementList;
 
             return theEnhancementList[theEnhancementList.selectedIndex].value;
         };
@@ -139,9 +139,9 @@
      *
      */
 
-    APP.loadFrames = function() {
+    WOPR.loadFrames = function() {
 
-        var util = APP.util;
+        var util = WOPR.util;
 
         /**
          * This function dynamically generates the NOAA-specific file path for the remote
@@ -155,7 +155,7 @@
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
                 theDays = util.dayOfYear(thePast),
-                baseURI = "http://www.ssd.noaa.gov/" + APP.theMapList[APP.theMapList.selectedIndex].value + "/img/",
+                baseURI = "http://www.ssd.noaa.gov/" + WOPR.theMapList[WOPR.theMapList.selectedIndex].value + "/img/",
                 thePeriod = 30,
                 theOffset = 0;
 
@@ -193,8 +193,8 @@
         }
 
         /** Remove any existing animation frames (images). */
-        while (APP.panelRoot.firstChild) {
-            APP.panelRoot.removeChild(APP.panelRoot.firstChild);
+        while (WOPR.panelRoot.firstChild) {
+            WOPR.panelRoot.removeChild(WOPR.panelRoot.firstChild);
         }
 
         var thePast = util.getThePast();
@@ -211,7 +211,7 @@
             frameElement.classList.add("frame");
             frameElement.setAttribute("alt", "Image " + frameNumber);
 
-            APP.panelRoot.appendChild(frameElement);
+            WOPR.panelRoot.appendChild(frameElement);
 
             /** Advance to the next frame's timestamp **/
             thePast.setMinutes(thePast.getMinutes() + 30);
@@ -224,7 +224,7 @@
      * frames of the animation.
      * @param n
      */
-    APP.animate = function (n) {
+    WOPR.animate = function (n) {
 
         var theInterval = 50;
         var theFrames = document.getElementsByClassName("frame");
@@ -245,13 +245,13 @@
 
             theFrames.item(n).classList.remove("hidden");
 
-            APP.animate(n);
+            WOPR.animate(n);
 
 
         }, theInterval);
 
     };
 
-    APP.main();
+    WOPR.main();
 
 }());
