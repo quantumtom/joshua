@@ -2,4 +2,8 @@ src/js/app.js:17: WARNING - Function APP.animate: called with 0 argument(s). Fun
         APP.animate();
         ^
 
-0 error(s), 1 warning(s), 83.6% typed
+src/js/app.js:35: WARNING - cannot instantiate non-constructor
+        APP.util = new APP.utilities();
+                   ^
+
+0 error(s), 2 warning(s), 75.9% typed
