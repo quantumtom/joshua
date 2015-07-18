@@ -1,42 +1,42 @@
 /**
  * @license MIT
  *
- * @module APP
+ * @module WOPR
  */
 
 (function () {
 
     'use strict';
 
-    var APP = {};
+    var WOPR = {};
 
-    APP.main = function () {
+    WOPR.main = function () {
 
-        APP.initialize();
-        APP.loadFrames();
-        APP.animate();
-
-    };
-
-    APP.initialize = function () {
-
-        APP.panelRoot = document.getElementById("panelRoot");
-        APP.theEnhancementList = document.getElementById("theEnhancementList");
-        APP.theMapList = document.getElementById("theMapList");
-
-        APP.theMapList.addEventListener("change", function () {
-            APP.loadFrames();
-        });
-
-        APP.theEnhancementList.addEventListener("change", function () {
-            APP.loadFrames();
-        });
-
-        APP.util = new APP.utilities();
+        WOPR.initialize();
+        WOPR.loadFrames();
+        WOPR.animate();
 
     };
 
-    APP.utilities = function () {
+    WOPR.initialize = function () {
+
+        WOPR.panelRoot = document.getElementById("panelRoot");
+        WOPR.theEnhancementList = document.getElementById("theEnhancementList");
+        WOPR.theMapList = document.getElementById("theMapList");
+
+        WOPR.theMapList.addEventListener("change", function () {
+            WOPR.loadFrames();
+        });
+
+        WOPR.theEnhancementList.addEventListener("change", function () {
+            WOPR.loadFrames();
+        });
+
+        WOPR.util = new WOPR.utilities();
+
+    };
+
+    WOPR.utilities = function () {
         /**
          * Takes a date and calculates how many days into the year that date is.
          * @param myDate
