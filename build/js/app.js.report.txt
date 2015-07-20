@@ -6,8 +6,4 @@ src/js/app.js:35: WARNING - cannot instantiate non-constructor
         WOPR.util = new WOPR.utilities();
                     ^
 
-src/js/app.js:43: WARNING - parameter myDate does not appear in Date.prototype.getDayOfYear's parameter list
-        Date.prototype.getDayOfYear = function() {
-                                      ^
-
-0 error(s), 3 warning(s), 79.0% typed
+0 error(s), 2 warning(s), 79.0% typed

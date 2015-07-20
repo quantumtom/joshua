@@ -36,7 +36,6 @@
 
         /**
          * Takes a date and calculates how many days into the year that date is.
-         * @param myDate
          * @returns {number}
          */
 
