@@ -34,26 +34,22 @@
 
         WOPR.util = new WOPR.utilities();
 
-    };
-
-    WOPR.utilities = function () {
         /**
          * Takes a date and calculates how many days into the year that date is.
          * @param myDate
          * @returns {number}
          */
-        this.dayOfYear = function(myDate) {
 
-            var theMonth = myDate.getMonth(),
-                theDate = myDate.getDate(),
+        Date.prototype.getDayOfYear = function() {
+            var theMonth = this.getMonth(),
+                theDate = this.getDate(),
                 monthDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
                 theDayOfTheYear = 0,
                 i;
 
-            /**
-             * Check for leap year.
-             */
-            if (myDate.getYear() % 4) {
+            /** Check for leap year. */
+
+            if (this.getYear() % 4) {
                 monthDays[1] = 28;
             }
 
@@ -66,6 +62,10 @@
             return theDayOfTheYear;
         };
 
+    };
+
+    WOPR.utilities = function () {
+
         /**
          * Takes a value between 0 - 59 and returns either the
          * bottom or top half of the hour.
@@ -73,6 +73,7 @@
          * @param p
          * @returns {number}
          */
+
         this.parseMinutes = function(m, p) {
 
             m = m / p;
@@ -90,6 +91,7 @@
          * @param places
          * @returns {string}
          */
+
         this.padZeroes = function(i, places) {
 
             var j;
@@ -149,12 +151,13 @@
          * @param thePast
          * @returns {string}
          */
+
         function getURI(thePast) {
 
             var theYear = thePast.getFullYear(),
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
-                theDays = util.dayOfYear(thePast),
+                theDays = thePast.getDayOfYear(),
                 baseURI = "http://www.ssd.noaa.gov/" + WOPR.theMapList[WOPR.theMapList.selectedIndex].value + "/img/",
                 thePeriod = 30,
                 theOffset = 0;
@@ -193,6 +196,7 @@
         }
 
         /** Remove any existing animation frames (images). */
+
         while (WOPR.panelRoot.firstChild) {
             WOPR.panelRoot.removeChild(WOPR.panelRoot.firstChild);
         }
@@ -214,6 +218,7 @@
             WOPR.panelRoot.appendChild(frameElement);
 
             /** Advance to the next frame's timestamp **/
+
             thePast.setMinutes(thePast.getMinutes() + 30);
         }
 
@@ -224,6 +229,7 @@
      * frames of the animation.
      * @param n
      */
+
     WOPR.animate = function (n) {
 
         var theInterval = 50;
