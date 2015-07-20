@@ -6,4 +6,8 @@ src/js/app.js:35: WARNING - cannot instantiate non-constructor
         WOPR.util = new WOPR.utilities();
                     ^
 
-0 error(s), 2 warning(s), 79.0% typed
+src/js/app.js:73: WARNING - parameter i does not appear in Number.prototype.padZeroes's parameter list
+        Number.prototype.padZeroes = function (places) {
+                                     ^
+
+0 error(s), 3 warning(s), 81.5% typed

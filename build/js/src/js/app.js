@@ -61,6 +61,29 @@
             return theDayOfTheYear;
         };
 
+        /**
+         * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
+         * it (concatenates it with a numeric string) that is
+         * passed in as the first parameter.
+         * @param i
+         * @param places
+         * @returns {string}
+         */
+
+        Number.prototype.padZeroes = function (places) {
+            var oldString = this.toString();
+
+            console.log('oldString', oldString);
+
+            while (oldString.length < places) {
+                oldString = '0' + oldString;
+            }
+
+            console.log('oldString', oldString);
+
+            return oldString;
+        };
+
     };
 
     WOPR.utilities = function () {
@@ -79,32 +102,6 @@
             m = Math.floor(m);
 
             return m * p;
-
-        };
-
-        /**
-         * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
-         * it (concatenates it with a numeric string) that is
-         * passed in as the first parameter.
-         * @param i
-         * @param places
-         * @returns {string}
-         */
-
-        this.padZeroes = function(i, places) {
-
-            var j;
-            var theString = "";
-
-            theString += i;
-
-            for (j = 0; j < places; j = j + 1) {
-                if (theString.length < places) {
-                    theString = "0" + theString;
-                }
-            }
-
-            return theString;
 
         };
 
@@ -151,7 +148,7 @@
          * @returns {string}
          */
 
-        function getURI(thePast) {
+        function makeURI(thePast) {
 
             var theYear = thePast.getFullYear(),
                 theMinutes = thePast.getMinutes(),
@@ -161,8 +158,8 @@
                 thePeriod = 30,
                 theOffset = 0;
 
-            theDays = util.padZeroes(theDays, 3);
-            theHours = util.padZeroes(theHours, 2);
+            theDays.padZeroes(3);
+            theHours.padZeroes(2);
 
             /**
              * Handle differences in the timing between the satellite
@@ -188,8 +185,12 @@
             /** Add the offfset. */
             theMinutes = theMinutes + theOffset;
 
-            /** Add a leading zero if the _minutes_ value is a single-digit. */
-            theMinutes = util.padZeroes(theMinutes, 2);
+            if (theMinutes === 0) {
+                theMinutes = '00';
+            } else {
+                /** Add a leading zero if the _minutes_ value is a single-digit. */
+                theMinutes.padZeroes(2);
+            }
 
             return baseURI + theYear + theDays + "_" + theHours + theMinutes + util.getEnhancement() + ".jpg";
         }
@@ -200,25 +201,36 @@
             WOPR.panelRoot.removeChild(WOPR.panelRoot.firstChild);
         }
 
+        function makeFrameArray() {
+            var frameArray = [];
+            var i;
+
+            for (i = 0; i < 20; i = i + 1) {
+                frameArray.push(makeURI(thePast));
+                /** Advance to the next frame's timestamp **/
+                thePast.setMinutes(thePast.getMinutes() + 30);
+            }
+
+            return frameArray;
+        }
+
         var thePast = util.getThePast();
         var frameNumber;
         var frameElement;
+        var frameArray = makeFrameArray();
 
-        for (frameNumber = 0; frameNumber < 20; frameNumber = frameNumber + 1) {
+        for (frameNumber = 0; frameNumber < frameArray.length; frameNumber = frameNumber + 1) {
 
             frameElement = document.createElement("img");
 
-            frameElement.src = getURI(thePast);
+            frameElement.src = frameArray[frameNumber];
 
+            frameElement.setAttribute("alt", "Satellite Weather Image #" + frameNumber);
             frameElement.classList.add("hidden");
             frameElement.classList.add("frame");
-            frameElement.setAttribute("alt", "Image " + frameNumber);
 
             WOPR.panelRoot.appendChild(frameElement);
 
-            /** Advance to the next frame's timestamp **/
-
-            thePast.setMinutes(thePast.getMinutes() + 30);
         }
 
     };
