@@ -9,9 +9,9 @@ required: (Number|null)
                    ^
 
 src/js/app.js:113: WARNING - inconsistent return type
-found   : (Number|string)
+found   : string
 required: (String|null)
             return oldString;
                    ^
 
-0 error(s), 3 warning(s), 85.5% typed
+0 error(s), 3 warning(s), 84.8% typed

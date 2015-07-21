@@ -104,7 +104,7 @@
          */
 
         Number.prototype.padZeroes = function (places) {
-            var oldString = this;
+            var oldString = this.toString();
 
             while (oldString.length < places) {
                 oldString = '0' + oldString;
@@ -151,8 +151,8 @@
             var theEnhancement = WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value;
             var baseURI = "http://www.ssd.noaa.gov/" + WOPR.theMapList[WOPR.theMapList.selectedIndex].value + "/img/";
 
-            theDays.padZeroes(3);
-            theHours.padZeroes(2);
+            theDays = theDays.padZeroes(3);
+            theHours = theHours.padZeroes(2);
 
             /** Handle differences in the timing between the satellite image delivery. */
 
