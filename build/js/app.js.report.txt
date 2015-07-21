@@ -2,16 +2,16 @@ src/js/app.js:18: WARNING - Function WOPR.animate: called with 0 argument(s). Fu
         WOPR.animate();
         ^
 
-src/js/app.js:97: WARNING - inconsistent return type
+src/js/app.js:95: WARNING - inconsistent return type
 found   : number
 required: (Number|null)
             return theMinutes;
                    ^
 
-src/js/app.js:115: WARNING - inconsistent return type
-found   : string
+src/js/app.js:113: WARNING - inconsistent return type
+found   : (Number|string)
 required: (String|null)
-            return oldString.valueOf();
+            return oldString;
                    ^
 
-0 error(s), 3 warning(s), 85.7% typed
+0 error(s), 3 warning(s), 85.5% typed

@@ -33,8 +33,6 @@
             WOPR.loadFrames();
         });
 
-        WOPR.theEnhancement = WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value;
-
     };
 
     WOPR.initialize = function () {
@@ -106,23 +104,13 @@
          */
 
         Number.prototype.padZeroes = function (places) {
-            var oldString = this.toString();
+            var oldString = this;
 
             while (oldString.length < places) {
                 oldString = '0' + oldString;
             }
 
-            return oldString.valueOf();
-        };
-
-    };
-
-    WOPR.utilities = function () {
-
-        this.getEnhancement = function() {
-            var theEnhancementList = WOPR.theEnhancementList;
-
-            return theEnhancementList[theEnhancementList.selectedIndex].value;
+            return oldString;
         };
 
     };
@@ -157,9 +145,11 @@
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
                 theDays = thePast.getDayOfYear(),
-                baseURI = "http://www.ssd.noaa.gov/" + WOPR.theMapList[WOPR.theMapList.selectedIndex].value + "/img/",
                 thePeriod = 30,
                 theOffset = 0;
+
+            var theEnhancement = WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value;
+            var baseURI = "http://www.ssd.noaa.gov/" + WOPR.theMapList[WOPR.theMapList.selectedIndex].value + "/img/";
 
             theDays.padZeroes(3);
             theHours.padZeroes(2);
@@ -190,7 +180,7 @@
                 theMinutes.padZeroes(2);
             }
 
-            return baseURI + theYear + theDays + "_" + theHours + theMinutes + WOPR.theEnhancement + ".jpg";
+            return baseURI + theYear + theDays + "_" + theHours + theMinutes + theEnhancement + ".jpg";
         }
 
         /** Remove any existing animation frames (images). */
@@ -199,8 +189,9 @@
         }
 
         function makeFrameArray() {
-            var frameArray = [];
+
             var i;
+            var frameArray = [];
 
             for (i = 0; i < 20; i = i + 1) {
                 frameArray.push(makeURI(thePast));
@@ -212,17 +203,17 @@
         }
 
         var thePast = new Date().getThePast();
-        var frameNumber;
+        var f;
         var frameElement;
         var frameArray = makeFrameArray();
 
-        for (frameNumber = 0; frameNumber < frameArray.length; frameNumber = frameNumber + 1) {
+        for (f = 0; f < frameArray.length; f = f + 1) {
 
             frameElement = document.createElement("img");
 
-            frameElement.src = frameArray[frameNumber];
+            frameElement.src = frameArray[f];
 
-            frameElement.setAttribute("alt", "Satellite Weather Image #" + frameNumber.padZeroes(2));
+            frameElement.setAttribute("alt", "Satellite Weather Image #" + f.padZeroes(2));
             frameElement.classList.add("hidden");
             frameElement.classList.add("frame");
 
