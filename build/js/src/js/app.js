@@ -21,7 +21,7 @@
 
     WOPR.setup = function () {
 
-        WOPR.panelRoot = document.getElementById("panelRoot");
+        WOPR.viewerPanel = document.getElementById("viewerPanel");
         WOPR.theMapList = document.getElementById("theMapList");
         WOPR.theEnhancementList = document.getElementById("theEnhancementList");
 
@@ -184,14 +184,15 @@
         }
 
         /** Remove any existing animation frames (images). */
-        while (WOPR.panelRoot.firstChild) {
-            WOPR.panelRoot.removeChild(WOPR.panelRoot.firstChild);
+        while (WOPR.viewerPanel.firstChild) {
+            WOPR.viewerPanel.removeChild(WOPR.viewerPanel.firstChild);
         }
 
         function makeFrameArray() {
 
             var i;
             var frameArray = [];
+            var thePast = new Date().getThePast();
 
             for (i = 0; i < 20; i = i + 1) {
                 frameArray.push(makeURI(thePast));
@@ -202,22 +203,21 @@
             return frameArray;
         }
 
-        var thePast = new Date().getThePast();
         var f;
-        var frameElement;
-        var frameArray = makeFrameArray();
+        var fElement;
+        var fArray = makeFrameArray();
 
-        for (f = 0; f < frameArray.length; f = f + 1) {
+        for (f = 0; f < fArray.length; f = f + 1) {
 
-            frameElement = document.createElement("img");
+            fElement = document.createElement("img");
 
-            frameElement.src = frameArray[f];
+            fElement.src = fArray[f];
 
-            frameElement.setAttribute("alt", "Satellite Weather Image #" + f.padZeroes(2));
-            frameElement.classList.add("hidden");
-            frameElement.classList.add("frame");
+            fElement.setAttribute("alt", "Satellite Weather Image #" + f.padZeroes(2));
+            fElement.classList.add("hidden");
+            fElement.classList.add("frame");
 
-            WOPR.panelRoot.appendChild(frameElement);
+            WOPR.viewerPanel.appendChild(fElement);
 
         }
 
@@ -231,7 +231,7 @@
 
     WOPR.animate = function (n) {
 
-        var theInterval = 50;
+        var theInterval = 133;
         var theFrames = document.getElementsByClassName("frame");
 
         if (!n) {

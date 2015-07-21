@@ -21,7 +21,7 @@
 
     WOPR.setup = function () {
 
-        WOPR.panelRoot = document.getElementById("panelRoot");
+        WOPR.viewerPanel = document.getElementById("viewerPanel");
         WOPR.theMapList = document.getElementById("theMapList");
         WOPR.theEnhancementList = document.getElementById("theEnhancementList");
 
@@ -184,8 +184,8 @@
         }
 
         /** Remove any existing animation frames (images). */
-        while (WOPR.panelRoot.firstChild) {
-            WOPR.panelRoot.removeChild(WOPR.panelRoot.firstChild);
+        while (WOPR.viewerPanel.firstChild) {
+            WOPR.viewerPanel.removeChild(WOPR.viewerPanel.firstChild);
         }
 
         function makeFrameArray() {
@@ -217,7 +217,7 @@
             frameElement.classList.add("hidden");
             frameElement.classList.add("frame");
 
-            WOPR.panelRoot.appendChild(frameElement);
+            WOPR.viewerPanel.appendChild(frameElement);
 
         }
 
