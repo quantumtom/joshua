@@ -1,13 +1,17 @@
-src/js/app.js:17: WARNING - Function WOPR.animate: called with 0 argument(s). Function requires at least 1 argument(s) and no more than 1 argument(s).
+src/js/app.js:18: WARNING - Function WOPR.animate: called with 0 argument(s). Function requires at least 1 argument(s) and no more than 1 argument(s).
         WOPR.animate();
         ^
 
-src/js/app.js:35: WARNING - cannot instantiate non-constructor
-        WOPR.util = new WOPR.utilities();
-                    ^
+src/js/app.js:97: WARNING - inconsistent return type
+found   : number
+required: (Number|null)
+            return theMinutes;
+                   ^
 
-src/js/app.js:73: WARNING - parameter i does not appear in Number.prototype.padZeroes's parameter list
-        Number.prototype.padZeroes = function (places) {
-                                     ^
+src/js/app.js:115: WARNING - inconsistent return type
+found   : string
+required: (String|null)
+            return oldString.valueOf();
+                   ^
 
-0 error(s), 3 warning(s), 81.5% typed
+0 error(s), 3 warning(s), 85.7% typed

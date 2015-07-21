@@ -12,17 +12,18 @@
 
     WOPR.main = function () {
 
+        WOPR.setup();
         WOPR.initialize();
         WOPR.loadFrames();
         WOPR.animate();
 
     };
 
-    WOPR.initialize = function () {
+    WOPR.setup = function () {
 
         WOPR.panelRoot = document.getElementById("panelRoot");
-        WOPR.theEnhancementList = document.getElementById("theEnhancementList");
         WOPR.theMapList = document.getElementById("theMapList");
+        WOPR.theEnhancementList = document.getElementById("theEnhancementList");
 
         WOPR.theMapList.addEventListener("change", function () {
             WOPR.loadFrames();
@@ -32,11 +33,29 @@
             WOPR.loadFrames();
         });
 
-        WOPR.util = new WOPR.utilities();
+        WOPR.theEnhancement = WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value;
+
+    };
+
+    WOPR.initialize = function () {
+
+        /**
+         *
+         * @returns {Date}
+         */
+
+        Date.prototype.getThePast = function() {
+            var theDate = new Date();
+            var theHours = theDate.getHours();
+
+            theDate.setHours(theHours - 4);
+
+            return theDate;
+        };
 
         /**
          * Takes a date and calculates how many days into the year that date is.
-         * @returns {number}
+         * @returns {Number}
          */
 
         Date.prototype.getDayOfYear = function() {
@@ -62,62 +81,48 @@
         };
 
         /**
+         * Takes a value between 0 - 59 and returns either the
+         * bottom or top half of the hour.
+         * @param thePeriod
+         * @returns {Number}
+         */
+
+        Number.prototype.parseMinutes = function(thePeriod) {
+            var theMinutes = this;
+
+            theMinutes = theMinutes / thePeriod;
+            theMinutes = Math.floor(theMinutes);
+            theMinutes = theMinutes * thePeriod;
+
+            return theMinutes;
+        };
+
+        /**
          * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
          * it (concatenates it with a numeric string) that is
          * passed in as the first parameter.
-         * @param i
          * @param places
-         * @returns {string}
+         * @returns {String}
          */
 
         Number.prototype.padZeroes = function (places) {
             var oldString = this.toString();
 
-            console.log('oldString', oldString);
-
             while (oldString.length < places) {
                 oldString = '0' + oldString;
             }
 
-            console.log('oldString', oldString);
-
-            return oldString;
+            return oldString.valueOf();
         };
 
     };
 
     WOPR.utilities = function () {
 
-        /**
-         * Takes a value between 0 - 59 and returns either the
-         * bottom or top half of the hour.
-         * @param m
-         * @param p
-         * @returns {number}
-         */
-
-        this.parseMinutes = function(m, p) {
-
-            m = m / p;
-            m = Math.floor(m);
-
-            return m * p;
-
-        };
-
         this.getEnhancement = function() {
             var theEnhancementList = WOPR.theEnhancementList;
 
             return theEnhancementList[theEnhancementList.selectedIndex].value;
-        };
-
-        this.getThePast = function() {
-            var thePresent = new Date();
-            var theHours = thePresent.getHours();
-
-            thePresent.setHours(theHours - 4);
-
-            return thePresent;
         };
 
     };
@@ -139,8 +144,6 @@
 
     WOPR.loadFrames = function() {
 
-        var util = WOPR.util;
-
         /**
          * This function dynamically generates the NOAA-specific file path for the remote
          * image resources.
@@ -161,42 +164,36 @@
             theDays.padZeroes(3);
             theHours.padZeroes(2);
 
-            /**
-             * Handle differences in the timing between the satellite
-             * image delivery.
-             *
-             * GOES-West: 0
-             * GOES-East: 15
-             * MTSAT: 32
-             *
-             **/
+            /** Handle differences in the timing between the satellite image delivery. */
 
+            /** MTSAT: 32 minute offset from GOES-West */
             if (baseURI.search("mtsat") >= 0) {
                 thePeriod = 59;
                 theOffset = 32;
             }
 
+            /** GOES-East: 15 minute offset from GOES-West */
             if (baseURI.search("east") >= 0) {
                 theOffset = 15;
             }
 
-            theMinutes = util.parseMinutes(theMinutes, thePeriod);
+            theMinutes = theMinutes.parseMinutes(thePeriod);
 
             /** Add the offfset. */
             theMinutes = theMinutes + theOffset;
 
+
+            /** Add a leading zero if the _minutes_ value is a single-digit. */
             if (theMinutes === 0) {
                 theMinutes = '00';
             } else {
-                /** Add a leading zero if the _minutes_ value is a single-digit. */
                 theMinutes.padZeroes(2);
             }
 
-            return baseURI + theYear + theDays + "_" + theHours + theMinutes + util.getEnhancement() + ".jpg";
+            return baseURI + theYear + theDays + "_" + theHours + theMinutes + WOPR.theEnhancement + ".jpg";
         }
 
         /** Remove any existing animation frames (images). */
-
         while (WOPR.panelRoot.firstChild) {
             WOPR.panelRoot.removeChild(WOPR.panelRoot.firstChild);
         }
@@ -214,7 +211,7 @@
             return frameArray;
         }
 
-        var thePast = util.getThePast();
+        var thePast = new Date().getThePast();
         var frameNumber;
         var frameElement;
         var frameArray = makeFrameArray();
@@ -225,7 +222,7 @@
 
             frameElement.src = frameArray[frameNumber];
 
-            frameElement.setAttribute("alt", "Satellite Weather Image #" + frameNumber);
+            frameElement.setAttribute("alt", "Satellite Weather Image #" + frameNumber.padZeroes(2));
             frameElement.classList.add("hidden");
             frameElement.classList.add("frame");
 
