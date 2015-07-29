@@ -8,36 +8,7 @@
 
     'use strict';
 
-    var WOPR = {};
-
-    WOPR.start = function () {
-
-        WOPR.setUpDOM();
-        WOPR.initialize();
-        WOPR.addHelpers();
-        WOPR.loadFrames();
-        WOPR.animate();
-
-    };
-
-    WOPR.setUpDOM = function () {
-
-        WOPR.viewerPanel = document.getElementById("viewerPanel");
-        WOPR.theMapList = document.getElementById("theMapList");
-        WOPR.theEnhancementList = document.getElementById("theEnhancementList");
-
-        WOPR.theMapList.addEventListener("change", function () {
-            WOPR.loadFrames();
-        });
-
-        WOPR.theEnhancementList.addEventListener("change", function () {
-            WOPR.loadFrames();
-        });
-
-    };
-
-    WOPR.initialize = function () {
-
+    var WOPR = function () {
         /**
          *
          * This is our interface to get still images. In this case, we're getting them from NOAA.
@@ -48,6 +19,26 @@
          */
 
         WOPR.noaa = new WOPR.NOAA();
+
+        WOPR.setUpDOM();
+        WOPR.addHelpers();
+        WOPR.injectFrames();
+        WOPR.animate();
+    };
+
+    WOPR.setUpDOM = function () {
+
+        WOPR.viewerPanel = document.getElementById("viewerPanel");
+        WOPR.theMapList = document.getElementById("theMapList");
+        WOPR.theEnhancementList = document.getElementById("theEnhancementList");
+
+        WOPR.theMapList.addEventListener("change", function () {
+            WOPR.injectFrames();
+        });
+
+        WOPR.theEnhancementList.addEventListener("change", function () {
+            WOPR.injectFrames();
+        });
 
     };
 
@@ -139,18 +130,9 @@
      * Injects image DOM nodes. It calculates the URI for each image
      * used as frames in the imagination to use as values for the src
      * attributes in each image element on the page.
-     *
-     * Each satellite generates an image every thirty minutes. The second satellite timing is
-     * offset fifteen minutes from the first.
-     *
-     * E.G.
-     *
-     * GOES-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
-     * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
-     *
      */
 
-    WOPR.loadFrames = function() {
+    WOPR.injectFrames = function() {
 
         var fCount;
         var fElement;
@@ -262,6 +244,17 @@
             theDays.padZeroes(3);
             theHours.padZeroes(2);
 
+            /**
+             * Each satellite generates an image every thirty minutes. The second satellite timing is
+             * offset fifteen minutes from the first.
+             *
+             * Example:
+             *
+             * GOES-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
+             * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
+             */
+
+
             /** Handle differences in the timing between the satellite image delivery. */
 
             /** MTSAT: 32 minute offset from GOES-West */
@@ -292,6 +285,6 @@
         }
     };
 
-    WOPR.start();
+    WOPR.call();
 
 }());
