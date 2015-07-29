@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+body{background:#000;height:100%;margin:auto;position:absolute;width:100%}#metaStuff{top:30px;width:100%;z-index:10}#metaStuff,#panelRoot{position:absolute;text-align:center}#panelRoot{left:0;top:0;width:100%;z-index:5}.panel{float:left;margin:0;max-height:100%}.frame{vertical-align:middle}.hidden{display:none}
+=======
 body {
     background: #000;
     height: 100%;
@@ -41,3 +44,4 @@ fieldset {
     border: none;
     text-align: left;
 }
+>>>>>>> f1b49b0eeaa9a3aa0c0a3050c54e2f9da4cc6c32
