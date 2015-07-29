@@ -33,6 +33,8 @@
             WOPR.loadFrames();
         });
 
+        WOPR.noaa = new WOPR.NOAA();
+
     };
 
     WOPR.initialize = function () {
@@ -115,10 +117,6 @@
 
     };
 
-    /**
-     * Remove any existing animation frames (images).
-     */
-
     WOPR.removeFrames = function () {
         while (WOPR.viewerPanel.firstChild) {
             WOPR.viewerPanel.removeChild(WOPR.viewerPanel.firstChild);
@@ -142,12 +140,13 @@
 
     WOPR.loadFrames = function() {
 
+        /** Remove any existing animation frames (images). */
+
         WOPR.removeFrames();
 
-        var thePast = new Date().getThePast();
         var fCount;
         var fElement;
-        var fArray = makeFrameArray();
+        var fArray = WOPR.NOAA.makeFrameArray();
 
         for (fCount = 0; fCount < fArray.length; fCount++) {
 
@@ -155,7 +154,7 @@
 
             fElement.src = fArray[fCount];
 
-            fElement.setAttribute("alt", "Satellite Weather Image #" + fCount.padZeroes(2));
+            fElement.setAttribute("alt", "Image #" + fCount.padZeroes(2));
             fElement.classList.add("hidden");
             fElement.classList.add("frame");
 
@@ -163,19 +162,43 @@
 
         }
 
-        function makeFrameArray() {
+    };
 
-            var i;
-            var tempArray = [];
+    /**
+     * This is the animation "player" that shows and hides the individual
+     * frames of the animation.
+     * @param n
+     */
 
-            for (i = 0; i < 20; i = i + 1) {
-                tempArray.push(makeURI(thePast));
-                /** Advance to the next frame's timestamp **/
-                thePast.setMinutes(thePast.getMinutes() + 30);
+    WOPR.animate = function (n) {
+
+        var theInterval = 50;
+        var theFrames = document.getElementsByClassName("frame");
+
+        if (!n) {
+            n = 0;
+        }
+
+        setTimeout(function () {
+
+            theFrames.item(n).classList.add("hidden");
+
+            if (n < theFrames.length - 1) {
+                n = n + 1;
+            } else {
+                n = 0;
             }
 
-            return tempArray;
-        }
+            theFrames.item(n).classList.remove("hidden");
+
+            WOPR.animate(n);
+
+
+        }, theInterval);
+
+    };
+
+    WOPR.NOAA = function () {
 
         /**
          * This function dynamically generates the NOAA-specific file path for the remote
@@ -228,40 +251,20 @@
             return baseURI + theYear + theDays + "_" + theHours + theMinutes + theEnhancement + ".jpg";
         }
 
-    };
+        this.makeFrameArray = function () {
+            var thePast = new Date().getThePast();
 
-    /**
-     * This is the animation "player" that shows and hides the individual
-     * frames of the animation.
-     * @param n
-     */
+            var i;
+            var tempArray = [];
 
-    WOPR.animate = function (n) {
-
-        var theInterval = 50;
-        var theFrames = document.getElementsByClassName("frame");
-
-        if (!n) {
-            n = 0;
-        }
-
-        setTimeout(function () {
-
-            theFrames.item(n).classList.add("hidden");
-
-            if (n < theFrames.length - 1) {
-                n = n + 1;
-            } else {
-                n = 0;
+            for (i = 0; i < 20; i = i + 1) {
+                tempArray.push(makeURI(thePast));
+                /** Advance to the next frame's timestamp **/
+                thePast.setMinutes(thePast.getMinutes() + 30);
             }
 
-            theFrames.item(n).classList.remove("hidden");
-
-            WOPR.animate(n);
-
-
-        }, theInterval);
-
+            return tempArray;
+        };
     };
 
     WOPR.main();
