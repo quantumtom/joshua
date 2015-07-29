@@ -145,17 +145,17 @@
         WOPR.removeFrames();
 
         var thePast = new Date().getThePast();
-        var f;
+        var fCount;
         var fElement;
         var fArray = makeFrameArray();
 
-        for (f = 0; f < fArray.length; f = f + 1) {
+        for (fCount = 0; fCount < fArray.length; fCount++) {
 
             fElement = document.createElement("img");
 
-            fElement.src = fArray[f];
+            fElement.src = fArray[fCount];
 
-            fElement.setAttribute("alt", "Satellite Weather Image #" + f.padZeroes(2));
+            fElement.setAttribute("alt", "Satellite Weather Image #" + fCount.padZeroes(2));
             fElement.classList.add("hidden");
             fElement.classList.add("frame");
 

@@ -6,10 +6,10 @@ CACHE MANIFEST
 index.html
 js/app.js
 css/app.css
-img/apple-touch-icon.png
+# img/apple-touch-icon.png
 
 NETWORK:
-show-log.php
-insert-into-log.php
-delete-log-entry.php
-update-log-entry.php
+# show-log.php
+# insert-into-log.php
+# delete-log-entry.php
+# update-log-entry.php
