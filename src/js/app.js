@@ -116,6 +116,16 @@
     };
 
     /**
+     * Remove any existing animation frames (images).
+     */
+
+    WOPR.removeFrames = function () {
+        while (WOPR.viewerPanel.firstChild) {
+            WOPR.viewerPanel.removeChild(WOPR.viewerPanel.firstChild);
+        }
+    };
+
+    /**
      * Injects image DOM nodes. It calculates the URI for each image
      * used as frames in the imagination to use as values for the src
      * attributes in each image element on the page.
@@ -131,6 +141,41 @@
      */
 
     WOPR.loadFrames = function() {
+
+        WOPR.removeFrames();
+
+        var thePast = new Date().getThePast();
+        var f;
+        var fElement;
+        var fArray = makeFrameArray();
+
+        for (f = 0; f < fArray.length; f = f + 1) {
+
+            fElement = document.createElement("img");
+
+            fElement.src = fArray[f];
+
+            fElement.setAttribute("alt", "Satellite Weather Image #" + f.padZeroes(2));
+            fElement.classList.add("hidden");
+            fElement.classList.add("frame");
+
+            WOPR.viewerPanel.appendChild(fElement);
+
+        }
+
+        function makeFrameArray() {
+
+            var i;
+            var tempArray = [];
+
+            for (i = 0; i < 20; i = i + 1) {
+                tempArray.push(makeURI(thePast));
+                /** Advance to the next frame's timestamp **/
+                thePast.setMinutes(thePast.getMinutes() + 30);
+            }
+
+            return tempArray;
+        }
 
         /**
          * This function dynamically generates the NOAA-specific file path for the remote
@@ -181,44 +226,6 @@
             }
 
             return baseURI + theYear + theDays + "_" + theHours + theMinutes + theEnhancement + ".jpg";
-        }
-
-        /** Remove any existing animation frames (images). */
-        while (WOPR.viewerPanel.firstChild) {
-            WOPR.viewerPanel.removeChild(WOPR.viewerPanel.firstChild);
-        }
-
-        function makeFrameArray() {
-
-            var i;
-            var frameArray = [];
-
-            for (i = 0; i < 20; i = i + 1) {
-                frameArray.push(makeURI(thePast));
-                /** Advance to the next frame's timestamp **/
-                thePast.setMinutes(thePast.getMinutes() + 30);
-            }
-
-            return frameArray;
-        }
-
-        var thePast = new Date().getThePast();
-        var f;
-        var frameElement;
-        var frameArray = makeFrameArray();
-
-        for (f = 0; f < frameArray.length; f = f + 1) {
-
-            frameElement = document.createElement("img");
-
-            frameElement.src = frameArray[f];
-
-            frameElement.setAttribute("alt", "Satellite Weather Image #" + f.padZeroes(2));
-            frameElement.classList.add("hidden");
-            frameElement.classList.add("frame");
-
-            WOPR.viewerPanel.appendChild(frameElement);
-
         }
 
     };
