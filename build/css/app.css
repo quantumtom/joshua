@@ -1,1 +1,47 @@
+<<<<<<< HEAD
 body{background:#000;height:100%;margin:auto;position:absolute;width:100%}#metaStuff{top:30px;width:100%;z-index:10}#metaStuff,#panelRoot{position:absolute;text-align:center}#panelRoot{left:0;top:0;width:100%;z-index:5}.panel{float:left;margin:0;max-height:100%}.frame{vertical-align:middle}.hidden{display:none}
+=======
+body {
+    background: #000;
+    height: 100%;
+    margin: 0;
+    width: 100%;
+}
+
+#controlPanel {
+    height: 70px;
+    margin: auto;
+    position: relative;
+    text-align: center;
+    width: 720px;
+    z-index: 10;
+}
+
+#viewerPanel {
+    margin: auto;
+    position: relative;
+    text-align: center;
+    top: -70px;
+    z-index: 5;
+}
+
+.frame {
+    vertical-align: middle;
+}
+
+.hidden {
+    display:none;
+}
+
+.controlLabel {
+    color: white;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+fieldset {
+    border: none;
+    text-align: left;
+}
+>>>>>>> f1b49b0eeaa9a3aa0c0a3050c54e2f9da4cc6c32

@@ -16,6 +16,11 @@ module.exports = function (grunt) {
                 files: {
                     'build/index.html': 'src/index.html'
                 }
+            },
+            dev: {
+                files: {
+                    'build/index.html': 'src/index.html'
+                }
             }
         },
         cssmin: {
@@ -33,6 +38,9 @@ module.exports = function (grunt) {
             }
         },
         copy: {
+            /**
+             * Copies original source from src/js to build/js/src/js for source map debugging.
+             */
             js: {
                 files: [
                     {
@@ -40,7 +48,16 @@ module.exports = function (grunt) {
                         src: 'src/js/*',
                         dest: 'build/js/'
                     }
-
+                ]
+            },
+            dev: {
+                files: [
+                    {
+                        cwd: 'src',
+                        expand: true,
+                        src: '**',
+                        dest: 'build/'
+                    }
                 ]
             }
         },
@@ -60,17 +77,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        watch: {
-            dev: {
-                files: [
-                    'src/*.html',
-                    'src/css/*',
-                    'src/js/*',
-                    'Gruntfile.js'
-                ],
-                tasks: ['minimal']
-            }
-        },
         jsdoc : {
             dist : {
                 src: 'src/js/app.js',
@@ -80,9 +86,30 @@ module.exports = function (grunt) {
         clean: {
             build: {
                 src: [
-                    "build/css/*",
-                    "build/js/*",
-                    "build/*.html"]
+                    "build/*"
+                ]
+            }
+        },
+        watch: {
+            dev: {
+                files: [
+                    'src/*.html',
+                    'src/css/*.css',
+                    'src/js/*.js',
+                    'Gruntfile.js'
+                ],
+                tasks: [
+                    'copy:dev'
+                ]
+            },
+            js: {
+                files: [
+                    'src/js/*.js'
+                ],
+                tasks: [
+                    'copy:js',
+                    'closure-compiler'
+                ]
             }
         }
 
@@ -99,7 +126,8 @@ module.exports = function (grunt) {
     /**
      * Alias tasks
      */
-    grunt.registerTask('default', ['clean', 'jsdoc', 'htmlmin', 'cssmin', 'copy:js', 'closure-compiler']);
+    grunt.registerTask('default', ['clean', 'htmlmin:dev', 'cssmin', 'copy:js', 'copy:dev', 'closure-compiler']);
+    grunt.registerTask('dev', ['copy:dev']);
     grunt.registerTask('minimal', ['clean', 'htmlmin', 'cssmin', 'copy:js', 'closure-compiler']);
 
 };

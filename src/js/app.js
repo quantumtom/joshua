@@ -1,95 +1,71 @@
 /**
  * @license MIT
  *
- * @module APP
+ * @module WOPR
  */
 
-"use strict";
+(function () {
 
-var APP = {};
+    'use strict';
 
-APP = {
-    /** Initialize some properties. Call the main function. */
-    init: function () {
+    var WOPR = {};
 
-        APP.view = {
-            panelRoot: document.getElementById("panelRoot"),
-            theEnhancementList: document.getElementById("theEnhancementList"),
-            theMapList: document.getElementById("theMapList"),
-            removeImages: function() {
-                /** Removes all the image elements from the page. */
-                while (APP.view.panelRoot.firstChild) {
-                    APP.view.panelRoot.removeChild(APP.view.panelRoot.firstChild);
-                }
-            },
-            getTheMap: function () {
-                return APP.view.theMapList[APP.view.theMapList.selectedIndex].value;
-            },
-            getEnhancement: function () {
-                var theEnhancementList = APP.view.theEnhancementList;
+    WOPR.main = function () {
 
-                return theEnhancementList[theEnhancementList.selectedIndex].value;
-            }
-        };
+        WOPR.setup();
+        WOPR.initialize();
+        WOPR.loadFrames();
+        WOPR.animate();
 
-        APP.theMap = APP.view.getTheMap();
+    };
 
-        APP.thePast = function () {
-            var thePast = new Date(),
-                theHours = thePast.getHours();
-            thePast.setHours(theHours - 4);
+    WOPR.setup = function () {
 
-            return thePast;
-        };
+        WOPR.viewerPanel = document.getElementById("viewerPanel");
+        WOPR.theMapList = document.getElementById("theMapList");
+        WOPR.theEnhancementList = document.getElementById("theEnhancementList");
 
-        APP.run();
+        WOPR.theMapList.addEventListener("change", function () {
+            WOPR.loadFrames();
+        });
 
-    },
+        WOPR.theEnhancementList.addEventListener("change", function () {
+            WOPR.loadFrames();
+        });
 
-    util: {
+    };
+
+    WOPR.initialize = function () {
 
         /**
-         * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
-         * it (concatenates it with) a numeric string) that is
-         * passed in as the first parameter.
-         * @param i
-         * @param places
-         * @returns {string}
+         *
+         * @returns {Date}
          */
-        padZeroes: function(i, places) {
 
-            var j,
-                theString = "";
+        Date.prototype.getThePast = function() {
+            var theDate = new Date();
+            var theHours = theDate.getHours();
 
-            theString += i;
+            theDate.setHours(theHours - 4);
 
-            for (j = 0; j < places; j = j + 1) {
-                if (theString.length < places) {
-                    theString = "0" + theString;
-                }
-            }
-
-            return theString;
-
-        },
+            return theDate;
+        };
 
         /**
          * Takes a date and calculates how many days into the year that date is.
-         * @param myDate
-         * @returns {number}
+         * @returns {Number}
          */
-        dayOfYear: function(myDate) {
 
-            var theMonth = myDate.getMonth(),
-                theDate = myDate.getDate(),
+        Date.prototype.getDayOfYear = function() {
+            var theMonth = this.getMonth(),
+                theDate = this.getDate(),
                 monthDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
                 theDayOfTheYear = 0,
                 i;
 
-            /**
-             * Check for leap year.
-             */
-            if (myDate.getYear() % 4) {
+            /** Check for leap year. */
+
+            if (this.getYear() % 4) {
                 monthDays[1] = 28;
             }
 
@@ -100,29 +76,61 @@ APP = {
             theDayOfTheYear += theDate;
 
             return theDayOfTheYear;
-
-        },
+        };
 
         /**
          * Takes a value between 0 - 59 and returns either the
          * bottom or top half of the hour.
-         * @param m
-         * @param p
-         * @returns {number}
+         * @param thePeriod
+         * @returns {Number}
          */
-        parseMinutes: function(m, p) {
 
-            m = m / p;
+        Number.prototype.parseMinutes = function(thePeriod) {
+            var theMinutes = this;
 
-            m = Math.floor(m);
+            theMinutes = theMinutes / thePeriod;
+            theMinutes = Math.floor(theMinutes);
+            theMinutes = theMinutes * thePeriod;
 
-            return m * p;
+            return theMinutes;
+        };
 
-        }
+        /**
+         * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
+         * it (concatenates it with a numeric string) that is
+         * passed in as the first parameter.
+         * @param places
+         * @returns {String}
+         */
 
-    },
+        Number.prototype.padZeroes = function (places) {
+            var oldString = this.toString();
 
-    run: function () {
+            while (oldString.length < places) {
+                oldString = '0' + oldString;
+            }
+
+            return oldString;
+        };
+
+    };
+
+    /**
+     * Injects image DOM nodes. It calculates the URI for each image
+     * used as frames in the imagination to use as values for the src
+     * attributes in each image element on the page.
+     *
+     * Each satellite generates an image every thirty minutes. The second satellite timing is
+     * offset fifteen minutes from the first.
+     *
+     * E.G.
+     *
+     * GOES-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
+     * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
+     *
+     */
+
+    WOPR.loadFrames = function() {
 
         /**
          * This function dynamically generates the NOAA-specific file path for the remote
@@ -130,171 +138,125 @@ APP = {
          * @param thePast
          * @returns {string}
          */
-        function getURI(thePast) {
+
+        function makeURI(thePast) {
 
             var theYear = thePast.getFullYear(),
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
-                theDays = APP.util.dayOfYear(thePast),
-                baseURI = "http://www.ssd.noaa.gov/" + APP.view.getTheMap() + "/img/",
+                theDays = thePast.getDayOfYear(),
                 thePeriod = 30,
-                theOffset = 0,
-                theEnhancement = APP.view.getEnhancement(),
-                padZeroes = APP.util.padZeroes,
-                parseMinutes = APP.util.parseMinutes;
+                theOffset = 0;
 
-            theDays = padZeroes(theDays, 3);
-            theHours = padZeroes(theHours, 2);
+            var theEnhancement = WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value;
+            var baseURI = "http://www.ssd.noaa.gov/" + WOPR.theMapList[WOPR.theMapList.selectedIndex].value + "/img/";
 
-            /**
-             * Handle differences in the timing between the satellite
-             * image delivery.
-             *
-             * GOES-West: 0
-             * GOES-East: 15
-             * MTSAT: 32
-             *
-             **/
+            theDays = theDays.padZeroes(3);
+            theHours = theHours.padZeroes(2);
 
+            /** Handle differences in the timing between the satellite image delivery. */
+
+            /** MTSAT: 32 minute offset from GOES-West */
             if (baseURI.search("mtsat") >= 0) {
                 thePeriod = 59;
                 theOffset = 32;
             }
 
+            /** GOES-East: 15 minute offset from GOES-West */
             if (baseURI.search("east") >= 0) {
                 theOffset = 15;
             }
 
-            theMinutes = parseMinutes(theMinutes, thePeriod);
+            theMinutes = theMinutes.parseMinutes(thePeriod);
 
-            /**
-             * Add the offfset.
-             */
+            /** Add the offfset. */
             theMinutes = theMinutes + theOffset;
 
-            /**
-             *  Add a leading zero if the _minutes_ value is a single-digit.
-             */
-            theMinutes = padZeroes(theMinutes, 2);
+
+            /** Add a leading zero if the _minutes_ value is a single-digit. */
+            if (theMinutes === 0) {
+                theMinutes = '00';
+            } else {
+                theMinutes.padZeroes(2);
+            }
 
             return baseURI + theYear + theDays + "_" + theHours + theMinutes + theEnhancement + ".jpg";
         }
 
-        /**
-         * This subroutine injects image DOM nodes. It calculates the URI for each image
-         * used as frames in the imagination to use as values for the src
-         * attributes in each image element on the page.
-         *
-         * Each satellite generates an image every thirty minutes. The second satellite timing is
-         * offset fifteen minutes from the first.
-         *
-         * E.G.
-         *
-         * GOES-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
-         * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
-         *
-         */
-        function load() {
+        /** Remove any existing animation frames (images). */
+        while (WOPR.viewerPanel.firstChild) {
+            WOPR.viewerPanel.removeChild(WOPR.viewerPanel.firstChild);
+        }
 
-            var thePast = APP.thePast(),
-                frameNumber,
-                frame;
+        function makeFrameArray() {
 
-            APP.view.removeImages();
+            var i;
+            var frameArray = [];
 
-            for (frameNumber = 0; frameNumber < 20; frameNumber = frameNumber + 1) {
-
-                frame = document.createElement("img");
-
-                frame.src = getURI(thePast);
-
-                frame.classList.add("hidden");
-                frame.classList.add("frame");
-                frame.setAttribute("alt", "Image " + frameNumber + " unavailable.");
-
-                APP.view.panelRoot.appendChild(frame);
-
+            for (i = 0; i < 20; i = i + 1) {
+                frameArray.push(makeURI(thePast));
                 /** Advance to the next frame's timestamp **/
                 thePast.setMinutes(thePast.getMinutes() + 30);
-
             }
+
+            return frameArray;
+        }
+
+        var thePast = new Date().getThePast();
+        var f;
+        var frameElement;
+        var frameArray = makeFrameArray();
+
+        for (f = 0; f < frameArray.length; f = f + 1) {
+
+            frameElement = document.createElement("img");
+
+            frameElement.src = frameArray[f];
+
+            frameElement.setAttribute("alt", "Satellite Weather Image #" + f.padZeroes(2));
+            frameElement.classList.add("hidden");
+            frameElement.classList.add("frame");
+
+            WOPR.viewerPanel.appendChild(frameElement);
 
         }
 
-        /**
-         * This is the animation "player" that shows and hides the individual
-         * frames of the animation.
-         * @param f
-         */
-        function animate(f) {
+    };
 
-            var theInterval = 133,
-                frame = document.getElementsByClassName("frame");
+    /**
+     * This is the animation "player" that shows and hides the individual
+     * frames of the animation.
+     * @param n
+     */
 
-            if (!f) {
-                f = 0;
-            }
+    WOPR.animate = function (n) {
 
-            /**
-             * This is sort of a hybrid for-while loop.
-             */
+        var theInterval = 50;
+        var theFrames = document.getElementsByClassName("frame");
 
-            setTimeout(function () {
-
-                /**
-                 * Run through all but the final frame.
-                 */
-
-                if (f < frame.length - 1) {
-
-                    frame.item(f).classList.add("hidden");
-
-                    f =  f + 1;
-
-                    frame.item(f).classList.remove("hidden");
-
-                    animate(f);
-
-                } else {
-
-                    /**
-                     * Last frame (19)
-                     */
-
-                    frame.item(f).classList.add("hidden");
-
-                    /**
-                     * Set the first frame back to visible.
-                     */
-
-                    frame.item(0).classList.remove("hidden");
-
-                    /**
-                     * Call this function recursively to loop it.
-                     */
-
-                    animate(0);
-
-                }
-
-            }, theInterval);
-
+        if (!n) {
+            n = 0;
         }
 
-        load();
+        setTimeout(function () {
 
-        animate(0);
+            theFrames.item(n).classList.add("hidden");
 
-        APP.view.theMapList.addEventListener("change", function () {
-            load();
-        });
+            if (n < theFrames.length - 1) {
+                n = n + 1;
+            } else {
+                n = 0;
+            }
 
-        APP.view.theEnhancementList.addEventListener("change", function () {
-            load();
-        });
+            theFrames.item(n).classList.remove("hidden");
 
-    }
+            WOPR.animate(n);
 
-};
 
-APP.init();
+        }, theInterval);
+
+    };
+
+    WOPR.main();
+
+}());

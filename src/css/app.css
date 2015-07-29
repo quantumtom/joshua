@@ -1,34 +1,25 @@
 body {
     background: #000;
     height: 100%;
-    margin: auto;
-    position: absolute;
+    margin: 0;
     width: 100%;
 }
 
-#metaStuff {
-    top: 30px;
-    width: 100%;
+#controlPanel {
+    height: 70px;
+    margin: auto;
+    position: relative;
+    text-align: center;
+    width: 720px;
     z-index: 10;
 }
 
-#panelRoot,
-#metaStuff {
-    position: absolute;
+#viewerPanel {
+    margin: auto;
+    position: relative;
     text-align: center;
-}
-
-#panelRoot {
-    left: 0;
-    top: 0;
-    width: 100%;
+    top: -70px;
     z-index: 5;
-}
-
-.panel {
-    float: left;
-    margin:0;
-    max-height: 100%;
 }
 
 .frame {
@@ -37,4 +28,16 @@ body {
 
 .hidden {
     display:none;
+}
+
+.controlLabel {
+    color: white;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+fieldset {
+    border: none;
+    text-align: left;
 }
