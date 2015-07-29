@@ -245,7 +245,7 @@
                 thePeriod = 30,
                 theOffset = 0;
 
-            var uri = {
+            var NOAA_URI = {
                 protocol: "http://",
                 server: "www.ssd.noaa.gov/",
                 enhancement: WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value,
@@ -257,7 +257,7 @@
                 return uri.protocol + uri.server + uri.map + uri.medium;
             }
 
-            var baseURI = buildURI(uri);
+            var baseURI = buildURI(NOAA_URI);
 
             theDays.padZeroes(3);
             theHours.padZeroes(2);
@@ -288,7 +288,7 @@
                 theMinutes.padZeroes(2);
             }
 
-            return baseURI + theYear + theDays + "_" + theHours + theMinutes + uri.enhancement + ".jpg";
+            return baseURI + theYear + theDays + "_" + theHours + theMinutes + NOAA_URI.enhancement + ".jpg";
         }
     };
 
