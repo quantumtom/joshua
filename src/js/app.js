@@ -10,16 +10,17 @@
 
     var WOPR = {};
 
-    WOPR.main = function () {
+    WOPR.start = function () {
 
-        WOPR.setup();
+        WOPR.setUpDOM();
         WOPR.initialize();
+        WOPR.addHelpers();
         WOPR.loadFrames();
         WOPR.animate();
 
     };
 
-    WOPR.setup = function () {
+    WOPR.setUpDOM = function () {
 
         WOPR.viewerPanel = document.getElementById("viewerPanel");
         WOPR.theMapList = document.getElementById("theMapList");
@@ -33,14 +34,32 @@
             WOPR.loadFrames();
         });
 
-        WOPR.noaa = new WOPR.NOAA();
-
     };
 
     WOPR.initialize = function () {
 
         /**
          *
+         * This is our interface to get still images. In this case, we're getting them from NOAA.
+         * The guts of the code needed to build the URIs is in its own section at the end. This way, we give ourselves
+         * room to make this part modular.
+         *
+         * @type {WOPR.NOAA}
+         */
+
+        WOPR.noaa = new WOPR.NOAA();
+
+    };
+
+    /**
+     * We extend two of the native JS objects (Date and Number) by prototyping new member methods on to them. We
+     * probably ought to decouple them from the built-in objects, but for now this works okay.
+     */
+
+    WOPR.addHelpers = function () {
+
+        /**
+         * Takes the current date and returns a date object set fours hours into the past.
          * @returns {Date}
          */
 
@@ -114,13 +133,6 @@
 
             return oldString;
         };
-
-    };
-
-    WOPR.removeFrames = function () {
-        while (WOPR.viewerPanel.firstChild) {
-            WOPR.viewerPanel.removeChild(WOPR.viewerPanel.firstChild);
-        }
     };
 
     /**
@@ -140,14 +152,16 @@
 
     WOPR.loadFrames = function() {
 
-        /** Remove any existing animation frames (images). */
-
-        WOPR.removeFrames();
-
         var fCount;
         var fElement;
         var fArray = WOPR.noaa.makeFrameArray();
 
+        /** First, remove any existing animation frames (images). */
+        while (WOPR.viewerPanel.firstChild) {
+            WOPR.viewerPanel.removeChild(WOPR.viewerPanel.firstChild);
+        }
+
+        /** Next, build image tags for each frame of the animated loop. Then inject each into the DOM. */
         for (fCount = 0; fCount < fArray.length; fCount++) {
 
             fElement = document.createElement("img");
@@ -200,6 +214,21 @@
 
     WOPR.NOAA = function () {
 
+        this.makeFrameArray = function () {
+            var thePast = new Date().getThePast();
+
+            var i;
+            var tempArray = [];
+
+            for (i = 0; i < 20; i = i + 1) {
+                tempArray.push(makeURI(thePast));
+                /** Advance to the next frame's timestamp **/
+                thePast.setMinutes(thePast.getMinutes() + 30);
+            }
+
+            return tempArray;
+        };
+
         /**
          * This function dynamically generates the NOAA-specific file path for the remote
          * image resources.
@@ -216,11 +245,22 @@
                 thePeriod = 30,
                 theOffset = 0;
 
-            var theEnhancement = WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value;
-            var baseURI = "http://www.ssd.noaa.gov/" + WOPR.theMapList[WOPR.theMapList.selectedIndex].value + "/img/";
+            var uri = {
+                protocol: "http://",
+                server: "www.ssd.noaa.gov/",
+                enhancement: WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value,
+                map: WOPR.theMapList[WOPR.theMapList.selectedIndex].value,
+                medium: "/img/"
+            };
 
-            theDays = theDays.padZeroes(3);
-            theHours = theHours.padZeroes(2);
+            function buildURI(uri) {
+                return uri.protocol + uri.server + uri.map + uri.medium;
+            }
+
+            var baseURI = buildURI(uri);
+
+            theDays.padZeroes(3);
+            theHours.padZeroes(2);
 
             /** Handle differences in the timing between the satellite image delivery. */
 
@@ -248,25 +288,10 @@
                 theMinutes.padZeroes(2);
             }
 
-            return baseURI + theYear + theDays + "_" + theHours + theMinutes + theEnhancement + ".jpg";
+            return baseURI + theYear + theDays + "_" + theHours + theMinutes + uri.enhancement + ".jpg";
         }
-
-        this.makeFrameArray = function () {
-            var thePast = new Date().getThePast();
-
-            var i;
-            var tempArray = [];
-
-            for (i = 0; i < 20; i = i + 1) {
-                tempArray.push(makeURI(thePast));
-                /** Advance to the next frame's timestamp **/
-                thePast.setMinutes(thePast.getMinutes() + 30);
-            }
-
-            return tempArray;
-        };
     };
 
-    WOPR.main();
+    WOPR.start();
 
 }());
