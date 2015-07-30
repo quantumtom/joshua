@@ -61,7 +61,7 @@
             var theMinutes = theDate.getMinutes();
 
             /** The  */
-            theDate.setMinutes(theMinutes - 55);
+            theDate.setMinutes(theMinutes - 45);
 
             return theDate;
         };
@@ -205,7 +205,7 @@
             var i;
             var tempArray = [];
 
-            for (i = 0; i < 15; i = i + 1) {
+            for (i = 0; i < 14; i = i + 1) {
                 tempArray.push(makeURI(thePast));
                 /** Advance to the next frame's timestamp **/
                 thePast.setMinutes(thePast.getMinutes() + 30);
