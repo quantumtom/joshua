@@ -18,8 +18,6 @@
          * @type {WOPR.NOAA}
          */
 
-        WOPR.noaa = new WOPR.NOAA();
-
         WOPR.setUpDOM();
         WOPR.addHelpers();
         WOPR.injectFrames();
@@ -50,8 +48,11 @@
 
     WOPR.addHelpers = function () {
 
+        WOPR.noaa = new WOPR.NOAA();
+
         /**
-         * Takes the current date and returns a date object set fours hours into the past.
+         * Takes the current date and returns a date object set back to allow
+         * for processing by NOAA SSD.
          * @returns {Date}
          */
 
@@ -59,7 +60,8 @@
             var theDate = this;
             var theMinutes = theDate.getMinutes();
 
-            theDate.setMinutes(theMinutes - 30);
+            /** The  */
+            theDate.setMinutes(theMinutes - 55);
 
             return theDate;
         };
@@ -253,7 +255,6 @@
              * GOES-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
              * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
              */
-
 
             /** Handle differences in the timing between the satellite image delivery. */
 
