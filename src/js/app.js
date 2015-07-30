@@ -55,10 +55,10 @@
          */
 
         Date.prototype.getThePast = function() {
-            var theDate = new Date();
-            var theHours = theDate.getHours();
+            var theDate = this;
+            var theMinutes = theDate.getMinutes();
 
-            theDate.setHours(theHours - 4);
+            theDate.setMinutes(theMinutes - 30);
 
             return theDate;
         };
@@ -168,7 +168,7 @@
 
     WOPR.animate = function (n) {
 
-        var theInterval = 50;
+        var theInterval = 200;
         var theFrames = document.getElementsByClassName("frame");
 
         if (!n) {
@@ -202,7 +202,7 @@
             var i;
             var tempArray = [];
 
-            for (i = 0; i < 20; i = i + 1) {
+            for (i = 0; i < 15; i = i + 1) {
                 tempArray.push(makeURI(thePast));
                 /** Advance to the next frame's timestamp **/
                 thePast.setMinutes(thePast.getMinutes() + 30);
