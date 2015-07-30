@@ -29,6 +29,7 @@
     WOPR.setUpDOM = function () {
 
         WOPR.viewerPanel = document.getElementById("viewerPanel");
+
         WOPR.theMapList = document.getElementById("theMapList");
         WOPR.theEnhancementList = document.getElementById("theEnhancementList");
 
@@ -168,7 +169,7 @@
 
     WOPR.animate = function (n) {
 
-        var theInterval = 200;
+        var theInterval = 160;
         var theFrames = document.getElementsByClassName("frame");
 
         if (!n) {
@@ -224,8 +225,7 @@
                 theMinutes = thePast.getMinutes(),
                 theHours = thePast.getHours(),
                 theDays = thePast.getDayOfYear(),
-                thePeriod = 30,
-                theOffset = 0;
+                thePeriod = 30;
 
             var NOAA_URI = {
                 protocol: "http://",
@@ -257,24 +257,15 @@
 
             /** Handle differences in the timing between the satellite image delivery. */
 
-            /** MTSAT: 32 minute offset from GOES-West */
-            if (baseURI.search("mtsat") >= 0) {
-                thePeriod = 59;
-                theOffset = 32;
-            }
+            theMinutes = theMinutes.parseMinutes(thePeriod);
 
             /** GOES-East: 15 minute offset from GOES-West */
             if (baseURI.search("east") >= 0) {
-                theOffset = 15;
+                /** Add the offfset. */
+                theMinutes = theMinutes + 15;
             }
 
-            theMinutes = theMinutes.parseMinutes(thePeriod);
-
-            /** Add the offfset. */
-            theMinutes = theMinutes + theOffset;
-
-
-            /** Add a leading zero if the _minutes_ value is a single-digit. */
+            /** Add a leading zero if the _minutes_ value is for the top of the hour. */
             if (theMinutes === 0) {
                 theMinutes = '00';
             } else {
