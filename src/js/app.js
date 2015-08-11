@@ -10,12 +10,8 @@
 
     var WOPR = function () {
         /**
-         *
          * This is our interface to get still images. In this case, we're getting them from NOAA.
-         * The guts of the code needed to build the URIs is in its own section at the end. This way, we give ourselves
-         * room to make this part modular.
-         *
-         * @type {WOPR.NOAA}
+         * The guts of the code needed to build the URIs is in its own section at the end.
          */
 
         WOPR.setUpDOM();

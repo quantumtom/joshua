@@ -102,6 +102,14 @@ module.exports = function (grunt) {
                     'copy:dev'
                 ]
             },
+            dist: {
+                files: [
+                    'src/*'
+                ],
+                tasks: [
+                    'default'
+                ]
+            },
             js: {
                 files: [
                     'src/js/*.js'
@@ -126,6 +134,7 @@ module.exports = function (grunt) {
     /**
      * Alias tasks
      */
+
     grunt.registerTask('default', ['clean', 'htmlmin:dev', 'cssmin', 'copy:js', 'copy:dev', 'closure-compiler']);
     grunt.registerTask('dev', ['copy:dev']);
     grunt.registerTask('minimal', ['clean', 'htmlmin', 'cssmin', 'copy:js', 'closure-compiler']);

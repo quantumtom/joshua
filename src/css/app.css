@@ -5,6 +5,11 @@ body {
     width: 100%;
 }
 
+body, option {
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif;
+    font-size: 18pt;
+}
+
 #controlPanel {
     height: 70px;
     margin: auto;
@@ -32,8 +37,6 @@ body {
 
 .controlLabel {
     color: white;
-    font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif;
-    font-size: 12px;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
