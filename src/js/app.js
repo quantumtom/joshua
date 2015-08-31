@@ -14,18 +14,22 @@
          * The guts of the code needed to build the URIs is in its own section at the end.
          */
 
-        WOPR.setUpDOM();
+        WOPR.setUp();
+    };
+
+    WOPR.setUp = function () {
+
+        WOPR.viewerPanel = document.getElementById("viewerPanel");
+        WOPR.theMapList = document.getElementById("theMapList");
+        WOPR.theEnhancementList = document.getElementById("theEnhancementList");
+
+        WOPR.addTriggers();
         WOPR.addHelpers();
         WOPR.injectFrames();
         WOPR.animate();
     };
 
-    WOPR.setUpDOM = function () {
-
-        WOPR.viewerPanel = document.getElementById("viewerPanel");
-
-        WOPR.theMapList = document.getElementById("theMapList");
-        WOPR.theEnhancementList = document.getElementById("theEnhancementList");
+    WOPR.addTriggers = function () {
 
         WOPR.theMapList.addEventListener("change", function () {
             WOPR.injectFrames();
@@ -43,24 +47,6 @@
      */
 
     WOPR.addHelpers = function () {
-
-        WOPR.noaa = new WOPR.NOAA();
-
-        /**
-         * Takes the current date and returns a date object set back to allow
-         * for processing by NOAA SSD.
-         * @returns {Date}
-         */
-
-        Date.prototype.getThePast = function() {
-            var theDate = this;
-            var theMinutes = theDate.getMinutes();
-
-            /** The  */
-            theDate.setMinutes(theMinutes - 45);
-
-            return theDate;
-        };
 
         /**
          * Takes a date and calculates how many days into the year that date is.
@@ -126,6 +112,85 @@
     };
 
     /**
+     * This function dynamically generates the NOAA-specific file path for the remote
+     * image resources.
+     * @param thePast
+     * @returns {string}
+     */
+
+    WOPR.makeURI = function(thePast) {
+
+        var theYear = thePast.getFullYear(),
+            theMinutes = thePast.getMinutes(),
+            theHours = thePast.getHours(),
+            theDays = thePast.getDayOfYear(),
+            thePeriod = 30;
+
+        var NOAA_URI = {
+            protocol: "http://",
+            server: "www.ssd.noaa.gov/",
+            enhancement: WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value,
+            map: WOPR.theMapList[WOPR.theMapList.selectedIndex].value,
+            medium: "/img/"
+        };
+
+        function buildURI(uri) {
+            return uri.protocol + uri.server + uri.map + uri.medium;
+        }
+
+        var baseURI = buildURI(NOAA_URI);
+
+        theDays.padZeroes(3);
+        theHours.padZeroes(2);
+
+        /**
+         * Each satellite generates an image every thirty minutes. The second satellite timing is
+         * offset fifteen minutes from the first.
+         *
+         * Example:
+         *
+         * GOES-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
+         * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
+         */
+
+        /** Handle differences in the timing between the satellite image delivery. */
+
+        theMinutes = theMinutes.parseMinutes(thePeriod);
+
+        /** GOES-East: 15 minute offset from GOES-West */
+        if (baseURI.search("east") >= 0) {
+            /** Add the offfset. */
+            theMinutes = theMinutes + 15;
+        }
+
+        /** Add a leading zero if the _minutes_ value is for the top of the hour. */
+        if (theMinutes === 0) {
+            theMinutes = '00';
+        } else {
+            theMinutes.padZeroes(2);
+        }
+
+        return baseURI + theYear + theDays + "_" + theHours + theMinutes + NOAA_URI.enhancement + ".jpg";
+    };
+
+    WOPR.makeFrameArray = function() {
+        var startTime = new Date();
+
+        startTime.setUTCHours(startTime.getUTCHours() - 1);
+
+        var i;
+        var tempArray = [];
+
+        for (i = 0; i < 15; i = i + 1) {
+            tempArray.push(WOPR.makeURI(startTime));
+            /** Advance to the next frame's timestamp **/
+            startTime.setMinutes(startTime.getMinutes() + 30);
+        }
+
+        return tempArray;
+    };
+
+    /**
      * Injects image DOM nodes. It calculates the URI for each image
      * used as frames in the imagination to use as values for the src
      * attributes in each image element on the page.
@@ -135,7 +200,7 @@
 
         var fCount;
         var fElement;
-        var fArray = WOPR.noaa.makeFrameArray();
+        var fArray = WOPR.makeFrameArray();
 
         /** First, remove any existing animation frames (images). */
         while (WOPR.viewerPanel.firstChild) {
@@ -149,7 +214,7 @@
 
             fElement.src = fArray[fCount];
 
-            fElement.setAttribute("alt", "Image #" + fCount.padZeroes(2));
+            fElement.setAttribute("alt", "Image #" + (fCount + 1).padZeroes(2));
             fElement.classList.add("hidden");
             fElement.classList.add("frame");
 
@@ -191,86 +256,6 @@
 
         }, theInterval);
 
-    };
-
-    WOPR.NOAA = function () {
-
-        this.makeFrameArray = function () {
-            var thePast = new Date().getThePast();
-
-            var i;
-            var tempArray = [];
-
-            for (i = 0; i < 14; i = i + 1) {
-                tempArray.push(makeURI(thePast));
-                /** Advance to the next frame's timestamp **/
-                thePast.setMinutes(thePast.getMinutes() + 30);
-            }
-
-            return tempArray;
-        };
-
-        /**
-         * This function dynamically generates the NOAA-specific file path for the remote
-         * image resources.
-         * @param thePast
-         * @returns {string}
-         */
-
-        function makeURI(thePast) {
-
-            var theYear = thePast.getFullYear(),
-                theMinutes = thePast.getMinutes(),
-                theHours = thePast.getHours(),
-                theDays = thePast.getDayOfYear(),
-                thePeriod = 30;
-
-            var NOAA_URI = {
-                protocol: "http://",
-                server: "www.ssd.noaa.gov/",
-                enhancement: WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value,
-                map: WOPR.theMapList[WOPR.theMapList.selectedIndex].value,
-                medium: "/img/"
-            };
-
-            function buildURI(uri) {
-                return uri.protocol + uri.server + uri.map + uri.medium;
-            }
-
-            var baseURI = buildURI(NOAA_URI);
-
-            theDays.padZeroes(3);
-            theHours.padZeroes(2);
-
-            /**
-             * Each satellite generates an image every thirty minutes. The second satellite timing is
-             * offset fifteen minutes from the first.
-             *
-             * Example:
-             *
-             * GOES-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
-             * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
-             */
-
-            /** Handle differences in the timing between the satellite image delivery. */
-
-            theMinutes = theMinutes.parseMinutes(thePeriod);
-
-            /** GOES-East: 15 minute offset from GOES-West */
-            if (baseURI.search("east") >= 0) {
-                /** Add the offfset. */
-                theMinutes = theMinutes + 15;
-            }
-
-            /** Add a leading zero if the _minutes_ value is for the top of the hour. */
-            if (theMinutes === 0) {
-                theMinutes = '00';
-            } else {
-                theMinutes.padZeroes(2);
-            }
-
-            return baseURI + theYear + theDays + "_" + theHours + theMinutes + NOAA_URI.enhancement + ".jpg";
-        }
     };
 
     WOPR.call();
