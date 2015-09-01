@@ -1,50 +1,58 @@
+goog.provide('APP');
+
 /**
  * @license MIT
  *
  * @module WOPR
+ *
+ * Each satellite generates an image every thirty minutes. The second satellite timing is
+ * offset fifteen minutes from the first.
+ *
+ * Example:
+ *
+ * GOES-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
+ * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
  */
+
+
 
 (function () {
 
     'use strict';
 
     var WOPR = function () {
-        /**
-         * This is our interface to get still images. In this case, we're getting them from NOAA.
-         * The guts of the code needed to build the URIs is in its own section at the end.
-         */
-
-        WOPR.setUp();
-    };
-
-    WOPR.setUp = function () {
-
         WOPR.viewerPanel = document.getElementById("viewerPanel");
         WOPR.theMapList = document.getElementById("theMapList");
         WOPR.theEnhancementList = document.getElementById("theEnhancementList");
 
         WOPR.addTriggers();
         WOPR.addHelpers();
-        WOPR.injectFrames();
+        WOPR.loadPage();
         WOPR.animate();
     };
 
     WOPR.addTriggers = function () {
 
         WOPR.theMapList.addEventListener("change", function () {
-            WOPR.injectFrames();
+            WOPR.loadPage();
         });
 
         WOPR.theEnhancementList.addEventListener("change", function () {
-            WOPR.injectFrames();
+            WOPR.loadPage();
         });
 
     };
 
-    /**
-     * We extend two of the native JS objects (Date and Number) by prototyping new member methods on to them. We
-     * probably ought to decouple them from the built-in objects, but for now this works okay.
-     */
+    WOPR.getInputs = function () {
+        WOPR.theMap = WOPR.theMapList[WOPR.theMapList.selectedIndex].value;
+        WOPR.theEnhancement = WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value;
+    };
+
+    WOPR.loadPage = function () {
+        WOPR.getInputs();
+        WOPR.cleanFrames();
+        WOPR.injectFrames();
+    };
 
     WOPR.addHelpers = function () {
 
@@ -72,7 +80,18 @@
 
             theDayOfTheYear += theDate;
 
-            return theDayOfTheYear;
+            return theDayOfTheYear.padZeroes(3);
+        };
+
+        Date.prototype.getFormattedHour = function () {
+            var theHour = this.getHours();
+            return theHour.padZeroes(2);
+        };
+
+        Date.prototype.getFormattedMinute = function () {
+            var theMinute = this.getMinutes();
+
+            return theMinute.parseMinutes(30);
         };
 
         /**
@@ -120,57 +139,28 @@
 
     WOPR.makeURI = function(thePast) {
 
-        var theYear = thePast.getFullYear(),
-            theMinutes = thePast.getMinutes(),
-            theHours = thePast.getHours(),
-            theDays = thePast.getDayOfYear(),
-            thePeriod = 30;
-
-        var NOAA_URI = {
-            protocol: "http://",
-            server: "www.ssd.noaa.gov/",
-            enhancement: WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value,
-            map: WOPR.theMapList[WOPR.theMapList.selectedIndex].value,
-            medium: "/img/"
-        };
-
-        function buildURI(uri) {
-            return uri.protocol + uri.server + uri.map + uri.medium;
-        }
-
-        var baseURI = buildURI(NOAA_URI);
-
-        theDays.padZeroes(3);
-        theHours.padZeroes(2);
-
-        /**
-         * Each satellite generates an image every thirty minutes. The second satellite timing is
-         * offset fifteen minutes from the first.
-         *
-         * Example:
-         *
-         * GOES-N timing        1200Z    |   1230Z    |   1300Z    |   1330Z
-         * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
-         */
-
-        /** Handle differences in the timing between the satellite image delivery. */
-
-        theMinutes = theMinutes.parseMinutes(thePeriod);
+        var baseURI = "http://www.ssd.noaa.gov/" + WOPR.theMap + "/img/";
+        var theYear = thePast.getFullYear();
+        var theDay = thePast.getDayOfYear();
+        var theHour = thePast.getFormattedHour();
+        var theMinute = thePast.getFormattedMinute();
+        var timeStamp;
 
         /** GOES-East: 15 minute offset from GOES-West */
         if (baseURI.search("east") >= 0) {
-            /** Add the offfset. */
-            theMinutes = theMinutes + 15;
+            theMinute = theMinute + 15;
         }
 
         /** Add a leading zero if the _minutes_ value is for the top of the hour. */
-        if (theMinutes === 0) {
-            theMinutes = '00';
+        if (theMinute === 0) {
+            theMinute = '00';
         } else {
-            theMinutes.padZeroes(2);
+            theMinute.padZeroes(2);
         }
 
-        return baseURI + theYear + theDays + "_" + theHours + theMinutes + NOAA_URI.enhancement + ".jpg";
+        timeStamp = theYear + theDay + "_" + theHour + theMinute;
+
+        return baseURI + timeStamp + WOPR.theEnhancement + ".jpg";
     };
 
     WOPR.makeFrameArray = function() {
@@ -190,11 +180,11 @@
         return tempArray;
     };
 
-    /**
-     * Injects image DOM nodes. It calculates the URI for each image
-     * used as frames in the imagination to use as values for the src
-     * attributes in each image element on the page.
-     */
+    WOPR.cleanFrames = function () {
+        while (WOPR.viewerPanel.firstChild) {
+            WOPR.viewerPanel.removeChild(WOPR.viewerPanel.firstChild);
+        }
+    };
 
     WOPR.injectFrames = function() {
 
@@ -202,12 +192,7 @@
         var fElement;
         var fArray = WOPR.makeFrameArray();
 
-        /** First, remove any existing animation frames (images). */
-        while (WOPR.viewerPanel.firstChild) {
-            WOPR.viewerPanel.removeChild(WOPR.viewerPanel.firstChild);
-        }
-
-        /** Next, build image tags for each frame of the animated loop. Then inject each into the DOM. */
+        /** Build image tags for each frame of the animated loop. Then inject each into the DOM. */
         for (fCount = 0; fCount < fArray.length; fCount++) {
 
             fElement = document.createElement("img");
@@ -223,12 +208,6 @@
         }
 
     };
-
-    /**
-     * This is the animation "player" that shows and hides the individual
-     * frames of the animation.
-     * @param n
-     */
 
     WOPR.animate = function (n) {
 
