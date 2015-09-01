@@ -2511,7 +2511,7 @@ goog.tagUnsealableClass = function(ctr) {
  */
 goog.UNSEALABLE_CONSTRUCTOR_PROPERTY_ = 'goog_defineClass_legacy_unsealable';
 
-goog.provide('APP');
+goog.provide('WOPR');
 
 /**
  * @license MIT
