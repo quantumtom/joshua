@@ -44,13 +44,14 @@ module.exports = function (grunt) {
             js: {
                 files: [
                     {
+                        cwd: 'src/js',
                         expand: true,
-                        src: 'src/js/*',
-                        dest: 'build/js/'
+                        src: 'app.js',
+                        dest: 'build/js/src/js'
                     }
                 ]
             },
-            dev: {
+            all: {
                 files: [
                     {
                         cwd: 'src',
@@ -186,7 +187,14 @@ module.exports = function (grunt) {
      * Alias tasks
      */
 
-    grunt.registerTask('default', ['clean', 'htmlmin:dev', 'cssmin', 'copy:js', 'copy:dev', 'closureBuilder']);
+    grunt.registerTask('default', [
+        'clean',
+        'htmlmin:dev',
+        'cssmin',
+        'copy:all',
+        'closureBuilder',
+        'closureDepsWriter'
+    ]);
     grunt.registerTask('dev', ['copy:dev']);
     grunt.registerTask('minimal', ['clean', 'htmlmin', 'cssmin', 'copy:js', 'closureBuilder']);
 
