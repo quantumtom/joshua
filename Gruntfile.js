@@ -16,11 +16,6 @@ module.exports = function (grunt) {
                 files: {
                     'build/index.html': 'src/index.html'
                 }
-            },
-            dev: {
-                files: {
-                    'build/index.html': 'src/index.html'
-                }
             }
         },
         cssmin: {
@@ -189,11 +184,11 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         'clean',
-        'htmlmin:dev',
-        'cssmin',
         'copy:all',
         'closureBuilder',
-        'closureDepsWriter'
+        'closureDepsWriter',
+        'cssmin',
+        'htmlmin'
     ]);
     grunt.registerTask('dev', ['copy:dev']);
     grunt.registerTask('minimal', ['clean', 'htmlmin', 'cssmin', 'copy:js', 'closureBuilder']);
