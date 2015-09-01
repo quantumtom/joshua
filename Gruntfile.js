@@ -26,9 +26,9 @@ module.exports = function (grunt) {
             dev: {
                 files: [{
                     expand: true,
-                    cwd: 'src',
-                    src: ['css/*.css'],
-                    dest: 'build'
+                    cwd: 'src/css',
+                    src: ['wopr.css'],
+                    dest: 'build/css'
                 }]
             }
         },
