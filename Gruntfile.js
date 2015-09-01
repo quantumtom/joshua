@@ -59,28 +59,80 @@ module.exports = function (grunt) {
                         dest: 'build/'
                     }
                 ]
+            },
+            closure: {
+                files: [
+                    {
+                        cwd: 'src/js',
+                        expand: true,
+                        src: 'closure-library/**',
+                        dest: 'build/js/src/js'
+                    }
+                ]
             }
         },
-        'closure-compiler': {
-            dist: {
-                closurePath: '/usr/local/opt/closure-compiler/libexec/',
-                js: "src/js/app.js",
-                jsOutputFile: "build/js/app.js",
-                maxBuffer: 500,
-                options: {
-                    compilation_level: 'ADVANCED_OPTIMIZATIONS',
-                    language_in: 'ECMASCRIPT5_STRICT',
-                    warning_level: 'VERBOSE',
-                    source_map_format: "V3",
-                    output_wrapper: "(function(){%output%}).call(window);\n//# sourceMappingURL=app.js.map",
-                    create_source_map: "build/js/app.js.map"
+        closureBuilder: {
+            options: {
+                closureLibraryPath: 'src/js/closure-library',
+                inputs: [
+                    'src/js/app.js'
+                ],
+                pythonBinary: '/usr/bin/python',
+                compilerFile: 'compiler.jar',
+                output_mode: 'script',
+                compile: false,
+                compilerOpts: {
+                    compilation_level: 'WHITESPACE_ONLY',
+                    warning_leve: 'VERBOSE',
+                    summary_detail_level: 3,
+                    externs: [
+                        'src/js/closure-library/closure/goog/base.js'
+                    ],
+                    source_map_format: 'V3',
+                    output_wrapper: '(function(){%output%}).call(window);\n//# sourceMappingURL=app.js.map',
+                    create_source_map: 'build/js/app.js.map'
+                },
+                execOpts: {
+                    use_closure_library: false,
+                    maxBuffer: 999999 * 1024
                 }
+            },
+            dist: {
+                src: [
+                    'src/js'
+                ],
+                dest: 'build/js/app.js'
             }
         },
-        jsdoc : {
-            dist : {
-                src: 'src/js/app.js',
-                dest: 'build/doc/'
+        closureDepsWriter: {
+            options: {
+                closureLibraryPath: 'src/js/closure-library',
+
+                // [OPTIONAL] Define the full path to the executable directly.
+                //    If set it trumps 'closureLibraryPath' which will not be required.
+                depswriter: 'src/js/closure-library/closure/bin/build/depswriter.py', // filepath to depswriter
+
+                // [OPTIONAL] Root directory to scan. Can be string or array
+                root: [
+                    'src/js',
+                    'src/js/closure-library'
+                ],
+                execOpts: {
+                    use_closure_library: false,
+                    maxBuffer: 999999 * 1024
+                }
+
+            },
+            // any name that describes your operation
+            dist: {
+
+                // [OPTIONAL] Set file targets. Can be a string, array or
+                //    grunt file syntax (<config:...> or *)
+                src: 'path/to/awesome.js',
+
+                // [OPTIONAL] If not set, will output to stdout
+                dest: 'build/deps.js'
+
             }
         },
         clean: {
@@ -116,7 +168,7 @@ module.exports = function (grunt) {
                 ],
                 tasks: [
                     'copy:js',
-                    'closure-compiler'
+                    'closureBuilder'
                 ]
             }
         }
@@ -128,15 +180,14 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-closure-compiler');
-    grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-closure-tools');
 
     /**
      * Alias tasks
      */
 
-    grunt.registerTask('default', ['clean', 'htmlmin:dev', 'cssmin', 'copy:js', 'copy:dev', 'closure-compiler']);
+    grunt.registerTask('default', ['clean', 'htmlmin:dev', 'cssmin', 'copy:js', 'copy:dev', 'closureBuilder']);
     grunt.registerTask('dev', ['copy:dev']);
-    grunt.registerTask('minimal', ['clean', 'htmlmin', 'cssmin', 'copy:js', 'closure-compiler']);
+    grunt.registerTask('minimal', ['clean', 'htmlmin', 'cssmin', 'copy:js', 'closureBuilder']);
 
 };
