@@ -1,4 +1,4 @@
-goog.provide('APP');
+goog.provide('WOPR');
 
 /**
  * @license MIT
