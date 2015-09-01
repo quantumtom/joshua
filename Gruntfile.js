@@ -78,7 +78,7 @@ module.exports = function (grunt) {
                 output_mode: 'script',
                 compile: false,
                 compilerOpts: {
-                    compilation_level: 'WHITESPACE_ONLY',
+                    compilation_level: 'SIMPLE_OPTIMIZATIONS',
                     warning_leve: 'VERBOSE',
                     summary_detail_level: 3,
                     externs: [
