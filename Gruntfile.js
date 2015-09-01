@@ -76,14 +76,11 @@ module.exports = function (grunt) {
                 pythonBinary: '/usr/bin/python',
                 compilerFile: 'compiler.jar',
                 output_mode: 'script',
-                compile: false,
+                compile: true,
                 compilerOpts: {
-                    compilation_level: 'SIMPLE_OPTIMIZATIONS',
-                    warning_leve: 'VERBOSE',
+                    compilation_level: 'ADVANCED_OPTIMIZATIONS',
+                    warning_level: 'VERBOSE',
                     summary_detail_level: 3,
-                    externs: [
-                        'src/js/closure-library/closure/goog/base.js'
-                    ],
                     source_map_format: 'V3',
                     output_wrapper: '(function(){%output%}).call(window);\n//# sourceMappingURL=wopr.js.map',
                     create_source_map: 'build/js/wopr.js.map'
