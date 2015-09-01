@@ -46,7 +46,7 @@ module.exports = function (grunt) {
                     {
                         cwd: 'src/js',
                         expand: true,
-                        src: 'app.js',
+                        src: 'wopr.js',
                         dest: 'build/js/src/js'
                     }
                 ]
@@ -76,7 +76,7 @@ module.exports = function (grunt) {
             options: {
                 closureLibraryPath: 'src/js/closure-library',
                 inputs: [
-                    'src/js/app.js'
+                    'src/js/wopr.js'
                 ],
                 pythonBinary: '/usr/bin/python',
                 compilerFile: 'compiler.jar',
@@ -90,8 +90,8 @@ module.exports = function (grunt) {
                         'src/js/closure-library/closure/goog/base.js'
                     ],
                     source_map_format: 'V3',
-                    output_wrapper: '(function(){%output%}).call(window);\n//# sourceMappingURL=app.js.map',
-                    create_source_map: 'build/js/app.js.map'
+                    output_wrapper: '(function(){%output%}).call(window);\n//# sourceMappingURL=wopr.js.map',
+                    create_source_map: 'build/js/wopr.js.map'
                 },
                 execOpts: {
                     use_closure_library: false,
@@ -102,7 +102,7 @@ module.exports = function (grunt) {
                 src: [
                     'src/js'
                 ],
-                dest: 'build/js/app.js'
+                dest: 'build/js/wopr.js'
             }
         },
         closureDepsWriter: {
