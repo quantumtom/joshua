@@ -83,13 +83,7 @@ module.exports = function (grunt) {
                 output_mode: 'script',
                 compile: true,
                 compilerOpts: {
-                    compilation_level: 'ADVANCED_OPTIMIZATIONS',
-                    flagfile: '.closurerc',
-                    warning_level: 'VERBOSE',
-                    summary_detail_level: 3,
-                    source_map_format: 'V3',
-                    output_wrapper: '(function(){%output%}).call(window);\n//# sourceMappingURL=wopr.js.map.json',
-                    create_source_map: 'build/js/wopr.js.map.json'
+                    flagfile: '.closurerc'
                 },
                 execOpts: {
                     use_closure_library: false,

@@ -1,0 +1,5 @@
+--warning_level=VERBOSE
+--summary_detail_level=3
+--compilation_level=ADVANCED_OPTIMIZATIONS
+--output_wrapper="(function(){%output%}).call(window);\n//# sourceMappingURL=wopr.js.map.json"
+--create_source_map=build/js/wopr.js.map.json
