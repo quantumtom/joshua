@@ -147,7 +147,7 @@ goog.provide('WOPR');
         var timeStamp;
 
         /** GOES-East: 15 minute offset from GOES-West */
-        if (baseURI.search("east") >= 0) {
+        if (WOPR.theMap.search("east") >= 0) {
             theMinute = theMinute + 15;
         }
 
@@ -200,6 +200,8 @@ goog.provide('WOPR');
             fElement.src = fArray[fCount];
 
             fElement.setAttribute("alt", "Image #" + (fCount + 1).padZeroes(2));
+            fElement.setAttribute("height", "400");
+            fElement.setAttribute("width", "600");
             fElement.classList.add("hidden");
             fElement.classList.add("frame");
 

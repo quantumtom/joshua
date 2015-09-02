@@ -46,13 +46,15 @@ module.exports = function (grunt) {
                     }
                 ]
             },
-            all: {
+            other: {
                 files: [
                     {
                         cwd: 'src',
                         expand: true,
                         src: [
+                            '.htaccess',
                             'img/**',
+                            'cache.manifest',
                             'favicon.ico'
                         ],
                         dest: 'build/'
@@ -171,7 +173,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         'clean',
-        'copy:all',
+        'copy:other',
         'copy:closure',
         'closureBuilder',
         'closureDepsWriter',

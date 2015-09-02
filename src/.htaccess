@@ -1,0 +1,203 @@
+AddType text/cache-manifest .manifest
+
+# ----------------------------------------------------------------------
+# | Character encodings                                                |
+# ----------------------------------------------------------------------
+
+# Serve all resources labeled as `text/html` or `text/plain`
+# with the media type `charset` parameter set to `UTF-8`.
+#
+# https://httpd.apache.org/docs/current/mod/core.html#adddefaultcharset
+
+AddDefaultCharset utf-8
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Serve the following file types with the media type `charset`
+# parameter set to `UTF-8`.
+#
+# https://httpd.apache.org/docs/current/mod/mod_mime.html#addcharset
+
+<IfModule mod_mime.c>
+    AddCharset utf-8 .atom \
+                     .bbaw \
+                     .css \
+                     .geojson \
+                     .js \
+                     .json \
+                     .jsonld \
+                     .manifest \
+                     .rdf \
+                     .rss \
+                     .topojson \
+                     .vtt \
+                     .webapp \
+                     .webmanifest \
+                     .xloc \
+                     .xml
+</IfModule>
+
+# ######################################################################
+# # WEB PERFORMANCE                                                    #
+# ######################################################################
+
+# ----------------------------------------------------------------------
+# | Compression                                                        |
+# ----------------------------------------------------------------------
+
+<IfModule mod_deflate.c>
+
+    # Force compression for mangled `Accept-Encoding` request headers
+    # https://developer.yahoo.com/blogs/ydn/pushing-beyond-gzipping-25601.html
+
+    <IfModule mod_setenvif.c>
+        <IfModule mod_headers.c>
+            SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
+            RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
+        </IfModule>
+    </IfModule>
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Compress all output labeled with one of the following media types.
+    #
+    # (!) For Apache versions below version 2.3.7 you don't need to
+    # enable `mod_filter` and can remove the `<IfModule mod_filter.c>`
+    # and `</IfModule>` lines as `AddOutputFilterByType` is still in
+    # the core directives.
+    #
+    # https://httpd.apache.org/docs/current/mod/mod_filter.html#addoutputfilterbytype
+
+    <IfModule mod_filter.c>
+        AddOutputFilterByType DEFLATE "application/atom+xml" \
+                                      "application/javascript" \
+                                      "application/json" \
+                                      "application/ld+json" \
+                                      "application/manifest+json" \
+                                      "application/rdf+xml" \
+                                      "application/rss+xml" \
+                                      "application/schema+json" \
+                                      "application/vnd.geo+json" \
+                                      "application/vnd.ms-fontobject" \
+                                      "application/x-font-ttf" \
+                                      "application/x-javascript" \
+                                      "application/x-web-app-manifest+json" \
+                                      "application/xhtml+xml" \
+                                      "application/xml" \
+                                      "font/eot" \
+                                      "font/opentype" \
+                                      "image/bmp" \
+                                      "image/svg+xml" \
+                                      "image/vnd.microsoft.icon" \
+                                      "image/x-icon" \
+                                      "text/cache-manifest" \
+                                      "text/css" \
+                                      "text/html" \
+                                      "text/javascript" \
+                                      "text/plain" \
+                                      "text/vcard" \
+                                      "text/vnd.rim.location.xloc" \
+                                      "text/vtt" \
+                                      "text/x-component" \
+                                      "text/x-cross-domain-policy" \
+                                      "text/xml"
+
+    </IfModule>
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Map the following filename extensions to the specified
+    # encoding type in order to make Apache serve the file types
+    # with the appropriate `Content-Encoding` response header
+    # (do note that this will NOT make Apache compress them!).
+    #
+    # If these files types would be served without an appropriate
+    # `Content-Enable` response header, client applications (e.g.:
+    # browsers) wouldn't know that they first need to uncompress
+    # the response, and thus, wouldn't be able to understand the
+    # content.
+    #
+    # https://httpd.apache.org/docs/current/mod/mod_mime.html#addencoding
+
+    <IfModule mod_mime.c>
+        AddEncoding gzip              svgz
+    </IfModule>
+
+</IfModule>
+
+# ----------------------------------------------------------------------
+# | Content transformation                                             |
+# ----------------------------------------------------------------------
+
+# Prevent intermediate caches or proxies (e.g.: such as the ones
+# used by mobile network providers) from modifying the website's
+# content.
+#
+# https://tools.ietf.org/html/rfc2616#section-14.9.5
+#
+# (!) If you are using `mod_pagespeed`, please note that setting
+# the `Cache-Control: no-transform` response header will prevent
+# `PageSpeed` from rewriting `HTML` files, and, if the
+# `ModPagespeedDisableRewriteOnNoTransform` directive isn't set
+# to `off`, also from rewriting other resources.
+#
+# https://developers.google.com/speed/pagespeed/module/configuration#notransform
+
+<IfModule mod_headers.c>
+    Header merge Cache-Control "no-transform"
+</IfModule>
+
+<ifmodule mod_expires.c>
+
+    # enable expirations
+    ExpiresActive On
+    ExpiresDefault "access plus 1 seconds"
+
+    # expire JPEG images after 15 minutes in the client's cache
+    ExpiresByType image/jpeg  "access plus 15 week"
+
+    # HTML documents are good for a month from the
+    # time they were changed
+    ExpiresByType text/css "access plus 1 week"
+
+    ExpiresByType text/javascript "access plus 60 minutes"
+    ExpiresByType application/x-javascript "access plus 60 minutes"
+    ExpiresByType application/javascript "access plus 60 minutes"
+
+    # Favicon (cannot be renamed!) and cursor images
+
+    ExpiresByType image/vnd.microsoft.icon              "access plus 1 week"
+    ExpiresByType image/x-icon                          "access plus 1 week"
+
+    # HTML
+
+    ExpiresByType text/html                             "access plus 0 seconds"
+
+    # JavaScript
+
+    ExpiresByType application/javascript                "access plus 1 year"
+    ExpiresByType application/x-javascript              "access plus 1 year"
+    ExpiresByType text/javascript                       "access plus 1 year"
+
+    # Manifest files
+
+    ExpiresByType application/manifest+json             "access plus 1 week"
+    ExpiresByType application/x-web-app-manifest+json   "access plus 0 seconds"
+    ExpiresByType text/cache-manifest                   "access plus 0 seconds"
+</ifmodule>
+
+# ----------------------------------------------------------------------
+# | ETags                                                              |
+# ----------------------------------------------------------------------
+
+# Remove `ETags` as resources are sent with far-future expires headers.
+#
+# https://developer.yahoo.com/performance/rules.html#etags
+# https://tools.ietf.org/html/rfc7232#section-2.3
+
+# `FileETag None` doesn't work in all cases.
+<IfModule mod_headers.c>
+    Header unset ETag
+</IfModule>
+
+FileETag None
