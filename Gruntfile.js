@@ -85,8 +85,8 @@ module.exports = function (grunt) {
                     warning_level: 'VERBOSE',
                     summary_detail_level: 3,
                     source_map_format: 'V3',
-                    output_wrapper: '(function(){%output%}).call(window);\n//# sourceMappingURL=wopr.js.map',
-                    create_source_map: 'build/js/wopr.js.map'
+                    output_wrapper: '(function(){%output%}).call(window);\n//# sourceMappingURL=wopr.js.map.json',
+                    create_source_map: 'build/js/wopr.js.map.json'
                 },
                 execOpts: {
                     use_closure_library: false,
