@@ -15,7 +15,6 @@ goog.provide('WOPR');
  */
 
 
-
 (function() {
 
     'use strict';
@@ -27,7 +26,7 @@ goog.provide('WOPR');
 
         WOPR.addHelpers();
         WOPR.loadPage();
-        WOPR.animate();
+        WOPR.animate(0);
 
         WOPR.theMapList.addEventListener('change', function() {
             WOPR.loadPage();
@@ -188,7 +187,6 @@ goog.provide('WOPR');
         var fCount;
         var fElement;
         var fArray = WOPR.makeFrameArray();
-        var el;
         var elID;
 
         /** Build image tags for each frame of the animated loop. Then inject each into the DOM. */
@@ -207,10 +205,6 @@ goog.provide('WOPR');
             fElement.classList.add('frame');
 
             WOPR.viewerPanel.appendChild(fElement);
-
-            el = document.getElementById(elID);
-
-            console.dir(el);
         }
     };
 
@@ -223,9 +217,7 @@ goog.provide('WOPR');
         var theInterval = 160;
         var theFrames = document.getElementsByClassName('frame');
 
-        if (!n) {
-            n = 0;
-        }
+        n = n || 0;
 
         setTimeout(function() {
 
