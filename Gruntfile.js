@@ -41,7 +41,7 @@ module.exports = function (grunt) {
                     {
                         cwd: 'src/js',
                         expand: true,
-                        src: 'wopr.js',
+                        src: '*.js',
                         dest: 'build/js/src/js'
                     }
                 ]
@@ -87,7 +87,6 @@ module.exports = function (grunt) {
                     flagfile: '.closurerc',
                     warning_level: 'VERBOSE',
                     summary_detail_level: 3,
-                    manage_closure_dependencies: false,
                     source_map_format: 'V3',
                     output_wrapper: '(function(){%output%}).call(window);\n//# sourceMappingURL=wopr.js.map.json',
                     create_source_map: 'build/js/wopr.js.map.json'
@@ -177,12 +176,16 @@ module.exports = function (grunt) {
         'clean',
         'copy:other',
         'copy:closure',
+        'copy:js',
         'closureBuilder',
         'closureDepsWriter',
         'cssmin',
         'htmlmin'
     ]);
-    grunt.registerTask('dev', ['copy:dev']);
-    grunt.registerTask('minimal', ['clean', 'htmlmin', 'cssmin', 'copy:js', 'closureBuilder']);
+
+    grunt.registerTask('js', [
+        'copy:js',
+        'closureBuilder'
+    ]);
 
 };
