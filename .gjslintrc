@@ -1,0 +1,11 @@
+--nojsdoc
+--custom_jsdoc_tag=returns,description,module
+--nobeep
+--summary
+--time
+--debug_indentation
+--max_line_length=120
+--exclude_directories=node_modues,build,src/js/closure-library
+--exclude_files=Gruntfile.js
+
+## Good documentation on these is at https://www.npmjs.com/package/gjslinter
