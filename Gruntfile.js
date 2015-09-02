@@ -79,7 +79,7 @@ module.exports = function (grunt) {
                 pythonBinary: '/usr/bin/python',
                 compilerFile: 'compiler.jar',
                 output_mode: 'script',
-                compile: true,
+                compile: false,
                 compilerOpts: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
                     warning_level: 'VERBOSE',
@@ -103,12 +103,7 @@ module.exports = function (grunt) {
         closureDepsWriter: {
             options: {
                 closureLibraryPath: 'src/js/closure-library',
-
-                // [OPTIONAL] Define the full path to the executable directly.
-                //    If set it trumps 'closureLibraryPath' which will not be required.
-                depswriter: 'src/js/closure-library/closure/bin/build/depswriter.py', // filepath to depswriter
-
-                // [OPTIONAL] Root directory to scan. Can be string or array
+                depswriter: 'src/js/closure-library/closure/bin/build/depswriter.py',
                 root: [
                     'src/js',
                     'src/js/closure-library'
@@ -119,16 +114,8 @@ module.exports = function (grunt) {
                 }
 
             },
-            // any name that describes your operation
             dist: {
-
-                // [OPTIONAL] Set file targets. Can be a string, array or
-                //    grunt file syntax (<config:...> or *)
-                src: 'path/to/awesome.js',
-
-                // [OPTIONAL] If not set, will output to stdout
                 dest: 'build/deps.js'
-
             }
         },
         clean: {
