@@ -25,13 +25,9 @@ goog.provide('WOPR');
         WOPR.theMapList = document.getElementById("theMapList");
         WOPR.theEnhancementList = document.getElementById("theEnhancementList");
 
-        WOPR.addTriggers();
         WOPR.addHelpers();
         WOPR.loadPage();
         WOPR.animate();
-    };
-
-    WOPR.addTriggers = function () {
 
         WOPR.theMapList.addEventListener("change", function () {
             WOPR.loadPage();
@@ -40,18 +36,17 @@ goog.provide('WOPR');
         WOPR.theEnhancementList.addEventListener("change", function () {
             WOPR.loadPage();
         });
-
-    };
-
-    WOPR.getInputs = function () {
-        WOPR.theMap = WOPR.theMapList[WOPR.theMapList.selectedIndex].value;
-        WOPR.theEnhancement = WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value;
     };
 
     WOPR.loadPage = function () {
         WOPR.getInputs();
         WOPR.cleanFrames();
         WOPR.injectFrames();
+    };
+
+    WOPR.getInputs = function () {
+        WOPR.theMap = WOPR.theMapList[WOPR.theMapList.selectedIndex].value;
+        WOPR.theEnhancement = WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value;
     };
 
     WOPR.addHelpers = function () {
@@ -80,12 +75,17 @@ goog.provide('WOPR');
 
             theDayOfTheYear += theDate;
 
-            return theDayOfTheYear.padZeroes(3);
+            theDayOfTheYear = theDayOfTheYear.padZeroes(3)
+
+            return theDayOfTheYear;
         };
 
         Date.prototype.getFormattedHour = function () {
             var theHour = this.getHours();
-            return theHour.padZeroes(2);
+
+            theHour = theHour.padZeroes(2);
+
+            return theHour;
         };
 
         Date.prototype.getFormattedMinute = function () {
