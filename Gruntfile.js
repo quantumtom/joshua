@@ -79,11 +79,12 @@ module.exports = function (grunt) {
                     'src/js/wopr.js'
                 ],
                 pythonBinary: '/usr/bin/python',
-                compilerFile: 'compiler.jar',
+                compilerFile: 'compiler-latest/compiler.jar',
                 output_mode: 'script',
                 compile: true,
                 compilerOpts: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
+                    flagfile: '.closurerc',
                     warning_level: 'VERBOSE',
                     summary_detail_level: 3,
                     manage_closure_dependencies: false,
