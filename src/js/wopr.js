@@ -1,9 +1,10 @@
-goog.provide('WOPR');
+goog.provide('WOPR.main');
+goog.require('WOPR.helpers');
 
 /**
  * @license MIT
  *
- * @module WOPR
+ * @module WOPR.main
  *
  * Each satellite generates an image every thirty minutes. The second satellite timing is
  * offset fifteen minutes from the first.
@@ -14,116 +15,64 @@ goog.provide('WOPR');
  * GOES-P timing        1215Z    |   1245Z    |   1315Z    |   1345Z
  */
 
-
 (function() {
 
     'use strict';
 
     var WOPR = function() {
-        WOPR.viewerPanel = document.getElementById('viewerPanel');
-        WOPR.theMapList = document.getElementById('theMapList');
-        WOPR.theEnhancementList = document.getElementById('theEnhancementList');
-
-        WOPR.addHelpers();
+        WOPR.init();
         WOPR.loadPage();
         WOPR.animate(0);
+    };
 
-        WOPR.theMapList.addEventListener('change', function() {
-            WOPR.loadPage();
-        });
+    WOPR.controls = {
+        mapList: document.getElementById('mapList'),
+        enhancementList: document.getElementById('enhancementList')
+    };
 
-        WOPR.theEnhancementList.addEventListener('change', function() {
-            WOPR.loadPage();
-        });
+    WOPR.init = function() {
+        for (var i in WOPR.controls) {
+            WOPR.controls[i].addEventListener('change', function() {
+                WOPR.loadPage();
+            });
+        }
+
+        this.display = document.getElementById('display');
+        this.frames = document.getElementsByClassName('frame');
+        
+        this.animation = {
+            interval: 160
+        };
     };
 
     WOPR.loadPage = function() {
-        WOPR.theMap = WOPR.theMapList[WOPR.theMapList.selectedIndex].value;
-        WOPR.theEnhancement = WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value;
-
-        WOPR.cleanFrames();
-        WOPR.injectFrames();
-    };
-
-    WOPR.addHelpers = function() {
+        WOPR.theMap = WOPR.controls.mapList[WOPR.controls.mapList.selectedIndex].value;
+        WOPR.theEnhancement = WOPR.controls.enhancementList[WOPR.controls.enhancementList.selectedIndex].value;
 
         /**
-         * Takes a date and calculates how many days into the year that date is.
-         * @returns {Number}
+         * Create an array of image elements into the DOM.
          */
 
-        Date.prototype.getDayOfYear = function() {
-            var theMonth = this.getMonth(),
-                theDate = this.getDate(),
-                monthDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
-                theDayOfTheYear = 0,
-                i;
+        var fCount;
+        var fElement;
+        var fArray = WOPR.makeFrames();
 
-            /** Check for leap year. */
+        while (WOPR.display.firstChild) {
+            WOPR.display.removeChild(WOPR.display.firstChild);
+        }
 
-            if (this.getYear() % 4) {
-                monthDays[1] = 28;
-            }
+        /** Build image tags for each frame of the animated loop. Then inject each into the DOM. */
+        for (fCount = 0; fCount < fArray.length; fCount++) {
 
-            for (i = 0; i < theMonth; i = i + 1) {
-                theDayOfTheYear += monthDays[i];
-            }
+            fElement = document.createElement('img');
 
-            theDayOfTheYear += theDate;
+            fElement.src = fArray[fCount];
 
-            theDayOfTheYear = theDayOfTheYear.padZeroes(3);
+            fElement.setAttribute('alt', 'Image #' + (fCount + 1).padZeroes(2));
+            fElement.classList.add('frame');
 
-            return theDayOfTheYear;
-        };
-
-        Date.prototype.getFormattedHour = function() {
-            var theHour = this.getHours();
-
-            theHour = theHour.padZeroes(2);
-
-            return theHour;
-        };
-
-        Date.prototype.getFormattedMinute = function() {
-            var theMinute = this.getMinutes();
-
-            return theMinute.parseMinutes(30);
-        };
-
-        /**
-         * Takes a value between 0 - 59 and returns either the
-         * bottom or top half of the hour.
-         * @param {Number} thePeriod
-         * @returns {Number}
-         */
-
-        Number.prototype.parseMinutes = function(thePeriod) {
-            var theMinutes = this;
-
-            theMinutes = theMinutes / thePeriod;
-            theMinutes = Math.floor(theMinutes);
-            theMinutes = theMinutes * thePeriod;
-
-            return theMinutes;
-        };
-
-        /**
-         * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
-         * it (concatenates it with a numeric string) that is
-         * passed in as the first parameter.
-         * @param {Number} places
-         * @returns {String}
-         */
-
-        Number.prototype.padZeroes = function(places) {
-            var oldString = this.toString();
-
-            while (oldString.length < places) {
-                oldString = '0' + oldString;
-            }
-
-            return oldString;
-        };
+            WOPR.display.appendChild(fElement);
+        }
     };
 
     /**
@@ -140,7 +89,7 @@ goog.provide('WOPR');
         var theDay = thePast.getDayOfYear();
         var theHour = thePast.getFormattedHour();
         var theMinute = thePast.getFormattedMinute();
-        var timeStamp;
+        var timeStamp = theYear + theDay + '_' + theHour;
 
         /** GOES-East: 15 minute offset from GOES-West */
         if (WOPR.theMap.search('east') >= 0) {
@@ -148,76 +97,44 @@ goog.provide('WOPR');
         }
 
         /** Add a leading zero if the _minutes_ value is for the top of the hour. */
-        if (theMinute === 0) {
-            theMinute = '00';
-        } else {
+        if (theMinute) {
             theMinute.padZeroes(2);
+        } else {
+            theMinute = '00';
         }
 
-        timeStamp = theYear + theDay + '_' + theHour + theMinute;
+        timeStamp = timeStamp + theMinute;
 
         return baseURI + timeStamp + WOPR.theEnhancement + '.jpg';
     };
 
-    WOPR.makeFrameArray = function() {
+    WOPR.makeFrames = function() {
         var startTime = new Date();
 
         startTime.setUTCHours(startTime.getUTCHours() - 1);
 
-        var i;
         var tempArray = [];
 
-        for (i = 0; i < 15; i = i + 1) {
+        for (var i = 0; i < 15; i = i + 1) {
             tempArray.push(WOPR.makeURI(startTime));
-            /** Advance to the next frame's timestamp **/
-            startTime.setMinutes(startTime.getMinutes() + 30);
+            startTime.setUTCMinutes(startTime.getUTCMinutes() + 30);
         }
 
         return tempArray;
     };
 
-    WOPR.cleanFrames = function() {
-        while (WOPR.viewerPanel.firstChild) {
-            WOPR.viewerPanel.removeChild(WOPR.viewerPanel.firstChild);
-        }
-    };
-
-    WOPR.injectFrames = function() {
-
-        var fCount;
-        var fElement;
-        var fArray = WOPR.makeFrameArray();
-        var elID;
-
-        /** Build image tags for each frame of the animated loop. Then inject each into the DOM. */
-        for (fCount = 0; fCount < fArray.length; fCount++) {
-
-            elID = 'image_' + fCount;
-
-            fElement = document.createElement('img');
-
-            fElement.src = fArray[fCount];
-            fElement.id = elID;
-
-            fElement.setAttribute('alt', 'Image #' + (fCount + 1).padZeroes(2));
-            fElement.classList.add('NOAA_JPEG');
-            fElement.classList.add('hidden');
-            fElement.classList.add('frame');
-
-            WOPR.viewerPanel.appendChild(fElement);
-        }
-    };
-
     /**
      * Animates the individual image frames.
-     * @param {Number} n
+     * @param {number} n
      */
+
     WOPR.animate = function(n) {
 
-        var theInterval = 160;
-        var theFrames = document.getElementsByClassName('frame');
+        var theFrames = WOPR.frames;
 
-        n = n || 0;
+        if (!n) {
+            n = 0;
+        }
 
         setTimeout(function() {
 
@@ -234,7 +151,7 @@ goog.provide('WOPR');
             WOPR.animate(n);
 
 
-        }, theInterval);
+        }, WOPR.animation.interval);
 
     };
 
