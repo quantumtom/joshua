@@ -16,29 +16,29 @@ goog.provide('WOPR');
 
 
 
-(function () {
+(function() {
 
     'use strict';
 
-    var WOPR = function () {
-        WOPR.viewerPanel = document.getElementById("viewerPanel");
-        WOPR.theMapList = document.getElementById("theMapList");
-        WOPR.theEnhancementList = document.getElementById("theEnhancementList");
+    var WOPR = function() {
+        WOPR.viewerPanel = document.getElementById('viewerPanel');
+        WOPR.theMapList = document.getElementById('theMapList');
+        WOPR.theEnhancementList = document.getElementById('theEnhancementList');
 
         WOPR.addHelpers();
         WOPR.loadPage();
         WOPR.animate();
 
-        WOPR.theMapList.addEventListener("change", function () {
+        WOPR.theMapList.addEventListener('change', function() {
             WOPR.loadPage();
         });
 
-        WOPR.theEnhancementList.addEventListener("change", function () {
+        WOPR.theEnhancementList.addEventListener('change', function() {
             WOPR.loadPage();
         });
     };
 
-    WOPR.loadPage = function () {
+    WOPR.loadPage = function() {
         WOPR.theMap = WOPR.theMapList[WOPR.theMapList.selectedIndex].value;
         WOPR.theEnhancement = WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value;
 
@@ -46,7 +46,7 @@ goog.provide('WOPR');
         WOPR.injectFrames();
     };
 
-    WOPR.addHelpers = function () {
+    WOPR.addHelpers = function() {
 
         /**
          * Takes a date and calculates how many days into the year that date is.
@@ -66,7 +66,7 @@ goog.provide('WOPR');
                 monthDays[1] = 28;
             }
 
-            for (i = 0; i < theMonth; i =  i + 1) {
+            for (i = 0; i < theMonth; i = i + 1) {
                 theDayOfTheYear += monthDays[i];
             }
 
@@ -77,7 +77,7 @@ goog.provide('WOPR');
             return theDayOfTheYear;
         };
 
-        Date.prototype.getFormattedHour = function () {
+        Date.prototype.getFormattedHour = function() {
             var theHour = this.getHours();
 
             theHour = theHour.padZeroes(2);
@@ -85,7 +85,7 @@ goog.provide('WOPR');
             return theHour;
         };
 
-        Date.prototype.getFormattedMinute = function () {
+        Date.prototype.getFormattedMinute = function() {
             var theMinute = this.getMinutes();
 
             return theMinute.parseMinutes(30);
@@ -94,7 +94,7 @@ goog.provide('WOPR');
         /**
          * Takes a value between 0 - 59 and returns either the
          * bottom or top half of the hour.
-         * @param thePeriod
+         * @param {Number} thePeriod
          * @returns {Number}
          */
 
@@ -112,11 +112,11 @@ goog.provide('WOPR');
          * Takes a places count in Base-10 (ones, tens, hundreds) and prepends
          * it (concatenates it with a numeric string) that is
          * passed in as the first parameter.
-         * @param places
+         * @param {Number} places
          * @returns {String}
          */
 
-        Number.prototype.padZeroes = function (places) {
+        Number.prototype.padZeroes = function(places) {
             var oldString = this.toString();
 
             while (oldString.length < places) {
@@ -130,13 +130,13 @@ goog.provide('WOPR');
     /**
      * This function dynamically generates the NOAA-specific file path for the remote
      * image resources.
-     * @param thePast
+     * @param {Date} thePast
      * @returns {string}
      */
 
     WOPR.makeURI = function(thePast) {
 
-        var baseURI = "http://www.ssd.noaa.gov/" + WOPR.theMap + "/img/";
+        var baseURI = 'http://www.ssd.noaa.gov/' + WOPR.theMap + '/img/';
         var theYear = thePast.getFullYear();
         var theDay = thePast.getDayOfYear();
         var theHour = thePast.getFormattedHour();
@@ -144,7 +144,7 @@ goog.provide('WOPR');
         var timeStamp;
 
         /** GOES-East: 15 minute offset from GOES-West */
-        if (WOPR.theMap.search("east") >= 0) {
+        if (WOPR.theMap.search('east') >= 0) {
             theMinute = theMinute + 15;
         }
 
@@ -155,9 +155,9 @@ goog.provide('WOPR');
             theMinute.padZeroes(2);
         }
 
-        timeStamp = theYear + theDay + "_" + theHour + theMinute;
+        timeStamp = theYear + theDay + '_' + theHour + theMinute;
 
-        return baseURI + timeStamp + WOPR.theEnhancement + ".jpg";
+        return baseURI + timeStamp + WOPR.theEnhancement + '.jpg';
     };
 
     WOPR.makeFrameArray = function() {
@@ -177,7 +177,7 @@ goog.provide('WOPR');
         return tempArray;
     };
 
-    WOPR.cleanFrames = function () {
+    WOPR.cleanFrames = function() {
         while (WOPR.viewerPanel.firstChild) {
             WOPR.viewerPanel.removeChild(WOPR.viewerPanel.firstChild);
         }
@@ -194,17 +194,17 @@ goog.provide('WOPR');
         /** Build image tags for each frame of the animated loop. Then inject each into the DOM. */
         for (fCount = 0; fCount < fArray.length; fCount++) {
 
-            elID = "image_" + fCount;
+            elID = 'image_' + fCount;
 
-            fElement = document.createElement("img");
+            fElement = document.createElement('img');
 
             fElement.src = fArray[fCount];
             fElement.id = elID;
 
-            fElement.setAttribute("alt", "Image #" + (fCount + 1).padZeroes(2));
-            fElement.classList.add("NOAA_JPEG");
-            fElement.classList.add("hidden");
-            fElement.classList.add("frame");
+            fElement.setAttribute('alt', 'Image #' + (fCount + 1).padZeroes(2));
+            fElement.classList.add('NOAA_JPEG');
+            fElement.classList.add('hidden');
+            fElement.classList.add('frame');
 
             WOPR.viewerPanel.appendChild(fElement);
 
@@ -214,18 +214,22 @@ goog.provide('WOPR');
         }
     };
 
-    WOPR.animate = function (n) {
+    /**
+     * Animates the individual image frames.
+     * @param {Number} n
+     */
+    WOPR.animate = function(n) {
 
         var theInterval = 160;
-        var theFrames = document.getElementsByClassName("frame");
+        var theFrames = document.getElementsByClassName('frame');
 
         if (!n) {
             n = 0;
         }
 
-        setTimeout(function () {
+        setTimeout(function() {
 
-            theFrames.item(n).classList.add("hidden");
+            theFrames.item(n).classList.add('hidden');
 
             if (n < theFrames.length - 1) {
                 n = n + 1;
@@ -233,7 +237,7 @@ goog.provide('WOPR');
                 n = 0;
             }
 
-            theFrames.item(n).classList.remove("hidden");
+            theFrames.item(n).classList.remove('hidden');
 
             WOPR.animate(n);
 
