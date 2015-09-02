@@ -39,7 +39,7 @@ goog.require('WOPR.helpers');
 
         this.display = document.getElementById('display');
         this.frames = document.getElementsByClassName('frame');
-        
+
         this.animation = {
             interval: 160
         };
