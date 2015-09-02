@@ -12,6 +12,14 @@ Copy of NodeJS (w/ NPM) installed and running.
 ### Internet Access
 You'll need to be able to connect to an NPM registry where npm can download the dependencies listed in the package.json file.
 
+### Google Closure Library
+Clone the Google Closure Library from its repo on Github.
+
+```
+#! cd src/js
+#! git clone https://github.com/google/closure-library/
+```
+
 ### Closure Compiler JAR
 Download Google's [Closure Compiler](https://dl.google.com/closure-compiler/compiler-latest.zip) JAR (Java Application Runtime) and extract it to your development workspace. You can keep it anywhere you like, but I've found it's best to keep it close to the source and build target directories. Google recommends keeping it in the closure-library directory, but this project assumes you are going to keep it in the root directory.
 
