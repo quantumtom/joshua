@@ -39,10 +39,10 @@ module.exports = function (grunt) {
             js: {
                 files: [
                     {
-                        cwd: 'src\/js',
+                        cwd: 'src/js',
                         expand: true,
                         src: 'wopr.js',
-                        dest: 'build\/js\/src\/js'
+                        dest: 'build/js/src/js'
                     }
                 ]
             },
@@ -52,20 +52,20 @@ module.exports = function (grunt) {
                         cwd: 'src',
                         expand: true,
                         src: [
-                            'img\/**',
+                            'img/**',
                             'favicon.ico'
                         ],
-                        dest: 'build\/'
+                        dest: 'build/'
                     }
                 ]
             },
             closure: {
                 files: [
                     {
-                        cwd: 'src\/js',
+                        cwd: 'src/js',
                         expand: true,
-                        src: 'closure-library\/**',
-                        dest: 'build\/js\/src/js'
+                        src: 'closure-library/**',
+                        dest: 'build/js/src/js'
                     }
                 ]
             }
