@@ -81,11 +81,12 @@ module.exports = function (grunt) {
                 pythonBinary: '/usr/bin/python',
                 compilerFile: 'compiler.jar',
                 output_mode: 'script',
-                compile: false,
+                compile: true,
                 compilerOpts: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
                     warning_level: 'VERBOSE',
                     summary_detail_level: 3,
+                    manage_closure_dependencies: false,
                     source_map_format: 'V3',
                     output_wrapper: '(function(){%output%}).call(window);\n//# sourceMappingURL=wopr.js.map.json',
                     create_source_map: 'build/js/wopr.js.map.json'
