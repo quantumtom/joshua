@@ -51,7 +51,10 @@ module.exports = function (grunt) {
                     {
                         cwd: 'src',
                         expand: true,
-                        src: '**',
+                        src: [
+                            'img/**',
+                            'favicon.ico'
+                        ],
                         dest: 'build/'
                     }
                 ]
@@ -182,6 +185,7 @@ module.exports = function (grunt) {
     grunt.registerTask('default', [
         'clean',
         'copy:all',
+        'copy:closure',
         'closureBuilder',
         'closureDepsWriter',
         'cssmin',
