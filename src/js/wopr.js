@@ -39,14 +39,11 @@ goog.provide('WOPR');
     };
 
     WOPR.loadPage = function () {
-        WOPR.getInputs();
-        WOPR.cleanFrames();
-        WOPR.injectFrames();
-    };
-
-    WOPR.getInputs = function () {
         WOPR.theMap = WOPR.theMapList[WOPR.theMapList.selectedIndex].value;
         WOPR.theEnhancement = WOPR.theEnhancementList[WOPR.theEnhancementList.selectedIndex].value;
+
+        WOPR.cleanFrames();
+        WOPR.injectFrames();
     };
 
     WOPR.addHelpers = function () {
@@ -75,7 +72,7 @@ goog.provide('WOPR');
 
             theDayOfTheYear += theDate;
 
-            theDayOfTheYear = theDayOfTheYear.padZeroes(3)
+            theDayOfTheYear = theDayOfTheYear.padZeroes(3);
 
             return theDayOfTheYear;
         };
@@ -191,24 +188,30 @@ goog.provide('WOPR');
         var fCount;
         var fElement;
         var fArray = WOPR.makeFrameArray();
+        var el;
+        var elID;
 
         /** Build image tags for each frame of the animated loop. Then inject each into the DOM. */
         for (fCount = 0; fCount < fArray.length; fCount++) {
 
+            elID = "image_" + fCount;
+
             fElement = document.createElement("img");
 
             fElement.src = fArray[fCount];
+            fElement.id = elID;
 
             fElement.setAttribute("alt", "Image #" + (fCount + 1).padZeroes(2));
-            fElement.setAttribute("height", "400");
-            fElement.setAttribute("width", "600");
+            fElement.classList.add("NOAA_JPEG");
             fElement.classList.add("hidden");
             fElement.classList.add("frame");
 
             WOPR.viewerPanel.appendChild(fElement);
 
-        }
+            el = document.getElementById(elID);
 
+            console.dir(el);
+        }
     };
 
     WOPR.animate = function (n) {
