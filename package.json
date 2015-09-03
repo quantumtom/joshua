@@ -1,6 +1,6 @@
 {
-  "name": "goes",
-  "description": "Joshua",
+  "name": "Joshua",
+  "description": "A single-page web app that creates an animated loop from a series of still image files.",
   "private": true,
   "repository": {
     "type": "git",
