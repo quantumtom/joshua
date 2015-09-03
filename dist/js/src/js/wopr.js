@@ -35,7 +35,6 @@ goog.require('WOPR.helpers');
         for (var i in WOPR.controls) {
             WOPR.controls[i].addEventListener('change', function() {
                 WOPR.loadPage();
-                console.log('change');
             });
         }
 
