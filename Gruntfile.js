@@ -1,6 +1,10 @@
 "use strict";
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
+
+    grunt.globals = {
+        pythonBinary: '/usr/bin/python'
+    };
 
     /**
      * Grunt Tasks and Configurations
@@ -120,6 +124,29 @@ module.exports = function (grunt) {
                 dest: 'dist/deps.js'
             }
         },
+        jshint: {
+            options: {
+                reporter: require('jshint-stylish')
+            },
+            test: [
+                'src/js/*.js'
+            ]
+        },
+        gjslint: {
+            options: {
+                flags: [
+                    '--flagfile .gjslintrc'
+                ],
+                reporter: {
+                    name: 'console' //report to console
+                },
+                force: false,
+                pythonPath: '/usr/bin/python'
+            },
+            test: {
+                src: '<%= jshint.test %>'
+            }
+        },
         clean: {
             dist: {
                 src: [
@@ -160,12 +187,14 @@ module.exports = function (grunt) {
 
     });
 
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-closure-tools');
+    grunt.loadNpmTasks('grunt-gjslint');
 
     /**
      * Alias tasks
@@ -185,6 +214,10 @@ module.exports = function (grunt) {
     grunt.registerTask('js', [
         'copy:js',
         'closureBuilder'
+    ]);
+
+    grunt.registerTask('test', [
+        'gjslint'
     ]);
 
 };
