@@ -33,9 +33,7 @@ goog.require('WOPR.helpers');
 
     WOPR.init = function() {
         for (var i in WOPR.controls) {
-            WOPR.controls[i].addEventListener('change', function() {
-                WOPR.loadPage();
-            });
+            WOPR.controls[i].addEventListener('change', WOPR.loadPage());
         }
 
         WOPR.interval = 160;
@@ -131,7 +129,7 @@ goog.require('WOPR.helpers');
 
         var theFrames = document.getElementsByClassName('frame');
 
-        if ((n == '') || (n == null) || (typeof n == null)) {
+        if ((n.toString() === '') || (n === null) || (typeof n === null)) {
             n = 0;
         }
 
