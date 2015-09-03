@@ -154,11 +154,11 @@ AddDefaultCharset utf-8
     ExpiresDefault "access plus 1 seconds"
 
     # expire JPEG images after 15 minutes in the client's cache
-    ExpiresByType image/jpeg  "access plus 15 week"
+    # ExpiresByType image/jpeg  "access plus 15 week"
 
     # HTML documents are good for a month from the
     # time they were changed
-    ExpiresByType text/css "access plus 1 week"
+    # ExpiresByType text/css "access plus 1 week"
 
     ExpiresByType text/javascript "access plus 60 minutes"
     ExpiresByType application/x-javascript "access plus 60 minutes"
