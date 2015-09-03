@@ -1,11 +1,112 @@
+# ######################################################################
+# # REWRITES                                                           #
+# ######################################################################
+
+# ----------------------------------------------------------------------
+# | Rewrite engine                                                     |
+# ----------------------------------------------------------------------
+
+# (1) Turn on the rewrite engine (this is necessary in order for
+#     the 'RewriteRule' directives to work).
+#
+#     https://httpd.apache.org/docs/current/mod/mod_rewrite.html#RewriteEngine
+#
+# (2) Enable the 'FollowSymLinks' option if it isn't already.
+#
+#     https://httpd.apache.org/docs/current/mod/core.html#options
+#
+# (3) If your web host doesn't allow the 'FollowSymlinks' option,
+#     you need to comment it out or remove it, and then uncomment
+#     the 'Options +SymLinksIfOwnerMatch' line (4), but be aware
+#     of the performance impact.
+#
+#     https://httpd.apache.org/docs/current/misc/perf-tuning.html#symlinks
+#
+# (4) Some cloud hosting services will require you set 'RewriteBase'.
+#
+#     https://www.rackspace.com/knowledge_center/frequently-asked-question/why-is-modrewrite-not-working-on-my-site
+#     https://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewritebase
+#
+# (5) Depending on how your server is set up, you may also need to
+#     use the 'RewriteOptions' directive to enable some options for
+#     the rewrite engine.
+#
+#     https://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewriteoptions
+#
+# (6) Set %{ENV:PROTO} variable, to allow rewrites to redirect with the
+#     appropriate schema automatically (http or https).
+
+# ----------------------------------------------------------------------
+# | Suppressing / Forcing the 'www.' at the beginning of URLs          |
+# ----------------------------------------------------------------------
+
+# The same content should never be available under two different
+# URLs, especially not with and without 'www.' at the beginning.
+# This can cause SEO problems (duplicate content), and therefore,
+# you should choose one of the alternatives and redirect the other
+# one.
+#
+# By default 'Option 1' (no 'www.') is activated.
+# http://no-www.org/faq.php?q=class_b
+#
+# If you would prefer to use 'Option 2', just comment out all the
+# lines from 'Option 1' and uncomment the ones from 'Option 2'.
+#
+# (!) NEVER USE BOTH RULES AT THE SAME TIME!
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Option 1: rewrite www.example.com → example.com
+
+#<IfModule mod_rewrite.c>
+#    RewriteEngine On
+#    RewriteCond %{HTTPS} !=on
+#    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+#    RewriteRule ^ %{ENV:PROTO}://%1%{REQUEST_URI} [R=301,L]
+#</IfModule>
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Option 2: rewrite example.com → www.example.com
+#
+# Be aware that the following might not be a good idea if you use "real"
+# subdomains for certain parts of your website.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP_HOST} !^www\. [NC]
+    RewriteCond %{SERVER_ADDR} !=127.0.0.1
+    RewriteCond %{SERVER_ADDR} !=::1
+    RewriteRule ^ %{ENV:PROTO}://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# ######################################################################
+# # SECURITY                                                           #
+# ######################################################################
+
+# ----------------------------------------------------------------------
+# | File access                                                        |
+# ----------------------------------------------------------------------
+
+# Block access to directories without a default document.
+#
+# You should leave the following uncommented, as you shouldn't allow
+# anyone to surf through every directory on your server (which may
+# includes rather private places such as the CMS's directories).
+
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
 AddType text/cache-manifest .manifest
 
 # ----------------------------------------------------------------------
 # | Character encodings                                                |
 # ----------------------------------------------------------------------
 
-# Serve all resources labeled as `text/html` or `text/plain`
-# with the media type `charset` parameter set to `UTF-8`.
+# Serve all resources labeled as 'text/html' or 'text/plain'
+# with the media type 'charset' parameter set to 'UTF-8'.
 #
 # https://httpd.apache.org/docs/current/mod/core.html#adddefaultcharset
 
@@ -13,8 +114,8 @@ AddDefaultCharset utf-8
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# Serve the following file types with the media type `charset`
-# parameter set to `UTF-8`.
+# Serve the following file types with the media type 'charset'
+# parameter set to 'UTF-8'.
 #
 # https://httpd.apache.org/docs/current/mod/mod_mime.html#addcharset
 
@@ -47,7 +148,7 @@ AddDefaultCharset utf-8
 
 <IfModule mod_deflate.c>
 
-    # Force compression for mangled `Accept-Encoding` request headers
+    # Force compression for mangled 'Accept-Encoding' request headers
     # https://developer.yahoo.com/blogs/ydn/pushing-beyond-gzipping-25601.html
 
     <IfModule mod_setenvif.c>
@@ -62,8 +163,8 @@ AddDefaultCharset utf-8
     # Compress all output labeled with one of the following media types.
     #
     # (!) For Apache versions below version 2.3.7 you don't need to
-    # enable `mod_filter` and can remove the `<IfModule mod_filter.c>`
-    # and `</IfModule>` lines as `AddOutputFilterByType` is still in
+    # enable 'mod_filter' and can remove the '<IfModule mod_filter.c>'
+    # and '</IfModule>' lines as 'AddOutputFilterByType' is still in
     # the core directives.
     #
     # https://httpd.apache.org/docs/current/mod/mod_filter.html#addoutputfilterbytype
@@ -108,11 +209,11 @@ AddDefaultCharset utf-8
 
     # Map the following filename extensions to the specified
     # encoding type in order to make Apache serve the file types
-    # with the appropriate `Content-Encoding` response header
+    # with the appropriate 'Content-Encoding' response header
     # (do note that this will NOT make Apache compress them!).
     #
     # If these files types would be served without an appropriate
-    # `Content-Enable` response header, client applications (e.g.:
+    # 'Content-Enable' response header, client applications (e.g.:
     # browsers) wouldn't know that they first need to uncompress
     # the response, and thus, wouldn't be able to understand the
     # content.
@@ -135,11 +236,11 @@ AddDefaultCharset utf-8
 #
 # https://tools.ietf.org/html/rfc2616#section-14.9.5
 #
-# (!) If you are using `mod_pagespeed`, please note that setting
-# the `Cache-Control: no-transform` response header will prevent
-# `PageSpeed` from rewriting `HTML` files, and, if the
-# `ModPagespeedDisableRewriteOnNoTransform` directive isn't set
-# to `off`, also from rewriting other resources.
+# (!) If you are using 'mod_pagespeed', please note that setting
+# the 'Cache-Control: no-transform' response header will prevent
+# 'PageSpeed' from rewriting 'HTML' files, and, if the
+# 'ModPagespeedDisableRewriteOnNoTransform' directive isn't set
+# to 'off', also from rewriting other resources.
 #
 # https://developers.google.com/speed/pagespeed/module/configuration#notransform
 
@@ -158,7 +259,7 @@ AddDefaultCharset utf-8
 
     # HTML documents are good for a month from the
     # time they were changed
-    # ExpiresByType text/css "access plus 1 week"
+    ExpiresByType text/css "access plus 1 year"
 
     ExpiresByType text/javascript "access plus 60 minutes"
     ExpiresByType application/x-javascript "access plus 60 minutes"
@@ -190,12 +291,12 @@ AddDefaultCharset utf-8
 # | ETags                                                              |
 # ----------------------------------------------------------------------
 
-# Remove `ETags` as resources are sent with far-future expires headers.
+# Remove 'ETags' as resources are sent with far-future expires headers.
 #
 # https://developer.yahoo.com/performance/rules.html#etags
 # https://tools.ietf.org/html/rfc7232#section-2.3
 
-# `FileETag None` doesn't work in all cases.
+# 'FileETag None' doesn't work in all cases.
 <IfModule mod_headers.c>
     Header unset ETag
 </IfModule>
