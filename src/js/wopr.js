@@ -1,4 +1,5 @@
 goog.provide('WOPR.main');
+
 goog.require('WOPR.helpers');
 
 /**
