@@ -1,10 +1,10 @@
 {
   "name": "goes",
-  "description": "gnuGruntProject",
+  "description": "Joshua",
   "private": true,
   "repository": {
-    "type": "svn",
-    "url": ""
+    "type": "git",
+    "url": "https://github.com/quantumtom/joshua"
   },
   "version": "0.2.0",
   "devDependencies": {
