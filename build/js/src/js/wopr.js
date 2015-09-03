@@ -34,15 +34,12 @@ goog.require('WOPR.helpers');
         for (var i in WOPR.controls) {
             WOPR.controls[i].addEventListener('change', function() {
                 WOPR.loadPage();
+                console.log('change');
             });
         }
 
-        this.display = document.getElementById('display');
-        this.frames = document.getElementsByClassName('frame');
-        
-        this.animation = {
-            interval: 160
-        };
+        WOPR.interval = 160;
+        WOPR.display = document.getElementById('display');
     };
 
     WOPR.loadPage = function() {
@@ -70,6 +67,7 @@ goog.require('WOPR.helpers');
 
             fElement.setAttribute('alt', 'Image #' + (fCount + 1).padZeroes(2));
             fElement.classList.add('frame');
+            fElement.classList.add('hidden');
 
             WOPR.display.appendChild(fElement);
         }
@@ -97,10 +95,10 @@ goog.require('WOPR.helpers');
         }
 
         /** Add a leading zero if the _minutes_ value is for the top of the hour. */
-        if (theMinute) {
-            theMinute.padZeroes(2);
-        } else {
+        if (theMinute === 0) {
             theMinute = '00';
+        } else {
+            theMinute.padZeroes(2);
         }
 
         timeStamp = timeStamp + theMinute;
@@ -113,9 +111,10 @@ goog.require('WOPR.helpers');
 
         startTime.setUTCHours(startTime.getUTCHours() - 1);
 
+        var i;
         var tempArray = [];
 
-        for (var i = 0; i < 15; i = i + 1) {
+        for (i = 0; i < 15; i = i + 1) {
             tempArray.push(WOPR.makeURI(startTime));
             startTime.setUTCMinutes(startTime.getUTCMinutes() + 30);
         }
@@ -130,9 +129,9 @@ goog.require('WOPR.helpers');
 
     WOPR.animate = function(n) {
 
-        var theFrames = WOPR.frames;
+        var theFrames = document.getElementsByClassName('frame');
 
-        if (!n) {
+        if ((n == '') || (n == null) || (typeof n == null)) {
             n = 0;
         }
 
@@ -151,7 +150,7 @@ goog.require('WOPR.helpers');
             WOPR.animate(n);
 
 
-        }, WOPR.animation.interval);
+        }, WOPR.interval);
 
     };
 
