@@ -80,11 +80,10 @@ module.exports = function (grunt) {
                 ],
                 pythonBinary: '/usr/bin/python',
                 compilerFile: 'compiler-latest/compiler.jar',
-                output_mode: 'script',
+                output_mode: 'compiled',
                 compile: true,
                 compilerOpts: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
-                    flagfile: '.closurerc',
                     warning_level: 'VERBOSE',
                     summary_detail_level: 3,
                     source_map_format: 'V3',
