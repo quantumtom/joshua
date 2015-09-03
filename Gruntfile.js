@@ -14,7 +14,7 @@ module.exports = function (grunt) {
                     collapseWhitespace: true
                 },
                 files: {
-                    'build/index.html': 'src/index.html'
+                    'dist/index.html': 'src/index.html'
                 }
             }
         },
@@ -28,7 +28,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: 'src/css',
                     src: ['wopr.css'],
-                    dest: 'build/css'
+                    dest: 'dist/css'
                 }]
             }
         },
@@ -42,7 +42,7 @@ module.exports = function (grunt) {
                         cwd: 'src/js',
                         expand: true,
                         src: '*.js',
-                        dest: 'build/js/src/js'
+                        dest: 'dist/js/src/js'
                     }
                 ]
             },
@@ -57,7 +57,7 @@ module.exports = function (grunt) {
                             'cache.manifest',
                             'favicon.ico'
                         ],
-                        dest: 'build/'
+                        dest: 'dist/'
                     }
                 ]
             },
@@ -67,7 +67,7 @@ module.exports = function (grunt) {
                         cwd: 'src/js',
                         expand: true,
                         src: 'closure-library/**',
-                        dest: 'build/js/src/js'
+                        dest: 'dist/js/src/js'
                     }
                 ]
             }
@@ -88,7 +88,7 @@ module.exports = function (grunt) {
                     summary_detail_level: 3,
                     source_map_format: 'V3',
                     output_wrapper: '(function(){%output%}).call(window);\n//# sourceMappingURL=wopr.js.map.json',
-                    create_source_map: 'build/js/wopr.js.map.json'
+                    create_source_map: 'dist/js/wopr.js.map.json'
                 },
                 execOpts: {
                     use_closure_library: false,
@@ -99,7 +99,7 @@ module.exports = function (grunt) {
                 src: [
                     'src/js'
                 ],
-                dest: 'build/js/wopr.js'
+                dest: 'dist/js/wopr.js'
             }
         },
         closureDepsWriter: {
@@ -117,13 +117,13 @@ module.exports = function (grunt) {
 
             },
             dist: {
-                dest: 'build/deps.js'
+                dest: 'dist/deps.js'
             }
         },
         clean: {
-            build: {
+            dist: {
                 src: [
-                    "build/*"
+                    'dist/*'
                 ]
             }
         },
