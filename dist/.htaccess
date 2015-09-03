@@ -7,28 +7,28 @@
 # ----------------------------------------------------------------------
 
 # (1) Turn on the rewrite engine (this is necessary in order for
-#     the `RewriteRule` directives to work).
+#     the 'RewriteRule' directives to work).
 #
 #     https://httpd.apache.org/docs/current/mod/mod_rewrite.html#RewriteEngine
 #
-# (2) Enable the `FollowSymLinks` option if it isn't already.
+# (2) Enable the 'FollowSymLinks' option if it isn't already.
 #
 #     https://httpd.apache.org/docs/current/mod/core.html#options
 #
-# (3) If your web host doesn't allow the `FollowSymlinks` option,
+# (3) If your web host doesn't allow the 'FollowSymlinks' option,
 #     you need to comment it out or remove it, and then uncomment
-#     the `Options +SymLinksIfOwnerMatch` line (4), but be aware
+#     the 'Options +SymLinksIfOwnerMatch' line (4), but be aware
 #     of the performance impact.
 #
 #     https://httpd.apache.org/docs/current/misc/perf-tuning.html#symlinks
 #
-# (4) Some cloud hosting services will require you set `RewriteBase`.
+# (4) Some cloud hosting services will require you set 'RewriteBase'.
 #
 #     https://www.rackspace.com/knowledge_center/frequently-asked-question/why-is-modrewrite-not-working-on-my-site
 #     https://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewritebase
 #
 # (5) Depending on how your server is set up, you may also need to
-#     use the `RewriteOptions` directive to enable some options for
+#     use the 'RewriteOptions' directive to enable some options for
 #     the rewrite engine.
 #
 #     https://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewriteoptions
@@ -37,20 +37,20 @@
 #     appropriate schema automatically (http or https).
 
 # ----------------------------------------------------------------------
-# | Suppressing / Forcing the `www.` at the beginning of URLs          |
+# | Suppressing / Forcing the 'www.' at the beginning of URLs          |
 # ----------------------------------------------------------------------
 
 # The same content should never be available under two different
-# URLs, especially not with and without `www.` at the beginning.
+# URLs, especially not with and without 'www.' at the beginning.
 # This can cause SEO problems (duplicate content), and therefore,
 # you should choose one of the alternatives and redirect the other
 # one.
 #
-# By default `Option 1` (no `www.`) is activated.
+# By default 'Option 1' (no 'www.') is activated.
 # http://no-www.org/faq.php?q=class_b
 #
-# If you would prefer to use `Option 2`, just comment out all the
-# lines from `Option 1` and uncomment the ones from `Option 2`.
+# If you would prefer to use 'Option 2', just comment out all the
+# lines from 'Option 1' and uncomment the ones from 'Option 2'.
 #
 # (!) NEVER USE BOTH RULES AT THE SAME TIME!
 
