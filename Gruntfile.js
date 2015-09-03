@@ -84,7 +84,7 @@ module.exports = function (grunt) {
                 compile: true,
                 compilerOpts: {
                     compilation_level: 'ADVANCED_OPTIMIZATIONS',
-                    // flagfile: '.closurerc',
+                    flagfile: '.closurerc',
                     warning_level: 'VERBOSE',
                     summary_detail_level: 3,
                     source_map_format: 'V3',
