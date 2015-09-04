@@ -2,10 +2,6 @@
 
 module.exports = function(grunt) {
 
-    grunt.globals = {
-        pythonBinary: '/usr/bin/python'
-    };
-
     /**
      * Grunt Tasks and Configurations
      */
@@ -147,6 +143,7 @@ module.exports = function(grunt) {
                 src: '<%= jshint.test %>'
             }
         },
+
         clean: {
             dist: {
                 src: [
@@ -213,7 +210,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('js', [
         'copy:js',
-        'closureBuilder'
+        'closureBuilder:dist'
     ]);
 
     grunt.registerTask('test', [

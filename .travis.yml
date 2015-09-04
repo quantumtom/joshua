@@ -16,3 +16,5 @@ script:
 - grunt test
 addons:
   sauce_connect: true
+notifications:
+  email: false
