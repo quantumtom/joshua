@@ -1,4 +1,5 @@
 node_modules
 compiler-latest
+/node_modules
 /src/js/closure-library
 /dist/js/src/js/closure-library
