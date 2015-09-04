@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <title>Satellite Weather</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1120, initial-scale=.5, minimum-scale=.5, maximum-scale=2.0, user-scalable=yes" />
@@ -19,31 +18,28 @@
             <fieldset>
                 <label for="mapList" class="controlLabel">Map</label>
                 <select id="mapList">
-                    <option value="goes/west/tpac">East Pacific</option>
-                    <option value="goes/comp/nhem">Northwest Semihemisphere</option>
-                    <optgroup label="Oceans">
-                        <option value="goes/west/tpac">East Pacific</option>
-                        <option value="goes/east/tatl">West Atlantic</option>
-                        <option value="goes/east/nwatl">Northwest Atlantic</option>
-                    </optgroup>
-                    <optgroup label="Western US">
+                    <optgroup label="Western US (GOES-N)">
+                        <option value="goes/west/tpac">Tropical Pacific</option>
                         <option value="goes/west/weus">Western US</option>
                         <option value="goes/west/nw">Northwest</option>
-                        <option value="goes/west/wc">Mid-Pacific</option>
-                        <option value="goes/west/sw">Southwest</option>
-                    </optgroup>
-                    <optgroup label="Central US">
+                        <option value="goes/west/wc">West Coast</option>
                         <option value="goes/west/np">Northern Plains</option>
                         <option value="goes/west/cp">Central Plains</option>
-                        <option value="goes/east/sc">Southern Plains</option>
+                        <option value="goes/west/sw">Southwest</option>
                     </optgroup>
-                    <optgroup label="Eastern US">
+                    <optgroup label="Eastern US (GOES-P)">
+                        <option value="goes/east/tatl">Tropical Atlantic</option>
+                        <option value="goes/east/nwatl">Northwest Atlantic</option>
                         <option value="goes/east/eaus">Eastern US</option>
                         <option value="goes/east/gl">Great Lakes</option>
+                        <option value="goes/east/ma">Mid-Atlantic</option>
                         <option value="goes/east/mw">Midwest</option>
                         <option value="goes/east/ne">Northeast</option>
-                        <option value="goes/east/ma">Mid-Atlantic</option>
+                        <option value="goes/east/sc">South-Central</option>
                         <option value="goes/east/se">Southeast</option>
+                    </optgroup>
+                    <optgroup label="Composite">
+                        <option value="goes/comp/nhem">Northwest Semihemisphere</option>
                     </optgroup>
                 </select>
             </fieldset>
