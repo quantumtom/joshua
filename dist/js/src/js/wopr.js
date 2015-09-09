@@ -105,7 +105,11 @@ goog.require('WOPR.helpers');
                 tempArray.push(WOPR.getURI());
                 newTime.setUTCMinutes(newTime.getUTCMinutes() + 30);
                 WOPR.setStartTime(newTime);
+                console.log(typeof(tempArray));
+                console.dir(tempArray);
             }
+
+            console.dir(typeof(tempArray));
 
             return tempArray;
         };
