@@ -1,5 +1,5 @@
 --nojsdoc
---custom_jsdoc_tag=returns,description,module,returns
+--custom_jsdoc_tag=returns,description,module
 --nobeep
 --summary
 --time
