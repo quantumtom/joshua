@@ -1,0 +1,6 @@
+{
+  "undef":     true,
+  "onecase":   true,
+  "browser":   true,
+  "globals":    ["goog"]
+}

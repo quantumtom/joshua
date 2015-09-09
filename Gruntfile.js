@@ -1,3 +1,5 @@
+/* jshint undef: true, unused: true */
+
 (function () {
 
     'use strict';
@@ -145,7 +147,6 @@
                     src: '<%= jshint.test %>'
                 }
             },
-
             clean: {
                 dist: {
                     src: [
@@ -182,8 +183,21 @@
                         'closureBuilder'
                     ]
                 }
+            },
+            tdd: {
+                browser: {
+                    files: {
+                        sources: ['src/js/**/*.js'], // Where your application files are located
+                        libs: [], // Libs loaded in order
+                        tests: ['tests/**/*-test.js'] // Where your tests are located
+                    },
+                    options: {
+                        runner: 'mocha', // jasmine, mocha or buster
+                        expect: true, // Use the expect.js library for assertions
+                        sinon: true // For spies, stubs and fake XHR
+                    }
+                }
             }
-
         });
 
         grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -193,6 +207,7 @@
         grunt.loadNpmTasks('grunt-contrib-copy');
         grunt.loadNpmTasks('grunt-contrib-watch');
         grunt.loadNpmTasks('grunt-closure-tools');
+        grunt.loadNpmTasks('grunt-tdd');
         grunt.loadNpmTasks('grunt-gjslint');
 
         /**
