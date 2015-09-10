@@ -27,7 +27,6 @@ goog.require('WOPR.helpers');
     };
 
     WOPR.init = function () {
-        this.interval = 160;
         this.display = document.getElementById('display');
 
         this.controls = {
@@ -160,38 +159,6 @@ goog.require('WOPR.helpers');
 
             WOPR.display.appendChild(imgElement);
         }
-    };
-
-    /**
-     * Animates the individual image frames.
-     * @param {number} n
-     */
-
-    WOPR.animateFrames = function (n) {
-
-        var theFrames = document.getElementsByClassName('frame');
-
-        if ((!n) || (n === null)) {
-            n = 0;
-        }
-
-        setTimeout(function () {
-
-            theFrames.item(n).classList.add('hidden');
-
-            if (n < theFrames.length - 1) {
-                n = n + 1;
-            } else {
-                n = 0;
-            }
-
-            theFrames.item(n).classList.remove('hidden');
-
-            WOPR.animateFrames(n);
-
-
-        }, WOPR.interval);
-
     };
 
     WOPR.call();

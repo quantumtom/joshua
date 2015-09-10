@@ -1,6 +1,5 @@
 {
   "undef":     true,
-  "onecase":   true,
   "browser":   true,
-  "globals":    ["goog"]
+  "globals":    ["goog","WOPR"]
 }
