@@ -219,7 +219,7 @@
             'copy:other',
             'copy:closure',
             'copy:js',
-            'closureBuilder',
+            'closureBuilder:dist',
             'closureDepsWriter',
             'cssmin',
             'htmlmin'
