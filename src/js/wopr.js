@@ -1,6 +1,7 @@
 goog.provide('WOPR.main');
 
 goog.require('WOPR.helpers');
+goog.require('WOPR.view');
 
 /**
  * @license MIT
@@ -23,10 +24,11 @@ goog.require('WOPR.helpers');
     var WOPR = function () {
         WOPR.init();
         WOPR.loadPage();
-        WOPR.animateFrames(0);
+        WOPR.view(0);
     };
 
     WOPR.init = function () {
+
         this.display = document.getElementById('display');
 
         this.controls = {
@@ -109,7 +111,6 @@ goog.require('WOPR.helpers');
             return tempArray;
         };
 
-
     };
 
     WOPR.loadPage = function () {
@@ -117,7 +118,7 @@ goog.require('WOPR.helpers');
         var item;
 
         this.change = function () {
-            WOPR.loadPage();
+            this.loadPage();
         };
 
         startTime.setUTCHours(startTime.getUTCHours() - 1);
@@ -160,6 +161,37 @@ goog.require('WOPR.helpers');
             WOPR.display.appendChild(imgElement);
         }
     };
+
+    /**
+     * Animates the individual image frames.
+     * @param {number} n
+     */
+    WOPR.view = function (n) {
+
+        var theFrames = document.getElementsByClassName('frame');
+
+        if ((!n) || (n === null)) {
+            n = 0;
+        }
+
+        setTimeout(function () {
+
+            theFrames.item(n).classList.add('hidden');
+
+            if (n < theFrames.length - 1) {
+                n = n + 1;
+            } else {
+                n = 0;
+            }
+
+            theFrames.item(n).classList.remove('hidden');
+
+            WOPR.view(n);
+
+
+        }, 160);
+    };
+
 
     WOPR.call();
 
