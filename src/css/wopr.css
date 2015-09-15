@@ -31,10 +31,6 @@ body, option {
     vertical-align: middle;
 }
 
-.visible {
-    display: block;
-}
-
 .hidden {
     display:none;
 }
