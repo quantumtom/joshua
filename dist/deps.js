@@ -2931,4 +2931,5 @@ goog.addDependency('third_party/closure/goog/mochikit/async/deferred.js', ['goog
 goog.addDependency('third_party/closure/goog/mochikit/async/deferredlist.js', ['goog.async.DeferredList'], ['goog.async.Deferred'], false);
 goog.addDependency('third_party/closure/goog/osapi/osapi.js', ['goog.osapi'], [], false);
 goog.addDependency('third_party/closure/goog/svgpan/svgpan.js', ['svgpan.SvgPan'], ['goog.Disposable', 'goog.events', 'goog.events.EventType', 'goog.events.MouseWheelHandler'], false);
-goog.addDependency('wopr.js', ['WOPR.main'], ['WOPR.helpers'], false);
+goog.addDependency('view.js', ['WOPR.view'], [], false);
+goog.addDependency('wopr.js', ['WOPR.main'], ['WOPR.helpers', 'WOPR.view'], false);

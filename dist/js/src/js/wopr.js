@@ -1,6 +1,7 @@
 goog.provide('WOPR.main');
 
 goog.require('WOPR.helpers');
+goog.require('WOPR.view');
 
 /**
  * @license MIT
@@ -23,11 +24,11 @@ goog.require('WOPR.helpers');
     var WOPR = function () {
         WOPR.init();
         WOPR.loadPage();
-        WOPR.animateFrames(0);
+        WOPR.view(0);
     };
 
     WOPR.init = function () {
-        this.interval = 160;
+
         this.display = document.getElementById('display');
 
         this.controls = {
@@ -110,7 +111,6 @@ goog.require('WOPR.helpers');
             return tempArray;
         };
 
-
     };
 
     WOPR.loadPage = function () {
@@ -118,7 +118,7 @@ goog.require('WOPR.helpers');
         var item;
 
         this.change = function () {
-            WOPR.loadPage();
+            this.loadPage();
         };
 
         startTime.setUTCHours(startTime.getUTCHours() - 1);
@@ -166,8 +166,7 @@ goog.require('WOPR.helpers');
      * Animates the individual image frames.
      * @param {number} n
      */
-
-    WOPR.animateFrames = function (n) {
+    WOPR.view = function (n) {
 
         var theFrames = document.getElementsByClassName('frame');
 
@@ -187,12 +186,12 @@ goog.require('WOPR.helpers');
 
             theFrames.item(n).classList.remove('hidden');
 
-            WOPR.animateFrames(n);
+            WOPR.view(n);
 
 
-        }, WOPR.interval);
-
+        }, 160);
     };
+
 
     WOPR.call();
 
