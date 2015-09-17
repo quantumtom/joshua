@@ -1,6 +1,7 @@
 # joshua
 
 [![Build Status](https://travis-ci.org/quantumtom/joshua.svg?branch=master)](https://travis-ci.org/quantumtom/joshua)
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 ## Introduction
 
