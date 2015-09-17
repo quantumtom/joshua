@@ -245,17 +245,18 @@ AddDefaultCharset utf-8
 # https://developers.google.com/speed/pagespeed/module/configuration#notransform
 
 <IfModule mod_headers.c>
-    Header merge Cache-Control "no-transform"
+    # Header merge Cache-Control "no-transform"
+    Header set Cache-Control "public"
 </IfModule>
 
 <ifmodule mod_expires.c>
 
     # enable expirations
     ExpiresActive On
-    ExpiresDefault "access plus 1 seconds"
+    ExpiresDefault "access plus 30 minutes"
 
     # expire JPEG images after 15 minutes in the client's cache
-    # ExpiresByType image/jpeg  "access plus 15 week"
+    ExpiresByType image/jpeg  "access plus 15 minutes"
 
     # HTML documents are good for a month from the
     # time they were changed
