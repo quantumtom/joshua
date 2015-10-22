@@ -102,7 +102,7 @@ goog.require('WOPR.view');
             var newTime = WOPR.startTime;
             var i;
 
-            for (i = 0; i < 18; i = i + 1) {
+            for (i = 0; i < 16; i = i + 1) {
                 tempArray.push(WOPR.getURI());
                 newTime.setUTCMinutes(newTime.getUTCMinutes() + 30);
                 WOPR.setStartTime(newTime);
