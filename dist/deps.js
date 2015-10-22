@@ -2921,7 +2921,6 @@ goog.addDependency('closure/goog/vec/vec4f.js', ['goog.vec.vec4f', 'goog.vec.vec
 goog.addDependency('closure/goog/webgl/webgl.js', ['goog.webgl'], [], false);
 goog.addDependency('closure/goog/window/window.js', ['goog.window'], ['goog.dom.TagName', 'goog.dom.safe', 'goog.html.SafeUrl', 'goog.html.uncheckedconversions', 'goog.labs.userAgent.platform', 'goog.string', 'goog.string.Const', 'goog.userAgent'], false);
 goog.addDependency('closure/goog/window/window_test.js', ['goog.windowTest'], ['goog.Promise', 'goog.dom', 'goog.dom.TagName', 'goog.events', 'goog.functions', 'goog.labs.userAgent.browser', 'goog.labs.userAgent.engine', 'goog.labs.userAgent.platform', 'goog.string', 'goog.testing.PropertyReplacer', 'goog.testing.jsunit', 'goog.window'], false);
-goog.addDependency('helpers.js', ['WOPR.helpers'], [], false);
 goog.addDependency('third_party/closure/goog/caja/string/html/htmlparser.js', ['goog.string.html', 'goog.string.html.HtmlParser', 'goog.string.html.HtmlParser.EFlags', 'goog.string.html.HtmlParser.Elements', 'goog.string.html.HtmlParser.Entities', 'goog.string.html.HtmlSaxHandler'], [], false);
 goog.addDependency('third_party/closure/goog/caja/string/html/htmlsanitizer.js', ['goog.string.html.HtmlSanitizer', 'goog.string.html.HtmlSanitizer.AttributeType', 'goog.string.html.HtmlSanitizer.Attributes', 'goog.string.html.htmlSanitize'], ['goog.string.StringBuffer', 'goog.string.html.HtmlParser', 'goog.string.html.HtmlSaxHandler'], false);
 goog.addDependency('third_party/closure/goog/dojo/dom/query.js', ['goog.dom.query'], ['goog.array', 'goog.dom', 'goog.functions', 'goog.string', 'goog.userAgent'], false);
@@ -2931,5 +2930,6 @@ goog.addDependency('third_party/closure/goog/mochikit/async/deferred.js', ['goog
 goog.addDependency('third_party/closure/goog/mochikit/async/deferredlist.js', ['goog.async.DeferredList'], ['goog.async.Deferred'], false);
 goog.addDependency('third_party/closure/goog/osapi/osapi.js', ['goog.osapi'], [], false);
 goog.addDependency('third_party/closure/goog/svgpan/svgpan.js', ['svgpan.SvgPan'], ['goog.Disposable', 'goog.events', 'goog.events.EventType', 'goog.events.MouseWheelHandler'], false);
-goog.addDependency('view.js', ['WOPR.view'], [], false);
-goog.addDependency('wopr.js', ['WOPR.main'], ['WOPR.helpers', 'WOPR.view'], false);
+goog.addDependency('wopr/helpers.js', ['WOPR.helpers'], [], false);
+goog.addDependency('wopr/main.js', ['WOPR.main'], ['WOPR.helpers', 'WOPR.view'], false);
+goog.addDependency('wopr/view.js', ['WOPR.view'], [], false);
