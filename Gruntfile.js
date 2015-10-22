@@ -12,6 +12,15 @@
         grunt.initConfig({
             pkg: grunt.file.readJSON('package.json'),
             htmlmin: {
+                dev: {
+                    options: {
+                        removeComments: false,
+                        collapseWhitespace: false
+                    },
+                    files: {
+                        'dist/index.html': 'src/index.html'
+                    }
+                },
                 dist: {
                     options: {
                         removeComments: true,
@@ -37,6 +46,26 @@
                 }
             },
             copy: {
+                all: {
+                    files: [
+                        {
+                            cwd: 'src',
+                            expand: true,
+                            src: '**',
+                            dest: 'dist'
+                        }
+                    ]
+                },
+                closure: {
+                    files: [
+                        {
+                            cwd: 'src/js',
+                            expand: true,
+                            src: 'closure-library/**',
+                            dest: 'dist/js/src/js'
+                        }
+                    ]
+                },
                 /**
                  * Copies original source from src/js to build/js/src/js for source map debugging.
                  */
@@ -45,8 +74,22 @@
                         {
                             cwd: 'src/js',
                             expand: true,
-                            src: '*.js',
+                            src: [
+                                'wopr/*.js'
+                            ],
                             dest: 'dist/js/src/js'
+                        }
+                    ]
+                },
+                externs: {
+                    files: [
+                        {
+                            cwd: 'src/js/externs',
+                            expand: true,
+                            src: [
+                                '**/*.js'
+                            ],
+                            dest: 'dist/js/externs'
                         }
                     ]
                 },
@@ -64,23 +107,13 @@
                             dest: 'dist/'
                         }
                     ]
-                },
-                closure: {
-                    files: [
-                        {
-                            cwd: 'src/js',
-                            expand: true,
-                            src: 'closure-library/**',
-                            dest: 'dist/js/src/js'
-                        }
-                    ]
                 }
             },
             closureBuilder: {
                 options: {
                     closureLibraryPath: 'src/js/closure-library',
                     inputs: [
-                        'src/js/wopr.js'
+                        'src/js/wopr/main.js'
                     ],
                     pythonBinary: '/usr/bin/python',
                     compilerFile: 'compiler-latest/compiler.jar',
@@ -88,6 +121,7 @@
                     compile: true,
                     compilerOpts: {
                         compilation_level: 'ADVANCED_OPTIMIZATIONS',
+                        formatting: 'pretty_print',
                         warning_level: 'VERBOSE',
                         summary_detail_level: 3,
                         source_map_format: 'V3',
@@ -97,6 +131,24 @@
                     execOpts: {
                         use_closure_library: false,
                         maxBuffer: 999999 * 1024
+                    }
+                },
+                dev: {
+                    src: [
+                        'src/js'
+                    ],
+                    dest: 'dist/js/wopr.js',
+                    options: {
+                        output_mode: 'script',
+                        compile: false,
+                        compilerOpts: {
+                            formatting: 'pretty_print',
+                            warning_level: 'VERBOSE',
+                            summary_detail_level: 3,
+                            source_map_format: 'V3',
+                            output_wrapper: '(function(){%output%}).call(window);\n//# sourceMappingURL=wopr.js.map.json',
+                            create_source_map: 'dist/js/wopr.js.map.json'
+                        }
                     }
                 },
                 dist: {
@@ -129,7 +181,7 @@
                     reporter: require('jshint-stylish')
                 },
                 test: [
-                    'src/js/*.js'
+                    'src/js/wopr/**/*.js'
                 ]
             },
             gjslint: {
@@ -150,7 +202,7 @@
             clean: {
                 dist: {
                     src: [
-                        'dist/*'
+                        'dist/**'
                     ]
                 }
             },
@@ -159,11 +211,11 @@
                     files: [
                         'src/*.html',
                         'src/css/*.css',
-                        'src/js/*.js',
+                        'src/js/wopr/*.js',
                         'Gruntfile.js'
                     ],
                     tasks: [
-                        'copy:dev'
+                        'dev'
                     ]
                 },
                 dist: {
@@ -223,6 +275,14 @@
             'closureDepsWriter',
             'cssmin',
             'htmlmin'
+        ]);
+
+        grunt.registerTask('dev', [
+            'copy:js',
+            'closureBuilder:dev',
+            'closureDepsWriter',
+            'cssmin:dev',
+            'htmlmin:dev'
         ]);
 
         grunt.registerTask('js', [
