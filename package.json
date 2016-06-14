@@ -7,7 +7,7 @@
     "url": "https://github.com/quantumtom/joshua"
   },
   "jsHintConfig": ".jshintrc",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "dependencies": {
     "compression": "^1.6.1",
     "express": "^4.13.4"
